@@ -1,0 +1,5 @@
+# This package is mounted as an out-of-tree profile plugin.
+# Keep both id and name: a bare id can override an existing row and no-op.
+- insert:
+    - id: dsh-theme-animal-island-ui
+      name: 'dsh-theme-animal-island-ui'
