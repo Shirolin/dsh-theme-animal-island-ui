@@ -24,6 +24,7 @@ test('skin uses only the reviewed stable data hooks', () => {
     'ds-dark-theme',
     'composer-card',
     'conversation-header-corner',
+    'state',
   ])
   assert.deepEqual([...new Set(hooks)].filter((hook) => !allowed.has(hook)), [])
 })

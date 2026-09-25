@@ -1,10 +1,10 @@
 # DSH Animal Island UI Theme
 
-`Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin。0.2.5 在 ThemeRuntime 色彩层之上增加了插件自有 CSS、原创资源和 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
+`Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin。0.2.7 在 ThemeRuntime 色彩层之上增加了插件自有 CSS、原创资源和 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 
-## v0.2.5 视觉范围
+## v0.2.7 视觉范围
 
 - 绿色双层波点画布；
 - 奶油白侧栏、蓝紫底部波浪与原创岛标；
@@ -65,10 +65,10 @@ pnpm install
 pnpm pack
 ```
 
-`prepack` 会自动重建 `lib`。0.2.5 的规范产物为：
+`prepack` 会自动重建 `lib`。0.2.7 的规范产物为：
 
 ```text
-artifacts/release-v0.2.5/dsh-theme-animal-island-ui-0.2.5.tgz
+artifacts/release-v0.2.7/dsh-theme-animal-island-ui-0.2.7.tgz
 ```
 
 将 `.tgz` 加入目标 `web` profile 后，完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用用于回滚。
