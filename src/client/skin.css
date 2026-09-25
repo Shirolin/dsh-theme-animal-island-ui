@@ -1,0 +1,258 @@
+/* Animal Island DSH skin. Production selectors are either plugin-owned classes,
+   semantic elements/roles, or a small reviewed DSH data-hook allowlist. */
+
+html[data-dsh-animal-island-skin] {
+  --animal-ink: #6f451f;
+  --animal-body: #654a2f;
+  --animal-muted: #75634d;
+  --animal-cream: #faf8f3;
+  --animal-cream-deep: #f7f3df;
+  --animal-mint: #19c8b9;
+  --animal-mint-deep: #0b7f75;
+  --animal-border: #dcd8d1;
+  --animal-border-strong: #c4b89e;
+  --animal-shadow-button: #bdaea0;
+  --animal-shadow-input: #d4c9b4;
+  --animal-shadow-soft: rgba(61, 52, 40, 0.1);
+  --animal-shadow-card: rgba(61, 52, 40, 0.14);
+  --animal-font-family: Nunito, "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --animal-code-family: "SFMono-Regular", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", monospace;
+  background-color: #8fcaa5;
+  background-image:
+    radial-gradient(circle, rgba(74, 126, 83, 0.24) 1.25px, transparent 1.4px),
+    radial-gradient(circle, rgba(245, 250, 222, 0.22) 0.85px, transparent 1px);
+  background-position: 0 0, 8px 8px;
+  background-size: 30px 30px, 15px 15px;
+  background-attachment: fixed;
+}
+
+html[data-dsh-animal-island-skin] body {
+  --dsw-alias-bg-base: rgba(248, 248, 240, 0.52) !important;
+  --dsw-specific-sidebar-fill: rgba(250, 248, 243, 0.82) !important;
+  isolation: isolate;
+  color: var(--animal-body);
+  background-color: #8fcaa5;
+  background-image:
+    url("__ANIMAL_ISLAND_WAVE__"),
+    radial-gradient(circle, rgba(74, 126, 83, 0.28) 1.25px, transparent 1.4px),
+    radial-gradient(circle, rgba(245, 250, 222, 0.26) 0.85px, transparent 1px);
+  background-position: left bottom, 0 0, 8px 8px;
+  background-size: 280px 112px, 30px 30px, 15px 15px;
+  background-repeat: no-repeat, repeat, repeat;
+  background-attachment: fixed, fixed, fixed;
+  font-family: var(--animal-font-family);
+  font-weight: 500;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
+  --animal-ink: #f7e7c7;
+  --animal-body: #ead9bd;
+  --animal-muted: #aa987c;
+  --animal-cream: #303444;
+  --animal-cream-deep: #29231c;
+  --animal-mint: #61d9cb;
+  --animal-mint-deep: #7be2d5;
+  --animal-border: #59493a;
+  --animal-border-strong: #8a7057;
+  --animal-shadow-button: #1f1a15;
+  --animal-shadow-input: #18130f;
+  --animal-shadow-soft: rgba(8, 6, 4, 0.28);
+  --animal-shadow-card: rgba(8, 6, 4, 0.42);
+  --dsw-alias-bg-base: rgba(41, 35, 28, 0.84) !important;
+  --dsw-specific-sidebar-fill: rgba(48, 52, 68, 0.9) !important;
+  color: var(--animal-body);
+  background-color: #1c2a24;
+  background-image:
+    radial-gradient(circle, rgba(118, 185, 145, 0.2) 1.2px, transparent 1.4px),
+    radial-gradient(circle, rgba(235, 221, 174, 0.11) 0.8px, transparent 1px);
+}
+
+html[data-dsh-animal-island-skin] :where(button, input, textarea, select, [role='button']),
+html[data-dsh-animal-island-skin] :where(input, textarea, [contenteditable='true'], select) {
+  font-family: inherit;
+  transition: color 180ms cubic-bezier(0.4, 0, 0.2, 1), background-color 180ms cubic-bezier(0.4, 0, 0.2, 1), border-color 180ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 180ms cubic-bezier(0.4, 0, 0.2, 1), transform 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 3D treatment is limited to text-bearing controls in stable DSH surfaces. */
+html[data-dsh-animal-island-skin] :where([data-composer-card], [role='dialog'], [role='menu'], [role='listbox']) :where(button:not(:has(svg)), [role='button']:not(:has(svg))) {
+  min-height: 36px;
+  padding-inline: 18px;
+  border: 2px solid var(--animal-border);
+  border-radius: 999px;
+  background: var(--animal-cream);
+  color: var(--animal-ink);
+  box-shadow: 0 4px 0 var(--animal-shadow-button);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+html[data-dsh-animal-island-skin] :where([data-composer-card], [role='dialog'], [role='menu'], [role='listbox']) :where(button:not(:has(svg)), [role='button']:not(:has(svg)):not(:disabled):hover) {
+  border-color: var(--animal-mint);
+  color: var(--animal-mint-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 var(--animal-shadow-button);
+}
+
+html[data-dsh-animal-island-skin] :where([data-composer-card], [role='dialog'], [role='menu'], [role='listbox']) :where(button:not(:has(svg)), [role='button']:not(:has(svg)):active) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--animal-shadow-button);
+}
+
+html[data-dsh-animal-island-skin] :where([data-composer-card], [role='dialog'], [role='menu']) :where(input:not([type='checkbox']):not([type='radio']), textarea, select, [contenteditable='true']) {
+  border: 2.5px solid var(--animal-border-strong);
+  border-radius: 24px;
+  background: #fffbe7;
+  color: var(--animal-ink);
+  box-shadow: 0 3px 0 var(--animal-shadow-input);
+}
+
+html[data-dsh-animal-island-skin] [data-composer-card] :where(input, textarea, select, [contenteditable='true']) {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :where([data-composer-card], [role='dialog'], [role='menu']) :where(input:not([type='checkbox']):not([type='radio']), textarea, select, [contenteditable='true']) {
+  background: #2a2520;
+  color: var(--animal-ink);
+}
+
+html[data-dsh-animal-island-skin] :where(input, textarea, select, [contenteditable='true'])::placeholder {
+  color: var(--animal-muted);
+  opacity: 1;
+}
+
+html[data-dsh-animal-island-skin] :where(button, input, textarea, select, [contenteditable='true'], [role='button']):focus-visible {
+  outline: 3px solid #9c7200 !important;
+  outline-offset: 2px;
+  border-color: var(--animal-mint-deep) !important;
+}
+
+html[data-dsh-animal-island-skin] [data-composer-card],
+html[data-dsh-animal-island-skin] [role='dialog'],
+html[data-dsh-animal-island-skin] [role='menu'],
+html[data-dsh-animal-island-skin] [role='listbox'] {
+  border: 1.5px solid var(--animal-border) !important;
+  border-radius: 24px !important;
+  background: var(--animal-cream) !important;
+  box-shadow: 0 8px 24px var(--animal-shadow-card) !important;
+}
+
+html[data-dsh-animal-island-skin] [data-composer-card] {
+  border-radius: 28px !important;
+  background: #fffbe7 !important;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-composer-card] {
+  background: #2a2520 !important;
+}
+
+html[data-dsh-animal-island-skin] pre {
+  overflow: auto;
+  padding: 20px 24px !important;
+  border: 1px solid #3d3028 !important;
+  border-radius: 20px !important;
+  background: var(--shiki-background, #2b2118) !important;
+  color: var(--shiki-foreground, #e8d5bc) !important;
+  box-shadow: 0 6px 18px rgba(43, 33, 24, 0.2) !important;
+  font-family: var(--animal-code-family) !important;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.7;
+  tab-size: 4;
+}
+
+html[data-dsh-animal-island-skin] :not(pre) > code {
+  border: 1px solid #e8dcc8;
+  border-radius: 10px;
+  background: #f0e8d8;
+  color: #6f451f;
+  padding: 0.12em 0.36em;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :not(pre) > code {
+  border-color: #59493a;
+  background: #362e25;
+  color: #ead9bd;
+}
+
+/* Optional version-scoped header enhancement. Missing hook => original DSH header. */
+html[data-dsh-animal-island-skin] header:has([data-conversation-header-corner]) nav {
+  position: relative;
+  margin-left: 22px !important;
+  padding: 6px 28px 7px !important;
+  border: 0;
+  border-radius: 4px 4px 10px 10px;
+  background: #0f766d !important;
+  color: #fff7df !important;
+  clip-path: polygon(0 0, 100% 0, 100% 74%, 92% 100%, 78% 74%, 22% 74%, 8% 100%, 0 74%) !important;
+  filter: drop-shadow(0 4px 0 #0b5f58) !important;
+  transform: perspective(160px) rotateY(3deg);
+  transform-origin: left center;
+}
+
+html[data-dsh-animal-island-skin] header:has([data-conversation-header-corner]) nav button,
+html[data-dsh-animal-island-skin] header:has([data-conversation-header-corner]) nav button:disabled {
+  color: #fff7df !important;
+  font-weight: 800;
+  text-shadow: none !important;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] header:has([data-conversation-header-corner]) nav {
+  background: #23766f !important;
+  filter: drop-shadow(0 4px 0 #123d39) !important;
+}
+
+.animal-island-brand__mark,
+.animal-island-hero__brand {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.animal-island-brand__mark {
+  filter: drop-shadow(0 2px 0 rgba(61, 52, 40, 0.12));
+}
+
+.animal-island-brand__name {
+  display: grid;
+  min-width: 0;
+  line-height: 1;
+}
+
+.animal-island-brand__name strong {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.animal-island-brand__name small {
+  margin-top: 4px;
+  color: var(--animal-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.animal-island-hero__brand {
+  gap: 10px;
+  color: var(--animal-ink);
+}
+
+.animal-island-hero__wordmark {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-dsh-animal-island-skin] :where(button, input, textarea, select, [role='button'], [contenteditable='true']) {
+    transition-duration: 0.01ms !important;
+  }
+
+  html[data-dsh-animal-island-skin] :where(button, [role='button']):hover,
+  html[data-dsh-animal-island-skin] :where(button, [role='button']):active {
+    transform: none;
+  }
+}

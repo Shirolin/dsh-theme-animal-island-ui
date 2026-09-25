@@ -1,82 +1,88 @@
 # DSH 兼容性说明
 
-## 支持边界
+## 支持基线
 
-本插件针对 DSH 0.1.x 的公开 Web 主题 seam 开发，当前仓库验证基线为 `@deepseek-ai/dsh-client-ui-theme@0.1.5-rc.3`。
+本版本验证基线：
 
-“兼容”指主题使用 DSH 官方 ThemeRuntime 和 CSS custom property token 约定，不依赖私有实现。DSH 当前仍是预发布版本，未知未来 breaking change 无法由第三方插件保证。
+- DSH `0.1.5-rc.3`
+- `@deepseek-ai/dsh-client-ui-theme@0.1.5-rc.3`
+- Sidebar / Conversation / Layout `0.1.5-rc.3`
+- React 18
 
-## 固定基线检查
+DSH 仍处于 0.1.x 预发布阶段。本插件承诺支持已验证的公开 seam，不承诺未知 future major。
+
+## 公开扩展面
+
+- `ctx.theme.overrideTokens(source, {light, dark}) -> disposer`
+- `ctx.slots.inject/register/spec`
+- `sidebar.brand.mark`、`sidebar.brand.name`
+- `conversation.hero.brand.mark`
+- `body[data-ds-dark-theme]`
+- DSH 当前公开 `--dsw-*` / `--shiki-*` token 名称
+
+Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为生产 CSS API。
+
+## 禁止依赖
+
+- DSH 构建 hash class；
+- DSH 私有 `lib/*`；
+- React fiber/container/private internals；
+- `window.__DSH_BOOT__`；
+- 固定 nth-child/祖先深度；
+- `querySelector`、closest、MutationObserver；
+- 合成 click、focus/blur、scrollIntoView；
+- 复制官方组件 DOM 或重写业务状态。
+
+## 检查目标 DSH
+
+固定仓库基线：
 
 ```sh
 pnpm run check:compat
 ```
 
-该命令解析仓库 `devDependencies` 锁定的 ThemeRuntime，输出中的 `source` 为 `repository-devDependency`。它用于保证源码在固定基线上可构建，不自动推断目标 profile 的实际 DSH 安装。
-
-## 检查目标 DSH 安装
-
-部署或升级后，必须把目标 `@deepseek-ai/dsh-client-ui-theme` 包目录显式传给检查脚本：
+目标安装：
 
 ```sh
 node scripts/check-compat.mjs --dsh-package "C:\path\to\@deepseek-ai\dsh-client-ui-theme"
 ```
 
-也可设置：
+或：
 
 ```sh
-DSH_THEME_PACKAGE="C:\path\to\@deepseek-ai\dsh-client-ui-theme"
+DSH_THEME_PACKAGE="C:\path\to\@deepseek-ai\dsh-client-ui-theme" pnpm run check:compat
 ```
 
-此时输出中的 `source` 为 `requested-package`。检查内容包括：
+输出明确区分 `repository-devDependency` 和 `requested-package`，避免用旧仓库依赖冒充目标 DSH 检查。
 
-- `ThemeRuntime` 和 `overrideTokens` 声明存在；
-- `overrideTokens` 的返回类型是 `() => void`；
-- 主题实际发出的全部 `--dsw-*` / `--shiki-*` token 均被目标 DSH 识别；
-- bundle 使用 `overrideTokens`，且不存在 DOM fallback 或 DSH 私有导入。
+检查内容：
 
-## 升级步骤
+- ThemeRuntime 和 disposer 返回类型；
+- `['theme', 'slots']` 服务顺序；
+- provider package 顺序；
+- Sidebar/Brand/Hero Slot 的 kind/scope；
+- 全部已发送 token 是否被目标 DSH 识别；
+- owned style 协议；
+- DOM fallback、Observer 和私有 DSH import。
 
-1. 安装依赖并构建：
+## 降级矩阵
 
-   ```sh
-   pnpm install
-   pnpm run build
-   ```
-
-2. 对目标 DSH 安装运行静态契约检查：
-
-   ```sh
-   node scripts/check-compat.mjs --dsh-package "C:\path\to\@deepseek-ai\dsh-client-ui-theme"
-   ```
-
-3. 运行完整 token、bundle 与生命周期测试：
-
-   ```sh
-   pnpm test
-   ```
-
-4. 将包加入目标 web profile，重启 profile 并刷新 GUI。
-5. 分别验证 Light、Dark、System，检查会话主界面、侧栏、菜单、tooltip、composer、Markdown、代码块、滚动条、窄窗口与长文本。
-6. 重启或卸载主题，确认 token layer 被释放且没有重复覆盖。
-
-## 失败分类
-
-| 现象 | 处理 |
+| 失败 | 行为 |
 | --- | --- |
-| `overrideTokens` 不存在 | 主题安全 no-op；升级入口到新的公开 Theme API |
-| `overrideTokens` 不返回 disposer | 视为不兼容；修复生命周期契约，不能继续注册无法清理的 layer |
-| token 名称消失 | 更新 `src/tokens.ts` 和完整 token manifest；不要添加 DOM fallback |
-| `lib/client.js` 缺失 | 执行 `pnpm run build` |
-| `pending (waiting for service: ...)` | 模块级 `inject` 使用 cordis 服务名 `theme`；包名只写在 manifest |
-| 主题不生效 | 检查 profile 是否提供 ThemeRuntime，并确认安装的是本次构建产物 |
-| HMR 后主题重复 | 检查是否通过 `ctx.effect` 管理 `overrideTokens` 返回的 disposer |
+| ThemeRuntime 缺失/抛错/无 disposer | 整个 skin no-op，DSH 原生继续 |
+| SlotRegistry 缺失 | ThemeRuntime + owned CSS 继续 |
+| Sidebar 根 Slot 改变 | 官方侧栏继续运行；品牌 Slot 独立降级 |
+| 品牌/Hero Slot 缺失 | 官方 fallback 保留 |
+| data hook 消失 | 仅局部增强不匹配 |
+| 字体失败 | 系统 CJK 字体继续 |
+| SVG/CSS 资源失败 | style 不安装，ThemeRuntime 仍可用 |
 
-## 不允许的兼容方案
+## 升级验收
 
-- 不通过 `document.body`、`window` 或产品 DOM selector 写入颜色。
-- 不覆盖 DSH 生成的 hash class。
-- 不直接 import DSH 安装目录中的私有 `lib/*`。
-- 不修改 DSH 核心样式表。
-- 不把固定开发基线的通过结果冒充为目标 DSH 已通过检查。
-- 不把 `console` 诊断当作成功状态。
+1. 更新本仓库固定 DSH devDependency。
+2. 运行 `pnpm run check`。
+3. 对目标 DSH 路径运行 `check:compat`。
+4. 安装 clean `.tgz` 并完整重启 Web。
+5. 验证 Light / Dark / System、hero/active、idle/streaming/tool/error、附件、菜单、设置、wide/rail、窄屏、代码和 reduced-motion。
+6. 连续执行 20 次 apply/dispose，确认 style、根属性和 Slot 不重复。
+7. 任一公开 Slot/token 契约变化必须更新实现和视觉回归，不允许加入 hash/DOM workaround 掩盖问题。

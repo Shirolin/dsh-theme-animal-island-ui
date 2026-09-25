@@ -17,6 +17,7 @@ export interface Palette {
   bg: string
   surface: string
   surfaceAlt: string
+  surfaceDeep: string
   overlay: string
   fg: string
   body: string
@@ -27,6 +28,8 @@ export interface Palette {
   accent: string
   accentText: string
   accentHover: string
+  primaryButton: string
+  primaryButtonHover: string
   info: string
   error: string
   success: string

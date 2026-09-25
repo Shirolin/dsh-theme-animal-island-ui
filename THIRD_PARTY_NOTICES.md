@@ -2,8 +2,40 @@
 
 ## animal-island-ui
 
-本项目在视觉方向上参考了 [guokaigdg/animal-island-ui](https://github.com/guokaigdg/animal-island-ui)，包括奶油纸张背景、暖棕文字、薄荷绿强调、浅蓝紫侧栏与柔和状态色。
+本项目在视觉方向和交互节奏上参考了 `guokaigdg/animal-island-ui`，固定审查基线为 commit `29051196bd7586d4484b55431b03178e6046fa64`、版本 2.0.0。
 
-该项目声明采用 CC BY-NC 4.0，并限制商业使用。本插件没有复制其源代码、字体文件、图片、插画、组件实现或完整运行时 token；本项目的 TypeScript 代码、DSH token 映射、测试和文档均为独立实现。
+本插件没有复制其源代码、组件实现、Logo、字体文件、插画、照片或完整 CSS。色板关系、波点规格、原创波浪、岛标、绶带几何、DSH token 映射和 Sidebar 集成均为本项目实现；按钮的轻微上浮/下沉和像素阴影属于受其 MIT 许可设计语言启发，本项目以 DSH 公开组件边界重新实现。
 
-如果未来需要引入该项目的任何资源，必须先重新确认目标用途符合其许可证，并补充相应归属声明。
+上游版权与许可：
+
+```text
+MIT License
+
+Copyright (c) 2026 guokaigdg
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## Nunito
+
+构建时内嵌 `@fontsource/nunito` 提供的 Nunito Latin WOFF2。Nunito 由 The Nunito Project Authors 创作，采用 SIL Open Font License 1.1。完整许可证见 `licenses/Nunito-OFL.txt`。
+
+## Original resources
+
+`src/client/assets/sidebar-wave.svg`、React Brand/Hero Mark 和 skin CSS geometry 为本项目原创资源，随本插件 MIT License 发布。

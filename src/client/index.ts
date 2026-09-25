@@ -1,31 +1,23 @@
 import { buildTokenOverrides } from '../tokens.ts'
 import type { TokenPairs } from '../types.ts'
+import type { ClientContextLike } from './context.ts'
+import { installOwnedSkin } from './install.ts'
+import { installPublicSlots } from './slots.ts'
 
 export type ThemeTokenOverrides = TokenPairs
 
-interface ThemeRuntimeLike {
-  overrideTokens(source: string, tokens: ThemeTokenOverrides): () => void
-}
-
-interface ClientContextLike {
-  theme?: ThemeRuntimeLike
-  effect(effect: () => () => void, name?: string): unknown
-}
-
-// Module-level inject lists cordis SERVICE names. The package name belongs only
-// in package.json's dsh.client.inject manifest; ThemeRuntime provides 'theme'.
-export const inject = ['theme']
+// Module-level inject uses Cordis service names. Package-level provider ordering
+// lives in package.json's dsh.client.inject manifest.
+export const inject = ['theme', 'slots']
 
 export const THEME_SOURCE = 'dsh-theme-animal-island-ui:palette'
 
-/** Apply one semantic token layer to DSH's public ThemeRuntime seam. */
-export function apply(ctx: ClientContextLike): void {
+function applyThemeLayer(ctx: ClientContextLike): boolean {
   const theme = ctx.theme
   const overrideTokens = theme?.overrideTokens
-
   if (typeof overrideTokens !== 'function') {
-    console.warn('[dsh-theme-animal-island-ui] DSH ThemeRuntime.overrideTokens is unavailable; theme skipped')
-    return
+    console.warn('[dsh-theme-animal-island-ui] DSH ThemeRuntime.overrideTokens is unavailable; skin skipped')
+    return false
   }
 
   let dispose: unknown
@@ -33,15 +25,23 @@ export function apply(ctx: ClientContextLike): void {
     dispose = overrideTokens.call(theme, THEME_SOURCE, buildTokenOverrides())
   } catch (error) {
     console.warn('[dsh-theme-animal-island-ui] token layer could not be registered:', error)
-    return
+    return false
   }
 
   if (typeof dispose !== 'function') {
-    console.warn('[dsh-theme-animal-island-ui] ThemeRuntime.overrideTokens did not return a disposer; theme skipped')
-    return
+    console.warn('[dsh-theme-animal-island-ui] ThemeRuntime.overrideTokens did not return a disposer; skin skipped')
+    return false
   }
 
   ctx.effect(() => dispose as () => void, 'animal-island-ui-theme:overrideTokens')
+  return true
+}
+
+/** Apply the coordinated token, owned-style, and public-slot skin layers. */
+export function apply(ctx: ClientContextLike): void {
+  if (!applyThemeLayer(ctx)) return
+  installOwnedSkin(ctx)
+  installPublicSlots(ctx)
 }
 
 export { buildTokenOverrides }

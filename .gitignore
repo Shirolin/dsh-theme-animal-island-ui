@@ -1,15 +1,37 @@
+# Dependencies
 node_modules/
 .pnpm-store/
+
+# Generated packages and test output
 *.tgz
-*.log
-.DS_Store
-.env
-.env.*
+*.tsbuildinfo
+.cache/
 coverage/
+.nyc_output/
+
+# Local DSH and browser smoke artifacts
+.dsh/
 .chrome-smoke/
 *-smoke.png
 artifacts/*
 !artifacts/README.md
 docs/palette-preview.png
-docs/palette-preview-0.1.1.png
-docs/palette-preview-0.1.2.png
+docs/palette-preview-*.png
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

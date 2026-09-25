@@ -9,6 +9,7 @@ import {
 } from '../lib/tokens.js'
 
 const EXPECTED_TOKENS = `
+--ds-font-family-code
 --dsw-alias-bg-base
 --dsw-alias-bg-layer-1
 --dsw-alias-bg-layer-2
@@ -43,6 +44,7 @@ const EXPECTED_TOKENS = `
 --dsw-alias-button-info-fill
 --dsw-alias-button-info-hover
 --dsw-alias-button-primary-dimmed
+--dsw-alias-button-primary-fill
 --dsw-alias-button-primary-hover
 --dsw-alias-button-tool-bar-fill
 --dsw-alias-button-tool-bar-fill-invisible
@@ -61,6 +63,7 @@ const EXPECTED_TOKENS = `
 --dsw-alias-label-primary-inverted
 --dsw-alias-label-secondary
 --dsw-alias-label-tertiary
+--dsw-alias-link
 --dsw-alias-markdown-citation
 --dsw-alias-markdown-code-block
 --dsw-alias-markdown-code-block-banner
@@ -86,6 +89,12 @@ const EXPECTED_TOKENS = `
 --dsw-alias-state-warn-tertiary
 --dsw-alias-toast-bg
 --dsw-alias-tooltip-bg
+--dsw-elevation-panel
+--dsw-elevation-prominent
+--dsw-elevation-soft
+--dsw-elevation-stroke
+--dsw-elevation-stroke-color
+--dsw-font-family
 --dsw-linear-gradient-think
 --dsw-linear-think-select
 --dsw-shadow-lv1
@@ -139,7 +148,13 @@ test('token payload has complete light and dark pairs', () => {
     assert.ok(payload[name], `missing ${name}`)
     for (const mode of ['light', 'dark']) {
       const value = payload[name][mode]
-      if (name.startsWith('--dsw-shadow-') || name.startsWith('--dsw-linear-')) {
+      if (
+        name === '--ds-font-family-code'
+        || name === '--dsw-font-family'
+        || name.startsWith('--dsw-shadow-')
+        || name.startsWith('--dsw-elevation-')
+        || name.startsWith('--dsw-linear-')
+      ) {
         assert.equal(typeof value, 'string')
         assert.ok(value.length > 0)
       } else {
@@ -153,11 +168,15 @@ test('token payload has complete light and dark pairs', () => {
 test('light mode follows the canonical Animal Island palette with readable semantic derivatives', () => {
   const payload = buildTokenOverrides()
   assert.equal(payload['--dsw-alias-bg-base'].light, '#f8f8f0')
-  assert.equal(payload['--dsw-alias-bg-layer-1'].light, '#f7f3df')
+  assert.equal(payload['--dsw-alias-bg-layer-1'].light, '#ffffff')
+  assert.equal(payload['--dsw-alias-bg-layer-2'].light, '#f7f3df')
+  assert.equal(payload['--dsw-alias-bg-layer-3'].light, '#f0e8d8')
   assert.equal(payload['--dsw-alias-brand-primary'].light, '#19c8b9')
   assert.equal(payload['--dsw-alias-state-business-primary'].light, '#0b7f75')
   assert.equal(payload['--dsw-alias-label-primary'].light, '#6f451f')
   assert.equal(payload['--dsw-alias-label-secondary'].light, '#654a2f')
+  assert.equal(payload['--dsw-alias-button-primary-fill'].light, '#f8f8f0')
+  assert.equal(payload['--shiki-background'].light, '#2b2118')
   assert.equal(payload['--dsw-specific-sidebar-nav-item-active'].light, '#b7c6e5')
   assert.equal(payload['--dsw-specific-sidebar-nav-item-hover'].light, '#d6dff0')
 })
@@ -178,6 +197,12 @@ test('normal text, business accents, and states remain readable on their real su
     ]) {
       assertContrast(payload[name][mode], payload['--dsw-alias-bg-base'][mode], `${mode} ${name}`)
     }
+
+    assertContrast(
+      payload['--dsw-alias-label-primary-foreground'][mode],
+      payload['--dsw-alias-button-primary-fill'][mode],
+      `${mode} primary button foreground`,
+    )
 
     for (const name of ['--dsw-alias-label-primary', '--dsw-alias-label-secondary']) {
       for (const surface of [

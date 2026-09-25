@@ -1,55 +1,91 @@
-# 一动森主题设计映射
+# 一动森 v0.2.5 设计映射
 
-## 设计基线
+## 参考基线
 
-主题以 [Animal Island UI](https://guokaigdg.github.io/animal-island-ui/) 的公开设计文档为方向来源：
+本项目将 `guokaigdg/animal-island-ui` commit `29051196bd7586d4484b55431b03178e6046fa64`（版本 2.0.0）作为视觉参考。该 commit 使用 MIT License。
 
-- [Design Tokens](https://github.com/guokaigdg/animal-island-ui/blob/main/docs/design-system/design-tokens.md)
-- [CSS Variables](https://github.com/guokaigdg/animal-island-ui/blob/main/docs/design-system/css-variables.md)
-- [Design Rules](https://github.com/guokaigdg/animal-island-ui/blob/main/docs/design-system/design-rules.md)
+只提炼色相、表面层级、圆润和游戏反馈等抽象关系；波点规格、波浪路径、岛标、绶带几何和 CSS 均由本项目重新设计，不复制参考资源。
 
-本项目只把颜色语言翻译到 DSH 公开的 `--dsw-*` 和 `--shiki-*` token，不声称完整还原参考组件库。
+## 三层实现
 
-## Light palette
-
-| 角色 | 值 | DSH 映射 |
-| --- | --- | --- |
-| 奶油纸背景 | `#f8f8f0` | bg base |
-| 内容纸面 | `#f7f3df` | bg layer 1 |
-| 嵌套纸面 | `#f0e8d8` | bg layer 2 |
-| 输入高光 | `#fffbe7` | overlay / menu |
-| 暖棕主文字 | `#6f451f` | label primary / brand text |
-| 暖棕正文 | `#654a2f` | label secondary |
-| 辅助文字 | `#75634d` | label tertiary |
-| caption | `#7c684d` | label caption |
-| 品牌填充 | `#19c8b9` | brand primary / primary button |
-| 业务文字与链接 | `#0b7f75` | business state / DeepSeek link ramp |
-| 侧栏底色 | `#e8edf9` | sidebar fill |
-| 侧栏 hover | `#d6dff0` | nav item hover |
-| 侧栏 active | `#b7c6e5` | nav item active |
-| 气泡底色 | `#e6f9f6` | assistant bubble |
-
-Animal Island 的 canonical 薄荷色对比度不足以直接承担 DSH 的 11–14px 业务文字和 focus outline，因此 0.1.3 将品牌填充与语义文字拆开：按钮和大色块继续使用 `#19c8b9`，文字、链接和 focus 使用同色相的 `#0b7f75`。辅助文字也使用独立可读色阶，而不是简单把 canonical 弱化色叠到背景上。
-
-状态色保留参考项目的草绿、黄色、珊瑚红色相；light 模式使用可承载小字的深阶。所有普通文字、业务强调和代码 token 均由测试验证至少 4.5:1。
-
-## Dark palette
-
-Dark 是独立的暖色夜间方案：深暖棕背景、奶油前景、较亮的薄荷品牌色、蓝紫侧栏和更高的 caption 对比度。它不复用 Ember Dusk 的背景、暗紫侧栏或强调色。
-
-## 能力边界
-
-可以稳定实现：
+### ThemeRuntime
 
 - 背景、表面、边框、文字、状态色；
-- 菜单、侧栏、tooltip、bubble、Markdown 和代码高亮；
-- Light / Dark / System token 切换。
+- Sidebar 底色与 hover/active；
+- 按钮、链接、字体栈、elevation；
+- Markdown、inline code、完整代码块和 Shiki；
+- Light / Dark / System 由 DSH 解析。
 
-仅靠 ThemeRuntime 不完整实现：
+### 自有 skin
 
-- DSH 全局 pill 圆角；
-- 所有按钮的 3D 阴影与按压位移；
-- 插画、图标、布局装饰和组件结构；
-- 外部字体加载。
+- 原创绿色波点画布；
+- 侧栏底部原创波浪装饰；
+- 品牌、hero、button、input、composer、dialog、code 的 scoped CSS；
+- 内嵌 Nunito Latin WOFF2；
+- 唯一根属性和 style 由 `ctx.effect()` 对称清理。
 
-这些能力若未来需要，必须先确认 DSH 提供公开组件 Slot 或样式扩展点，禁止通过私有 hash class 或全局 DOM selector 硬改。
+### 公开 Slot
+
+- 保留 DSH 官方 `sidebar` 根组件及其工作区、设置、footer、事件和滚动行为；
+- 只替换 `sidebar.brand.mark`、`sidebar.brand.name`、`conversation.hero.brand.mark`；
+- 不接管 root、sidebar、main、conversation session、composer 编辑器或事件行为。
+
+## Light 色板
+
+| 角色 | 值 | 用途 |
+| --- | --- | --- |
+| 波点画布 | `#8fcaa5` | 页面外层 |
+| 主内容 | `rgba(248,248,240,.90)` | 暖白半透明中心 |
+| 白色表面 | `#ffffff` | 主卡片 |
+| 奶油表面 | `#f7f3df` | 内容层、inline code |
+| 输入高光 | `#fffbe7` | composer、输入 |
+| 主文字 | `#6f451f` | 标题、侧栏 |
+| 正文 | `#654a2f` | 卡片和会话 |
+| 辅助文字 | `#75634d` | 12–14px 弱化文本 |
+| caption | `#7c684d` | placeholder/helper |
+| 品牌薄荷 | `#19c8b9` | 绶带、focus、装饰 |
+| 深薄荷 | `#0b7f75` | 链接和 business text |
+| Sidebar | `#faf8f3` | 浮动侧栏 |
+| Hover | `#d6dff0` | 导航 hover |
+| Active | `#b7c6e5` | 导航选中 |
+| 波浪 | `#a2b0e7` | 侧栏底部原创 SVG |
+| 代码背景 | `#2b2118` | 完整代码块 |
+| 代码前景 | `#e8d5bc` | 代码正文 |
+
+主文字使用比参考 canonical 更深的暖棕，以在 `#b7c6e5` active 背景上达到 4.5:1。品牌薄荷不直接承担白色小字或 11px 文字。
+
+## Dark
+
+Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
+
+- 暖黑半透明内容面；
+- 深蓝紫侧栏与波浪；
+- 亮薄荷 brand/business；
+- 深棕代码岛；
+- 绿色波点改为低对比深青绿。
+
+## 形状与反馈
+
+- Sidebar：18px 圆角、2px 白边、暖色 soft shadow；
+- Header ribbon：薄荷正面、深色折角、轻微 3D；
+- 文本按钮：pill、2px 暖边、4px 立体底边；
+- 输入/contenteditable：24px 圆角、2.5px 边、3px 输入底边；
+- Composer/dialog/menu：24–28px 圆角；
+- Code：20px 圆角、20/24px padding；
+- Hover 上浮 1px，active 下沉 2px；
+- `prefers-reduced-motion` 禁用非必要位移。
+
+## 原创资源
+
+- `src/client/assets/sidebar-wave.svg`：本项目原创贝塞尔路径；
+- Brand/Hero Mark：React 内联原创 SVG；
+- 波点：30px/15px 的原创双点阵；
+- 没有使用参考项目 Logo、照片、插画、图标包或 GROBOLD 字体。
+
+## 能力降级
+
+- Slot 服务缺失：ThemeRuntime 和自有 style 继续生效。
+- Sidebar Slot 契约改变：拒绝接管，官方 Sidebar 保留。
+- CSS semantic hook 消失：仅丢失绶带或局部圆角/阴影。
+- 字体/图片失败：系统字体和纯 CSS 背景兜底。
+- ThemeRuntime 不兼容：整个 skin 安全 no-op，原生 DSH 继续运行。

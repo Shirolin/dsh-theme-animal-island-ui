@@ -1,5 +1,7 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import ts from 'typescript'
+import { build } from 'esbuild'
+import { transform } from 'lightningcss'
 
 const configFile = ts.readConfigFile('tsconfig.types.json', ts.sys.readFile)
 if (configFile.error) {
@@ -19,6 +21,7 @@ if (diagnostics.length > 0) {
   process.exit(1)
 }
 
+await rm('lib', { recursive: true, force: true })
 await mkdir('lib/types', { recursive: true })
 const emit = program.emit()
 if (emit.emitSkipped) {
@@ -26,59 +29,92 @@ if (emit.emitSkipped) {
   process.exit(1)
 }
 
-const compilerOptions = {
-  target: ts.ScriptTarget.ES2022,
-  module: ts.ModuleKind.ESNext,
-  isolatedModules: true,
-  removeComments: false,
-}
-
 async function transpile(file) {
   const source = await readFile(file, 'utf8')
-  const result = ts.transpileModule(source, { compilerOptions, fileName: file })
+  const result = ts.transpileModule(source, {
+    compilerOptions: {
+      target: ts.ScriptTarget.ES2022,
+      module: ts.ModuleKind.ESNext,
+      isolatedModules: true,
+      removeComments: false,
+    },
+    fileName: file,
+  })
   return result.outputText.replace(/(["'])([^"']+)\.ts\1/g, '$1$2.js$1')
 }
 
-const [index, palette, tokens, client] = await Promise.all([
+const [index, palette, tokens] = await Promise.all([
   transpile('src/index.ts'),
   transpile('src/palette.ts'),
   transpile('src/tokens.ts'),
-  transpile('src/client/index.ts'),
 ])
 
-await writeFile('lib/index.js', index)
-await writeFile('lib/palette.js', palette)
-await writeFile('lib/tokens.js', tokens)
+await Promise.all([
+  writeFile('lib/index.js', index),
+  writeFile('lib/palette.js', palette),
+  writeFile('lib/tokens.js', tokens),
+])
 
-function assertLocalImports(file, source, allowed) {
-  const parsedSource = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS)
-  const imports = parsedSource.statements
-    .filter(ts.isImportDeclaration)
-    .map((statement) => statement.moduleSpecifier.text)
-  const unexpected = imports.filter((specifier) => !allowed.includes(specifier))
-  if (unexpected.length > 0) {
-    throw new Error(`${file} contains unsupported runtime imports: ${unexpected.join(', ')}`)
-  }
-}
+const fontWeights = [400, 500, 600, 700, 800, 900]
+const fontCss = await Promise.all(fontWeights.map(async (weight) => {
+  const file = `node_modules/@fontsource/nunito/files/nunito-latin-${weight}-normal.woff2`
+  const data = (await readFile(file)).toString('base64')
+  return `@font-face{font-family:Nunito;font-style:normal;font-display:swap;font-weight:${weight};src:url(data:font/woff2;base64,${data}) format("woff2")}`
+}))
 
-assertLocalImports('src/palette.ts', palette, [])
-assertLocalImports('src/tokens.ts', tokens, ['./palette.js'])
-assertLocalImports('src/client/index.ts', client, ['../tokens.js'])
+const skinCss = await readFile('src/client/skin.css', 'utf8')
+const waveSvg = await readFile('src/client/assets/sidebar-wave.svg', 'utf8')
+const waveDataUri = `data:image/svg+xml,${encodeURIComponent(waveSvg)}`
+const transformedCss = transform({
+  filename: 'skin.css',
+  code: Buffer.from(skinCss.replaceAll('__ANIMAL_ISLAND_WAVE__', waveDataUri)),
+  minify: false,
+  sourceMap: false,
+})
+const ownedSkinCss = [...fontCss, transformedCss.code.toString()].join('\n')
 
-/**
- * The client half has no external runtime imports. Strip local module statements and
- * combine the local modules into the DSH Module Loader factory contract. DSH's
- * ThemeRuntime implementation is deliberately not embedded.
- */
-function browserModule(source) {
-  return source
-    .replace(/^import\s+[^;]+;\s*$/gm, '')
-    .replace(/^export\s*\{[^}]*\}\s*;?\s*$/gm, '')
-    .replace(/^export\s+/gm, '')
-}
+const result = await build({
+  entryPoints: ['src/client-entry.ts'],
+  outfile: 'lib/client.js',
+  bundle: true,
+  write: false,
+  format: 'cjs',
+  platform: 'browser',
+  target: ['es2022'],
+  jsx: 'automatic',
+  external: ['react', 'react/jsx-runtime'],
+  sourcemap: false,
+  legalComments: 'none',
+  logLevel: 'silent',
+  plugins: [{
+    name: 'animal-island-owned-assets',
+    setup(context) {
+      context.onResolve({ filter: /^virtual:animal-island-skin-css$/ }, () => ({
+        path: 'animal-island-skin-css',
+        namespace: 'animal-island-skin',
+      }))
+      context.onLoad({ filter: /.*/, namespace: 'animal-island-skin' }, () => ({
+        contents: `export const SKIN_CSS = ${JSON.stringify(ownedSkinCss)}`,
+        loader: 'ts',
+        resolveDir: process.cwd(),
+      }))
+    },
+  }],
+})
 
-const clientBody = [palette, tokens, client].map(browserModule).join('\n')
-const clientBundle = `(() => {\n  globalThis.__ModuleLoader__?.load({\n    id: 'dsh-theme-animal-island-ui',\n    factory: () => {\n${clientBody}\n      return { inject, apply }\n    },\n  })\n})()\n`
+const clientModule = result.outputFiles.find((file) => file.path.endsWith('.js'))
+if (!clientModule) throw new Error('esbuild did not emit the client module')
+
+const clientBundle = `globalThis.__ModuleLoader__?.load({
+  id: 'dsh-theme-animal-island-ui',
+  factory: (require) => {
+    var module = { exports: {} }
+    var exports = module.exports
+${clientModule.text}
+    return module.exports
+  },
+})
+`
 await writeFile('lib/client.js', clientBundle)
 
-console.log('Built lib/index.js, lib/palette.js, lib/tokens.js, lib/client.js and declarations.')
+console.log('Built host/token modules, declarations, and the esbuild client skin bundle.')

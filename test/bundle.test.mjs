@@ -4,30 +4,48 @@ import { readFile } from 'node:fs/promises'
 
 const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
 
-test('package exposes DSH client and host bundle entries', () => {
-  assert.equal(packageJson.name, 'dsh-theme-animal-island-ui')
+test('package exposes DSH client, provider ordering, peers, and prepack', () => {
+  assert.equal(packageJson.version, '0.2.5')
   assert.equal(packageJson.dsh.client.platform, 'web')
-  assert.ok(packageJson.dsh.client.inject.includes('@deepseek-ai/dsh-client-ui-theme'))
+  assert.deepEqual(packageJson.dsh.client.inject, [
+    '@deepseek-ai/dsh-client-ui-theme',
+    '@deepseek-ai/dsh-client-ui-renderer',
+    '@deepseek-ai/dsh-client-ui-sidebar',
+    '@deepseek-ai/dsh-client-ui-conversation',
+  ])
   assert.equal(packageJson.exports['./client'].default, './lib/client.js')
   assert.equal(packageJson.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(packageJson.scripts.prepack, 'pnpm run build')
+  assert.equal(packageJson.peerDependencies, undefined)
 })
 
-test('built client uses the loader protocol and public theme seam', async () => {
+test('built client uses the DSH factory(require) and owned style protocols', async () => {
   const bundle = await readFile(new URL('../lib/client.js', import.meta.url), 'utf8')
   assert.match(bundle, /__ModuleLoader__/)
+  assert.match(bundle, /factory:\s*\(require\)/)
   assert.match(bundle, /overrideTokens/)
-  assert.match(bundle, /dsh-theme-animal-island-ui/)
-  assert.doesNotMatch(bundle, /document\.body|document\.querySelector|window\.__DSH_BOOT__/)
-  assert.doesNotMatch(bundle, /@deepseek-ai\/dsh-client-ui-theme\/lib\//)
+  assert.match(bundle, /data-dsh-animal-island-skin/)
+  assert.match(bundle, /data-plugin-css/)
+  assert.match(bundle, /sidebar\.brand\.mark/)
 })
 
-test('published client declarations are self-contained', async () => {
+test('built client excludes brittle DOM, private runtime, and React internals', async () => {
+  const bundle = await readFile(new URL('../lib/client.js', import.meta.url), 'utf8')
+  assert.doesNotMatch(bundle, /document\.querySelector|document\.closest|\.closest\(/)
+  assert.doesNotMatch(bundle, /MutationObserver|ResizeObserver/)
+  assert.doesNotMatch(bundle, /window\.__DSH_BOOT__|__react|ReactDOM|hydrateRoot|createRoot/)
+  assert.doesNotMatch(bundle, /@deepseek-ai\/dsh-[^/]+\/lib\//)
+  assert.doesNotMatch(bundle, /(?<![A-Za-z0-9_-])\.[A-Za-z][A-Za-z0-9-]*_[A-Za-z0-9]{5,}(?![A-Za-z0-9_-])/)
+})
+
+test('published client declaration stays self-contained', async () => {
   const declaration = await readFile(new URL('../lib/types/client/index.d.ts', import.meta.url), 'utf8')
   assert.doesNotMatch(declaration, /from ['"]@deepseek-ai\//)
+  assert.doesNotMatch(declaration, /from ['"]react(?:\/|['"])/)
 })
 
-test('built client does not embed the DSH runtime implementation', async () => {
+test('built client does not embed DSH ThemeRuntime or Sidebar implementations', async () => {
   const bundle = await readFile(new URL('../lib/client.js', import.meta.url), 'utf8')
   assert.doesNotMatch(bundle, /class ThemeRuntime|function ThemeRuntime/)
+  assert.doesNotMatch(bundle, /class SidebarRoot|function SidebarRoot/)
 })

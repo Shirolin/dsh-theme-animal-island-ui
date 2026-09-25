@@ -3,6 +3,7 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "jsx": "react-jsx",
     "strict": true,
     "skipLibCheck": true,
     "declaration": true,
@@ -13,7 +14,7 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "lib": ["ES2022", "DOM"],
-    "types": ["node"]
+    "types": ["node", "react"]
   },
-  "include": ["src/index.ts", "src/client/index.ts", "src/types.ts", "src/palette.ts", "src/tokens.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
