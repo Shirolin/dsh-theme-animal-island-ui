@@ -4,7 +4,7 @@
 
 本项目将 `guokaigdg/animal-island-ui` commit `29051196bd7586d4484b55431b03178e6046fa64`（版本 2.0.0）作为视觉参考。该 commit 使用 MIT License。
 
-只提炼色相、表面层级、圆润和游戏反馈等抽象关系；波点规格、波浪路径、岛标、绶带几何和 CSS 均由本项目重新设计，不复制参考资源。
+只提炼色相、表面层级、圆润和游戏反馈等抽象关系；波点规格、波浪路径、岛标和整体 CSS 均由本项目重新设计。标题绶带沿用参考 `Title` 的三层构造（正面主体 + 燕尾 + 折角三角），但实现是本项目在 DSH 的 `nav` 与两个伪元素上重写的，没有复制参考代码。
 
 ## 三层实现
 
@@ -67,11 +67,12 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 ## 形状与反馈
 
 - Sidebar：18px 圆角、2px 白边、暖色 soft shadow；
-- Header ribbon：薄荷正面、深色折角、轻微 3D；
+- Header ribbon：参考 `Title` 的三层构造 —— 薄荷正面主体（`::after`）+ 深青燕尾与折角三角（`::before`：燕尾走 `clip-path`，折角用两枚渐变三角）；三层全部收在 `nav` 盒内，因为 DSH 的 `.crumbs` 是 `overflow: hidden`；
 - 文本按钮：pill、2px 暖边、4px 立体底边；
 - 输入/contenteditable：24px 圆角、2.5px 边、3px 输入底边；
 - DSH 组合式输入（`span > 图标 + input`）：由外壳承担输入外观，内部 `input` 保持透明，键盘焦点环随之移到外壳，避免同一字段出现两层边框；
-- Composer/dialog/menu：24–28px 圆角；
+- Composer/dialog：24–28px 圆角、奶油卡片；菜单/弹出层不套这层卡片外观，沿用 DSH 自己的弹出chrome，表面取 `--dsw-specific-menu`（= `surface` 白，避免和 composer 的 `#fffbe7` 糊成一片）；
+- 弹出层行列高亮（`[role='option'|'menuitem']` 的 hover / `aria-selected`）用薄荷 `--dsw-alias-interactive-bg-hover-accent`；通用的 `--dsw-alias-interactive-bg-hover` 保持 periwinkle，因为侧栏会话行与它共用；
 - Code：20px 圆角、20/24px padding；
 - Hover 上浮 1px，active 下沉 2px；
 - `prefers-reduced-motion` 禁用非必要位移。

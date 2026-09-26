@@ -25,6 +25,9 @@ test('skin uses only the reviewed stable data hooks', () => {
     'composer-card',
     'conversation-header-corner',
     'state',
+    // DSH's own composer trigger panel (input-trigger MenuView) carries this
+    // attribute for its dismiss logic, so the skin can key popover chrome off it.
+    'trigger-menu',
   ])
   assert.deepEqual([...new Set(hooks)].filter((hook) => !allowed.has(hook)), [])
 })

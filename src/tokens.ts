@@ -190,7 +190,9 @@ export function buildTokens(palette: Palette, mode: Mode): TokenMap {
     '--dsw-specific-bubble-highlight': mix(palette.bubble, accent, 0.28),
     '--dsw-specific-input-major': surface,
     '--dsw-specific-login-input': lift(bg, fg, 0.03),
-    '--dsw-specific-menu': palette.overlay,
+    // Popovers float above the composer card, whose highlight is #fffbe7; a menu
+    // reusing that colour merges into it, so menus get the plain surface.
+    '--dsw-specific-menu': surface,
     '--dsw-specific-selector': lift(surface, fg, 0.05),
     '--dsw-specific-sidebar-fill': palette.sidebar,
     '--dsw-specific-sidebar-nav-item-hover': palette.sidebarHover,
