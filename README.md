@@ -1,10 +1,10 @@
 # DSH Animal Island UI Theme
 
-`Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin。0.3.1 在 ThemeRuntime 色彩层之上增加了插件自有 CSS、原创资源和 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
+`Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin。0.3.3 在 ThemeRuntime 色彩层之上增加了插件自有 CSS、原创资源和 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 
-## v0.3.1 视觉范围
+## v0.3.3 视觉范围
 
 - 绿色双层波点画布；
 - 奶油白侧栏、蓝紫底部波浪与原创岛标；
@@ -65,10 +65,10 @@ pnpm install
 pnpm pack
 ```
 
-`prepack` 会自动重建 `lib`。0.3.1 的规范产物为：
+`prepack` 会自动重建 `lib`。0.3.3 的规范产物为：
 
 ```text
-artifacts/release-v0.3.1/dsh-theme-animal-island-ui-0.3.1.tgz
+artifacts/release-v0.3.3/dsh-theme-animal-island-ui-0.3.3.tgz
 ```
 
 将 `.tgz` 加入目标 `web` profile 后，完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用用于回滚。
@@ -88,6 +88,8 @@ node scripts/check-compat.mjs --dsh-package "C:\path\to\@deepseek-ai\dsh-client-
 ```
 
 也可设置 `DSH_THEME_PACKAGE`。检查覆盖 ThemeRuntime disposer、全部 token、服务/Provider 顺序、公开 Slot 类型、DOM fallback、Observer 和私有导入。详见 [docs/compatibility.md](docs/compatibility.md) 与 [docs/design.md](docs/design.md)。
+
+侧栏「会话列表」整块空白但有品牌和 `新会话` 时，先按 [docs/session-list-blank.md](docs/session-list-blank.md) 的判定点走一遍：那种现象来自 DSH 自身的槽错误边界与持久化快照形状，不属于皮肤的作用面。
 
 ## 许可证与来源
 

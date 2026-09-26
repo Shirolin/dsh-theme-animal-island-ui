@@ -1,4 +1,4 @@
-# 一动森 v0.3.1 设计映射
+# 一动森 v0.3.3 设计映射
 
 ## 参考基线
 
@@ -70,6 +70,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - Header ribbon：薄荷正面、深色折角、轻微 3D；
 - 文本按钮：pill、2px 暖边、4px 立体底边；
 - 输入/contenteditable：24px 圆角、2.5px 边、3px 输入底边；
+- DSH 组合式输入（`span > 图标 + input`）：由外壳承担输入外观，内部 `input` 保持透明，键盘焦点环随之移到外壳，避免同一字段出现两层边框；
 - Composer/dialog/menu：24–28px 圆角；
 - Code：20px 圆角、20/24px padding；
 - Hover 上浮 1px，active 下沉 2px；

@@ -74,7 +74,7 @@ html[data-dsh-animal-island-skin] :where(input, textarea, [contenteditable='true
 }
 
 /* 3D treatment is limited to text-bearing controls in stable DSH surfaces. */
-html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not(:has(svg))) {
+html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg))) {
   min-height: 36px;
   padding-inline: 18px;
   border: 2px solid var(--animal-border);
@@ -86,16 +86,30 @@ html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-p
   letter-spacing: 0.01em;
 }
 
-html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not(:has(svg)):not(:disabled):hover) {
+html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)):not(:disabled):hover) {
   border-color: var(--animal-mint);
   color: var(--animal-mint-deep);
   transform: translateY(-1px);
   box-shadow: 0 5px 0 var(--animal-shadow-button);
 }
 
-html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not(:has(svg)):active) {
+html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)):active) {
   transform: translateY(2px);
   box-shadow: 0 1px 0 var(--animal-shadow-button);
+}
+
+/* Hard guard: no control that lives inside a menu, listbox, or options layer
+   may ever receive the composer's 3D pill treatment, regardless of role. */
+html[data-dsh-animal-island-skin] [data-composer-card] :where([role='menu'], [role='listbox'], [role='options']) button {
+  min-height: 0;
+  padding-inline: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-weight: inherit;
+  letter-spacing: normal;
+  transform: none;
 }
 
 /* Reserve vertical space in the settings header for the open-config-file
@@ -123,9 +137,40 @@ html[data-dsh-animal-island-skin] [data-composer-card] :where(input, textarea, s
   box-shadow: none;
 }
 
+/* DSH composes most dialog fields as a shell that already draws the box:
+   span > icon + input. Painting the inner input as well produced a second box
+   inside the shell, so the shell carries the field look and the input inside it
+   stays transparent. Only the shell's own box changes; DSH keeps its padding,
+   so callers that reserve room for a trailing control still work. */
+html[data-dsh-animal-island-skin] :where([role='dialog'], [role='menu']) span:has(> input:not([type='checkbox']):not([type='radio']):not([type='hidden'])) {
+  box-sizing: border-box;
+  border: 2.5px solid var(--animal-border-strong);
+  border-radius: 24px;
+  background: #fffbe7;
+  box-shadow: 0 3px 0 var(--animal-shadow-input);
+}
+
+html[data-dsh-animal-island-skin] :where([role='dialog'], [role='menu']) span:has(> input:not([type='checkbox']):not([type='radio']):not([type='hidden'])) > input {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none !important;
+}
+
+/* The shell is the field now, so the keyboard focus ring moves onto it. */
+html[data-dsh-animal-island-skin] :where([role='dialog'], [role='menu']) span:has(> input:focus-visible) {
+  outline: 3px solid #9c7200;
+  outline-offset: 2px;
+}
+
 html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :where([data-composer-card], [role='dialog'], [role='menu']) :where(input:not([type='checkbox']):not([type='radio']), textarea, select, [contenteditable='true']) {
   background: #2a2520;
   color: var(--animal-ink);
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :where([role='dialog'], [role='menu']) span:has(> input:not([type='checkbox']):not([type='radio']):not([type='hidden'])) {
+  background: #2a2520;
 }
 
 html[data-dsh-animal-island-skin] :where(input, textarea, select, [contenteditable='true'])::placeholder {
@@ -227,22 +272,34 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] header:has([data-conv
 
 .animal-island-brand__name {
   display: grid;
+  flex: 1 1 auto;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   line-height: 1;
 }
 
+.animal-island-brand__name strong,
+.animal-island-brand__name small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .animal-island-brand__name strong {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .animal-island-brand__name small {
-  margin-top: 4px;
+  margin-top: 3px;
   color: var(--animal-muted);
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
 }
 
 .animal-island-hero__brand {

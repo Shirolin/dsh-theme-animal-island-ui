@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises'
 const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
 
 test('package exposes DSH client, provider ordering, peers, and prepack', () => {
-  assert.equal(packageJson.version, '0.3.1')
+  assert.equal(packageJson.version, '0.3.3')
   assert.equal(packageJson.dsh.client.platform, 'web')
   assert.deepEqual(packageJson.dsh.client.inject, [
     '@deepseek-ai/dsh-client-ui-theme',

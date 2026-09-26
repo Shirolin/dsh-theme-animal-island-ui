@@ -50,6 +50,17 @@ test('owned CSS hard-coded text and focus combinations remain readable', () => {
   }
 })
 
+test('composed dialog fields are skinned once, on the shell', () => {
+  const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const shell = rules.find((rule) => /span:has\(> input/.test(rule) && /border: 2\.5px solid/.test(rule))
+  assert.ok(shell, 'the DSH field shell must carry the field skin')
+  const inner = rules.find((rule) => /span:has\(> input[^{]*\)\s*>\s*input\s*\{/.test(rule))
+  assert.ok(inner, 'the input inside a composed shell must not draw its own box')
+  for (const declaration of ['border: 0', 'background: transparent', 'box-shadow: none']) {
+    assert.ok(inner.includes(declaration), declaration)
+  }
+})
+
 test('wave artwork is an original local SVG rather than a reference asset', () => {
   assert.match(wave, /viewBox="0 0 240 130"/)
   assert.match(wave, /C28 42 58 40 90 62/)
