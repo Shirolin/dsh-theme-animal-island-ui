@@ -204,14 +204,19 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-composer-card] 
   background: #2a2520 !important;
 }
 
+/* The markdown code block is a container (banner + pre) whose radius, banner
+   and background all come from DSH's --dsl-code-block-* variables, and whose
+   inner pre only rounds its bottom corners. Styling the pre box made its arc
+   disagree with the container's. Set the radius on the container instead —
+   :has(> [data-code-block-content]) is that container, and it out-ranks DSH's
+   own 12px default. */
+html[data-dsh-animal-island-skin] div:has(> [data-code-block-content]) {
+  --dsl-code-block-border-radius: 20px;
+}
+
 html[data-dsh-animal-island-skin] pre {
-  overflow: auto;
   padding: 20px 24px !important;
-  border: 1px solid #3d3028 !important;
-  border-radius: 20px !important;
-  background: var(--shiki-background, #2b2118) !important;
   color: var(--shiki-foreground, #e8d5bc) !important;
-  box-shadow: 0 6px 18px rgba(43, 33, 24, 0.2) !important;
   font-family: var(--animal-code-family) !important;
   font-size: 14px;
   font-weight: 600;

@@ -28,6 +28,9 @@ test('skin uses only the reviewed stable data hooks', () => {
     // DSH's own composer trigger panel (input-trigger MenuView) carries this
     // attribute for its dismiss logic, so the skin can key popover chrome off it.
     'trigger-menu',
+    // DSH's markdown code block tags its content area; the block container is
+    // reached through it to set --dsl-code-block-border-radius in one place.
+    'code-block-content',
   ])
   assert.deepEqual([...new Set(hooks)].filter((hook) => !allowed.has(hook)), [])
 })
