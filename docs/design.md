@@ -75,7 +75,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - DSH 组合式输入（`span > 图标 + input`）：由外壳承担输入外观，内部 `input` 保持透明，键盘焦点环随之移到外壳，避免同一字段出现两层边框；
 - Composer/dialog：24–28px 圆角、奶油卡片；菜单/弹出层不套这层卡片外观，沿用 DSH 自己的弹出chrome，表面取 `--dsw-specific-menu`（= `surface` 白，避免和 composer 的 `#fffbe7` 糊成一片）；
 - 弹出层行列高亮（`[role='option'|'menuitem']` 的 hover / `aria-selected`）用薄荷 `--dsw-alias-interactive-bg-hover-accent`；通用的 `--dsw-alias-interactive-bg-hover` 保持 periwinkle，因为侧栏会话行与它共用；
-- Code block：容器统一 20px 圆角 —— 通过容器上的 `--dsl-code-block-border-radius` 声明（`div:has(> [data-code-block-content])`），`pre` 只保留 20/24px padding 与排版，不自己画边框/圆角/底色；`pre` 的圆角必须与容器一致，否则底部两角错位；
+- Code block：圆角/底色跟随 DSH 的代码块变量（圆角 12px，不另立数值 —— 容器变量一旦在容器上覆写，会连带顶掉文档预览刻意设的 `0px` 平面样式）；`pre` 只保留 20/24px padding 与排版，不自己画边框/圆角/底色；banner 文字（语言标签 + 复制按钮）用代码前景色：标签自己声明了 `label-primary`、复制按钮只是 `inherit`，所以 banner 本身与它的直接子元素都要覆盖 —— 否则会出现「右边改好了、左边还是看不清」；
 - Code：inline code chip 只作用于无 class 的 `<code>`，自带样式的组件（预设 id 之类）保留原生外观；
 - Hover 上浮 1px，active 下沉 2px；
 - `prefers-reduced-motion` 禁用非必要位移。
@@ -92,7 +92,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 | 胶囊/3D 只给带文字的控件；含 `img`/`video`/`canvas`、带 `svg`、带 switch/checkbox/radio/option 角色的控件一律排除 | 粘贴图片缩略图被套胶囊、图片被挤压截断 |
 | 弹出层不套 dialog 卡片外观，表面走 `--dsw-specific-menu` | 菜单与 composer 同色，看起来像嵌套双框 |
 | 通用 token 改动前先查消费方（`--dsw-alias-interactive-bg-hover` 被侧栏会话行共用） | 改一处、连带改掉侧栏 hover/选中 |
-| 变量要声明在**使用它的那个元素**上（继承值打不过元素自身声明，`!important` 也不行） | 圆角/背景改不动，或只改到一半 |
+| 变量要声明在**使用它的那个元素**上（继承值打不过元素自身声明，`!important` 也不行）；但组件已经在自己身上设过的变量（`--dsl-code-block-*`）就不要写 | 圆角/背景改不动，或改动了却顶掉组件的自有意图（预览平面样式） |
 
 
 ## 原创资源

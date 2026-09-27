@@ -83,7 +83,7 @@ pnpm pack
 
 ```text
 artifacts/release-v0.3.4/dsh-theme-animal-island-ui-0.3.4.tgz
-SHA-256: 1F5BAFE64673E3786D5E2E14A68744E128A4294BAA91AAF86787AEF5FB635315
+SHA-256: F3B02F51502FBDAE3817DBCD4A50ED512C121C574F3C970DCF2F9D65726D3FEC
 ```
 
 把 `.tgz` 装进目标 `web` profile 并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）：
@@ -120,3 +120,6 @@ node scripts/check-compat.mjs --dsh-package "C:\path\to\@deepseek-ai\dsh-client-
 - 本插件代码：MIT，见 `LICENSE`。
 - Nunito：SIL OFL 1.1，见 `licenses/Nunito-OFL.txt`。
 - Animal Island UI：只参考视觉语言；没有复制其代码、组件、Logo、字体、插画或完整 CSS。参考基线与许可证见 `THIRD_PARTY_NOTICES.md`。
+
+
+

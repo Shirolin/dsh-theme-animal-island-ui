@@ -31,11 +31,11 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `[data-composer-card]` | composer 卡片范围：按钮 pill、输入重置、胶囊排除的作用域 | 会话 composer 的语义容器，多轮迭代未变 |
 | `[data-conversation-header-corner]` | 标题绶带的启用条件（`header:has(...)`） | 会话头部角落插槽的标记 |
 | `[data-trigger-menu]` | composer 的 `/`｜`@` 触发面板，排除胶囊与弹出层装饰 | DSH 自己的 pointerdown 关闭逻辑依赖它 |
-| `[data-code-block-content]` | 通过 `:has(> …)` 命中代码块容器，声明 `--dsl-code-block-border-radius` | markdown 代码块内容区的标记 |
+| `[data-code-block-banner]` | 代码块 banner（语言标签 + 复制按钮）的文字颜色 —— 它继承 `label-primary`，亮色下压在深色代码岛上不可读 | 代码块 banner 的标记；只改颜色不动几何，且必须连 banner 的直接子元素一起改：语言标签自己声明了 `label-primary`，元素自身声明赢过继承 |
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
 | `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
 | `[aria-pressed]`、`[aria-selected]` | 选中态（预设卡片、列表项） | ARIA 状态属性 |
-| `--dsl-code-block-*` | 代码块圆角/底色/banner/正文字体 | DSH 为代码块预留的公开样式变量 |
+| `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
 
 不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。
 

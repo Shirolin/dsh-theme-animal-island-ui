@@ -207,11 +207,18 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-composer-card] 
 /* The markdown code block is a container (banner + pre) whose radius, banner
    and background all come from DSH's --dsl-code-block-* variables, and whose
    inner pre only rounds its bottom corners. Styling the pre box made its arc
-   disagree with the container's. Set the radius on the container instead —
-   :has(> [data-code-block-content]) is that container, and it out-ranks DSH's
-   own 12px default. */
-html[data-dsh-animal-island-skin] div:has(> [data-code-block-content]) {
-  --dsl-code-block-border-radius: 20px;
+   disagree with the container's, so the pre no longer paints a box at all —
+   and the radius stays DSH's own: declaring 20px on the container would also
+   override the document preview, which deliberately sets 0px for its flat code
+   view (it renders the same CodeBlock). */
+/* The code island is dark in both palettes, but the banner inherits
+   --dsw-alias-label-primary, which is warm brown in light mode — unreadable on
+   the dark banner. The language label declares that colour itself, so the
+   banner's own colour is not enough: the label and the action slot (whose copy
+   button only inherits) are both driven from the code foreground. */
+html[data-dsh-animal-island-skin] [data-code-block-banner],
+html[data-dsh-animal-island-skin] [data-code-block-banner] > :where(div, span, button, code) {
+  color: var(--shiki-foreground, #e8d5bc);
 }
 
 html[data-dsh-animal-island-skin] pre {
