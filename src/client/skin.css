@@ -48,7 +48,7 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
   --animal-ink: #f7e7c7;
   --animal-body: #ead9bd;
   --animal-muted: #aa987c;
-  --animal-cream: #303444;
+  --animal-cream: #40362b;
   --animal-cream-deep: #29231c;
   --animal-mint: #61d9cb;
   --animal-mint-deep: #7be2d5;
@@ -79,7 +79,7 @@ html[data-dsh-animal-island-skin] :where(input, textarea, [contenteditable='true
    carry DSH's own row geometry; resetting their padding/min-height after the
    fact (the previous guard) shrank the command palette's rows while the
    breadcrumb buttons still took the pill. */
-html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg))):not([role='menu'] *):not([role='listbox'] *):not([data-trigger-menu] *) {
+html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg))):not(:has(img)):not(:has(video)):not(:has(canvas)):not([role='menu'] *):not([role='listbox'] *):not([data-trigger-menu] *) {
   min-height: 36px;
   padding-inline: 18px;
   border: 2px solid var(--animal-border);
@@ -91,14 +91,14 @@ html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-p
   letter-spacing: 0.01em;
 }
 
-html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)):not(:disabled):hover):not([role='menu'] *):not([role='listbox'] *):not([data-trigger-menu] *) {
+html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)):not(:disabled):hover):not(:has(img)):not(:has(video)):not(:has(canvas)):not([role='menu'] *):not([role='listbox'] *):not([data-trigger-menu] *) {
   border-color: var(--animal-mint);
   color: var(--animal-mint-deep);
   transform: translateY(-1px);
   box-shadow: 0 5px 0 var(--animal-shadow-button);
 }
 
-html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)):active):not([role='menu'] *):not([role='listbox'] *):not([data-trigger-menu] *) {
+html[data-dsh-animal-island-skin] [data-composer-card] :where(button:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)), [role='button']:not([aria-pressed]):not([role='switch']):not([role='checkbox']):not([role='radio']):not([role='menuitem']):not([role='menuitemradio']):not([role='option']):not(:has(svg)):active):not(:has(img)):not(:has(video)):not(:has(canvas)):not([role='menu'] *):not([role='listbox'] *):not([data-trigger-menu] *) {
   transform: translateY(2px);
   box-shadow: 0 1px 0 var(--animal-shadow-button);
 }
@@ -111,8 +111,10 @@ html[data-dsh-animal-island-skin] :where([role='option'], [role='menuitem'], [ro
 }
 
 /* Reserve vertical space in the settings header for the open-config-file
-   action and the icon-only close button, without changing the button itself. */
-html[data-dsh-animal-island-skin] [role='dialog'] :where(div):has(> button > svg) {
+   action and the icon-only close button, without changing the button itself.
+   The :not(li *) guard keeps it off list rows and card footers, which also hold
+   icon buttons and were inheriting the 64px header height. */
+html[data-dsh-animal-island-skin] [role='dialog'] :where(div):has(> button > svg):not(li *) {
   min-height: 64px;
   height: auto;
   align-items: center;
@@ -217,7 +219,10 @@ html[data-dsh-animal-island-skin] pre {
   tab-size: 4;
 }
 
-html[data-dsh-animal-island-skin] :not(pre) > code {
+/* Inline code chips apply to plain prose code only. Components that bring their
+   own code styling (a preset id caption, for example) keep it — the chip would
+   stretch full width inside their flex column and read as a text field. */
+html[data-dsh-animal-island-skin] :not(pre) > code:not([class]) {
   border: 1px solid #e8dcc8;
   border-radius: 10px;
   background: #f0e8d8;
@@ -225,7 +230,7 @@ html[data-dsh-animal-island-skin] :not(pre) > code {
   padding: 0.12em 0.36em;
 }
 
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :not(pre) > code {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :not(pre) > code:not([class]) {
   border-color: #59493a;
   background: #362e25;
   color: #ead9bd;
@@ -361,49 +366,10 @@ html[data-dsh-animal-island-skin] [role='dialog'] :where(button:not([aria-presse
   border-color: var(--animal-border) !important;
 }
 
-/* The model settings panel uses a two-column layout. Give it explicit
-   responsive constraints instead of letting the list and scrollbar push the
-   detail pane outside the dialog. */
-html[data-dsh-animal-island-skin] [role='dialog'] div:has(> nav[aria-label]) {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 20px;
-  min-width: 0;
-}
-
-html[data-dsh-animal-island-skin] [role='dialog'] nav[aria-label] {
-  min-width: 0;
-  max-height: min(58vh, 540px);
-  padding-right: 4px;
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-color: var(--animal-border-strong) transparent;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
-}
-
-html[data-dsh-animal-island-skin] [role='dialog'] nav[aria-label]::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-html[data-dsh-animal-island-skin] [role='dialog'] nav[aria-label]::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background: var(--animal-border-strong);
-}
-
-html[data-dsh-animal-island-skin] [role='dialog'] nav[aria-label] > div {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 10px;
-  min-width: 0;
-}
-
-html[data-dsh-animal-island-skin] [role='dialog'] nav[aria-label] button {
-  min-width: 0;
-}
-
+/* Plugin settings pages that render their own two-column layout (a nav plus a
+   detail pane) own that layout: the opencode-go model list ships its own grid,
+   row flex and scrolling, and overriding them reshuffled its rows. Only the
+   detail container keeps a min-width guard. */
 html[data-dsh-animal-island-skin] [role='dialog'] section[aria-label] {
   min-width: 0;
 }
@@ -420,17 +386,6 @@ html[data-dsh-animal-island-skin] [role='dialog'] :where(code) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-@media (max-width: 900px) {
-  html[data-dsh-animal-island-skin] [role='dialog'] div:has(> nav[aria-label]) {
-    display: block;
-  }
-
-  html[data-dsh-animal-island-skin] [role='dialog'] nav[aria-label] {
-    max-height: 300px;
-    margin-bottom: 16px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
