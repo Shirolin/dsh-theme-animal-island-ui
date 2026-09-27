@@ -22,6 +22,29 @@ DSH 仍处于 0.1.x 预发布阶段。本插件承诺支持已验证的公开 se
 
 Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为生产 CSS API。
 
+## 已审阅的属性与变量接缝
+
+除 Slot/token 之外，皮肤只允许使用下表列出的语义标签、角色与 DSH 自己的属性。任何新增都必须在 `test/skin.test.mjs` 的 `allowed` 集合里登记，并在此处说明理由。
+
+| 接缝 | 用途 | 为什么稳定 |
+| --- | --- | --- |
+| `[data-composer-card]` | composer 卡片范围：按钮 pill、输入重置、胶囊排除的作用域 | 会话 composer 的语义容器，多轮迭代未变 |
+| `[data-conversation-header-corner]` | 标题绶带的启用条件（`header:has(...)`） | 会话头部角落插槽的标记 |
+| `[data-trigger-menu]` | composer 的 `/`｜`@` 触发面板，排除胶囊与弹出层装饰 | DSH 自己的 pointerdown 关闭逻辑依赖它 |
+| `[data-code-block-content]` | 通过 `:has(> …)` 命中代码块容器，声明 `--dsl-code-block-border-radius` | markdown 代码块内容区的标记 |
+| `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
+| `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
+| `[aria-pressed]`、`[aria-selected]` | 选中态（预设卡片、列表项） | ARIA 状态属性 |
+| `--dsl-code-block-*` | 代码块圆角/底色/banner/正文字体 | DSH 为代码块预留的公开样式变量 |
+
+不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。
+
+## 插件自有布局
+
+DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 的 `modelLayout` 两列网格、`modelRow` 行内 flex、自己的滚动与行高）。皮肤**不得**改写这类布局：0.3.4 删掉了为那页写的 `nav[aria-label]` 覆盖，因为同一条规则会顶掉插件自己的列宽比例，并把行拆成两列网格导致行内开关位置参差。
+
+判断口径：只覆盖 DSH 与插件都**没有**给出外观的语义元素；已经自带 CSS 的组件，最多通过 token 影响它的颜色，不改它的几何。
+
 ## 禁止依赖
 
 - DSH 构建 hash class；
@@ -32,6 +55,25 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 - `querySelector`、closest、MutationObserver；
 - 合成 click、focus/blur、scrollIntoView；
 - 复制官方组件 DOM 或重写业务状态。
+
+## 工程约束
+
+- **包清单**：`package.json` 的 `dsh.client.inject` 写**包名**（`@deepseek-ai/dsh-client-ui-theme` 等），用于声明依赖与加载顺序；
+- **服务注入**：客户端入口内部 `inject` 写 **Cordis 服务名**（`['theme', 'slots']`）。写包名会让插件永久停在 `pending (waiting for service: ...)`；
+- **主题注册**：必须走 `ctx.theme.overrideTokens(source, tokens)`，disposer 交给 `ctx.effect()`；禁止 `document.body`、`window`、`querySelector`、DSH 内部 CSS module hash 或直接覆盖 DSH 核心样式表；
+- **自有样式生命周期**：`<style data-plugin>` 与根属性成对安装/清理，重复 apply/dispose 不得残留；
+- **构建**：`lib/client.js` 必须是 DSH Module Loader 形状（`globalThis.__ModuleLoader__.load({ id, factory })`），React 由平台模块表提供，Nunito WOFF2 与原创 SVG 构建期内嵌；
+- **门禁**：`pnpm run check` = typecheck + build + `node test/run.mjs` + `check:compat`，全部必须通过；token 测试要求 light/dark key 集合一致且对比度达标，bundle 测试禁止 hash class、私有 import、DOM fallback 与 Observer。
+
+## 离屏验收夹具
+
+主题的历史问题大多是「规则打到不该打的地方」，肉眼难判，因此每次改动都用离屏夹具验收：从已安装的 DSH 前端与插件包中提取**真实 CSS**，配真实 DOM 形状渲染，再截图对比。
+
+- 夹具脚本与生成页面：`.dsh/`（忽略目录），按页面分目录，例如 `.dsh/code-block/`、`.dsh/composer-chip/`、`.dsh/agent-preset/`；
+- 输出截图：`artifacts/smoke/`（忽略目录，保留作为回归证据）；
+- 渲染命令：headless Chrome `--headless=new --screenshot`，`--user-data-dir` 用系统临时目录，**不要**往仓库里写浏览器 profile；
+- 判定优先级：先看 computed style 探针（几何/颜色/命中规则），再看截图观感；两者都通过才算修好。
+
 
 ## 检查目标 DSH
 

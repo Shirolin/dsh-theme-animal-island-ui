@@ -1,10 +1,12 @@
 # DSH Animal Island UI Theme
 
-`Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin。0.3.4 在 ThemeRuntime 色彩层之上增加了插件自有 CSS、原创资源和 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
+`Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创资源与 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
+
+当前版本 **0.3.4**：修复主题规则越界改写 DSH 与插件自有界面的一系列问题（标题绶带、弹出层表面、命令面板行高、粘贴图片缩略图、代码块圆角、预设页与 opencode-go 设置页），逐条可见变化见 [CHANGELOG.md](CHANGELOG.md)。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 
-## v0.3.4 视觉范围
+## 视觉范围
 
 - 绿色双层波点画布；
 - 奶油白侧栏、蓝紫底部波浪与原创岛标；
@@ -16,6 +18,16 @@
 
 设计图是方向性 specimen；真实 DSH 截图是最终验收依据。
 
+## 文档
+
+| 文件 | 内容 |
+| --- | --- |
+| [CHANGELOG.md](CHANGELOG.md) | 各版本对用户可见的变化 |
+| [docs/design.md](docs/design.md) | 色板、形状与反馈、暗色派生、**样式边界**（不得越界的地方） |
+| [docs/compatibility.md](docs/compatibility.md) | DSH 接缝、已审阅属性/变量、工程约束、离屏验收夹具 |
+| [docs/session-list-blank.md](docs/session-list-blank.md) | 侧栏会话区空白一次误判的排查记录（结论：DSH 侧） |
+| [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | 参考项目基线与许可证 |
+
 ## 稳定边界
 
 插件只使用：
@@ -24,9 +36,9 @@
 2. DSH `dsh.client` Module Loader；
 3. `ctx.slots` 的公开品牌和 hero Slot，同时保留 DSH 官方 Sidebar 根组件；
 4. 插件自己创建并清理的 `<style>`、根属性和原创资源；
-5. 少量有版本测试的语义 `data-*` CSS 增强。
+5. 少量有版本测试的语义 `data-*` / ARIA 增强（清单见 [docs/compatibility.md](docs/compatibility.md)）。
 
-不使用 DSH hash class、私有 `lib/*`、React 私有符号、DOM 扫描、MutationObserver、合成点击或焦点劫持。DSH 升级后缺失的能力只会安全降级，不会阻塞 GUI。
+不使用 DSH hash class、私有 `lib/*`、React 私有符号、DOM 扫描、MutationObserver、合成点击或焦点劫持，**也不改写插件自带的布局与几何**（只通过 token 影响颜色）。DSH 升级后缺失的能力只会安全降级，不会阻塞 GUI。
 
 ## 架构
 
@@ -58,6 +70,8 @@ pnpm run check
 
 构建使用 esbuild 生成适配 DSH `factory(require)` 的客户端 bundle，React 由 DSH 平台模块表提供，Nunito WOFF2 与原创 SVG 在构建时内嵌。
 
+改动皮肤规则时的验收方式见 [docs/compatibility.md](docs/compatibility.md) 的「离屏验收夹具」：用真实 DSH/插件 CSS 渲染最小夹具，先看 computed style 探针、再看截图。夹具脚本在 `.dsh/`（忽略目录），截图证据归档在 `artifacts/smoke/`（忽略目录）。
+
 ## 安装到 DSH profile
 
 ```sh
@@ -69,9 +83,19 @@ pnpm pack
 
 ```text
 artifacts/release-v0.3.4/dsh-theme-animal-island-ui-0.3.4.tgz
+SHA-256: 1F5BAFE64673E3786D5E2E14A68744E128A4294BAA91AAF86787AEF5FB635315
 ```
 
-将 `.tgz` 加入目标 `web` profile 后，完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用用于回滚。
+把 `.tgz` 装进目标 `web` profile 并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）：
+
+```sh
+cd <profile 目录>
+pnpm add file:<仓库>/artifacts/release-v0.3.4/dsh-theme-animal-island-ui-0.3.4.tgz
+```
+
+之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。
+
+更新过源码后重新出包时，`pnpm pack --pack-destination artifacts/release-<版本>` 会覆盖同名 tgz —— 请同步更新 `artifacts/README.md` 与本节记录的 SHA；若该版本已经分发过，请改版本号而不是原地重打。
 
 ## 兼容性
 
