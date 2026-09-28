@@ -31,6 +31,11 @@ test('skin uses only the reviewed stable data hooks', () => {
     // Markdown code-block banner: the language label and copy button inherit
     // label-primary, which is unreadable on the dark code island in light mode.
     'code-block-banner',
+    // Right sidebar document preview: its flat views (the highlighted code body
+    // and the plain-text pages) keep DSH's own text colour instead of the
+    // theme's dark-island code foreground.
+    'code-preview',
+    'textpreview-plain',
   ])
   assert.deepEqual([...new Set(hooks)].filter((hook) => !allowed.has(hook)), [])
 })

@@ -221,7 +221,13 @@ html[data-dsh-animal-island-skin] [data-code-block-banner] > :where(div, span, b
   color: var(--shiki-foreground, #e8d5bc);
 }
 
-html[data-dsh-animal-island-skin] pre {
+/* Code typography and the code foreground are for the dark island. The right
+   sidebar's document preview is not an island: it renders flat views on the
+   sidebar surface (highlighted body = data-code-preview, plain-text pages =
+   data-textpreview-plain, one <pre> per page, 0 radius, transparent background).
+   Excluding those subtrees keeps DSH's own padding, colour and metrics there —
+   in light mode our foreground had left the plain view at ~1.35:1. */
+html[data-dsh-animal-island-skin] pre:not([data-code-preview] *):not([data-textpreview-plain] *) {
   padding: 20px 24px !important;
   color: var(--shiki-foreground, #e8d5bc) !important;
   font-family: var(--animal-code-family) !important;
