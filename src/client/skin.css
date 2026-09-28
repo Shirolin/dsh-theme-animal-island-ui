@@ -110,6 +110,23 @@ html[data-dsh-animal-island-skin] :where([role='option'], [role='menuitem'], [ro
   background: var(--dsw-alias-interactive-bg-hover-accent) !important;
 }
 
+/* The composer's "/" and "@" trigger panel is a scroll area whose max-height DSH
+   computes from the space above the composer and sets inline, so CSS must not
+   fight that number. A row at the cut edge is clipped mid-line; fading the panel's
+   bottom edge makes that read as "more below" instead of a broken row. The panel
+   owns no pseudo-element of its own, and the fade follows the panel surface. */
+html[data-dsh-animal-island-skin] [data-trigger-menu]::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  height: 16px;
+  border-radius: 0 0 16px 16px;
+  background: linear-gradient(to bottom, transparent, var(--dsw-specific-menu, #ffffff) 80%);
+  pointer-events: none;
+}
+
 /* Reserve vertical space in the settings header for the open-config-file
    action and the icon-only close button, without changing the button itself.
    The :not(li *) guard keeps it off list rows and card footers, which also hold

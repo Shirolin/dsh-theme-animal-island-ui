@@ -14,7 +14,8 @@
 
 - 菜单表面改用 `--dsw-specific-menu`（= `surface`），不再复用 composer 的 `#fffbe7`，命令面板不再和输入框糊成一片；对应地，菜单/列表不再被套上 dialog/composer 的奶油卡片外观；
 - 弹出层行列高亮（`[role='option'|'menuitem']` 的 hover / `aria-selected`）改用薄荷 `--dsw-alias-interactive-bg-hover-accent`；通用 `--dsw-alias-interactive-bg-hover` 保持 periwinkle，因为侧栏会话行与它共用；
-- composer 的文字胶囊规则不再匹配 menu / listbox / composer 触发面板子树，也不再匹配内容含 `img` / `video` / `canvas` 的控件 —— 修掉了命令面板行高被清零、面包屑被套成胶囊、粘贴图片缩略图被挤压截断三个问题。
+- composer 的文字胶囊规则不再匹配 menu / listbox / composer 触发面板子树，也不再匹配内容含 `img` / `video` / `canvas` 的控件 —— 修掉了命令面板行高被清零、面包屑被套成胶囊、粘贴图片缩略图被挤压截断三个问题；
+- 命令面板（`/`、`@`）的高度是组件按 composer 上方可用空间算出的内联 `max-height`，主题不去改它；改为给面板底边加渐隐 —— 被滚动裁掉的半行读起来是「下面还有」而不是一行断字，短列表不滚动时不受影响。
 
 ### 表单
 
