@@ -15,6 +15,7 @@ const documents = [
   'THIRD_PARTY_NOTICES.md',
   'docs/design.md',
   'docs/compatibility.md',
+  'docs/desktop.md',
   'docs/session-list-blank.md',
 ]
 

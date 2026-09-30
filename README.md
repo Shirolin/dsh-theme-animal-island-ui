@@ -26,6 +26,7 @@
 | [docs/design.md](docs/design.md) | 色板、形状与反馈、暗色派生、**样式边界**（不得越界的地方） |
 | [docs/compatibility.md](docs/compatibility.md) | DSH 接缝、已审阅属性/变量、工程约束、离屏验收夹具 |
 | [docs/session-list-blank.md](docs/session-list-blank.md) | 侧栏会话区空白一次误判的排查记录（结论：DSH 侧） |
+| [docs/desktop.md](docs/desktop.md) | 桌面客户端（Electron）：profile 隔离、安装/验证/回滚、何时要重启、怎么对着桌面 runtime 跑夹具 |
 | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | 参考项目基线与许可证 |
 
 ## 稳定边界
@@ -92,7 +93,7 @@ pnpm install
 pnpm run release 0.3.5     # 打包 + 回写 SHA；版本号必须是新的
 ```
 
-`prepack` 会自动重建 `lib`。0.3.4 的规范产物为：
+`prepack` 会自动重建 `lib`。当前规范产物为：
 
 ```text
 artifacts/release-v0.3.5/dsh-theme-animal-island-ui-0.3.5.tgz
@@ -107,6 +108,8 @@ pnpm add file:<仓库>/artifacts/release-v0.3.5/dsh-theme-animal-island-ui-0.3.5
 ```
 
 之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。
+
+桌面客户端（Electron）用的是独立的 `desktop` profile，插件不会跨 profile 生效，安装方式也不同 —— 见 [docs/desktop.md](docs/desktop.md)。
 
 发布脚本会改版本号、出包、把新 SHA-256 同时写进本文件与 `artifacts/README.md`（测试 `docs.test.mjs` 会校验两处一致）；**已分发过的版本请改版本号，不要原地重打**。
 

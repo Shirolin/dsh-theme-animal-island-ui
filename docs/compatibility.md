@@ -11,6 +11,10 @@
 
 DSH 仍处于 0.1.x 预发布阶段。本插件承诺支持已验证的公开 seam，不承诺未知 future major。
 
+官方桌面客户端内置的 runtime 与上面的仓库基线**不是同一版**（验证时为 `0.2.0-rc.2`），它跑同一套 web
+应用、同一套客户端插件契约 —— 桌面环境的 profile 隔离、安装、重启时机与夹具做法见
+[desktop.md](desktop.md)。
+
 ## 公开扩展面
 
 - `ctx.theme.overrideTokens(source, {light, dark}) -> disposer`
