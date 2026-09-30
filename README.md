@@ -70,32 +70,45 @@ pnpm run check
 
 构建使用 esbuild 生成适配 DSH `factory(require)` 的客户端 bundle，React 由 DSH 平台模块表提供，Nunito WOFF2 与原创 SVG 在构建时内嵌。
 
-改动皮肤规则时的验收方式见 [docs/compatibility.md](docs/compatibility.md) 的「离屏验收夹具」：用真实 DSH/插件 CSS 渲染最小夹具，先看 computed style 探针、再看截图。夹具脚本在 `.dsh/`（忽略目录），截图证据归档在 `artifacts/smoke/`（忽略目录）。
+改动皮肤规则时的验收方式见 [docs/compatibility.md](docs/compatibility.md) 的「离屏验收夹具」：用真实 DSH/插件 CSS 渲染最小夹具，先看 computed style 探针、再看截图。
+
+```sh
+pnpm run fixture document-preview-plain    # 渲染 test/fixtures/<名称>，产物在 artifacts/smoke/
+pnpm run fixture document-preview-plain --dsh "C:\path\to\.dsh\app"
+```
+
+夹具定义在 `test/fixtures/`，runner 是 `scripts/fixture.mjs`（默认读 `~/.dsh/app`，可用 `DSH_APP` 覆盖）。
+
+## 贡献
+
+- 改动前请读 [CONTRIBUTING.md](CONTRIBUTING.md)：边界约束、验证方式、提交与发布流程；
+- 参与即适用 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)；
+- 安全问题请走 [SECURITY.md](SECURITY.md) 的私有渠道，不要开公开 issue。
 
 ## 安装到 DSH profile
 
 ```sh
 pnpm install
-pnpm pack
+pnpm run release 0.3.5     # 打包 + 回写 SHA；版本号必须是新的
 ```
 
 `prepack` 会自动重建 `lib`。0.3.4 的规范产物为：
 
 ```text
-artifacts/release-v0.3.4/dsh-theme-animal-island-ui-0.3.4.tgz
-SHA-256: B288BB66546D34D092B5B78C3863CAEEF0E05179BAE24DC425EB8E22412D49F0
+artifacts/release-v0.3.5/dsh-theme-animal-island-ui-0.3.5.tgz
+SHA-256: 0170CD1064DECDA944E8D61C49B7568C8A876CDF9D4A0E6869B4DAE2D239B461
 ```
 
 把 `.tgz` 装进目标 `web` profile 并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）：
 
 ```sh
 cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v0.3.4/dsh-theme-animal-island-ui-0.3.4.tgz
+pnpm add file:<仓库>/artifacts/release-v0.3.5/dsh-theme-animal-island-ui-0.3.5.tgz
 ```
 
 之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。
 
-更新过源码后重新出包时，`pnpm pack --pack-destination artifacts/release-<版本>` 会覆盖同名 tgz —— 请同步更新 `artifacts/README.md` 与本节记录的 SHA；若该版本已经分发过，请改版本号而不是原地重打。
+发布脚本会改版本号、出包、把新 SHA-256 同时写进本文件与 `artifacts/README.md`（测试 `docs.test.mjs` 会校验两处一致）；**已分发过的版本请改版本号，不要原地重打**。
 
 ## 兼容性
 

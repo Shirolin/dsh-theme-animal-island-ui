@@ -1,0 +1,38 @@
+<!doctype html>
+<!--
+  The right sidebar's 「文档」 tab renders a plain-text view as
+  [data-textpreview-plain] > pre[data-textpreview-page] > div[data-textpreview-line].
+  It is flat on the sidebar surface (0 radius, transparent background), so the
+  skin's code typography must not reach it — light mode used to render the body
+  at ~1.35:1. Regression guard for that.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>document preview — plain text</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  body { margin: 0; padding: 18px 20px 24px; font-family: var(--dsw-font-family); background: var(--dsw-alias-bg-base); }
+  h1 { font-size: 14px; margin: 0 0 4px; }
+  p.hint { font-size: 12px; opacity: .72; margin: 0 0 14px; }
+  /* Sidebar surface: the token follows light/dark, so both variants are real. */
+  .sidebarSurface { max-width: 780px; padding: 12px 14px; border-radius: 18px; background: var(--dsw-specific-sidebar-fill); }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{BODY_STYLE}} {{TOKENS}}">
+<h1>文档预览 · 纯文本视图</h1>
+<p class="hint">代码平铺在侧栏表面上（0 圆角、透明底），正文应使用 DSH 自身的文字颜色。</p>
+<div class="sidebarSurface">
+  <div class="dhJKeW_textDocument" data-textpreview-plain="true">
+    <pre class="dhJKeW_page" data-textpreview-page="0"><div class="dhJKeW_line" data-textpreview-line="0"># Animal Island DSH skin — plain text view
+</div><div class="dhJKeW_line" data-textpreview-line="1">
+</div><div class="dhJKeW_line" data-textpreview-line="2">This file has no syntax highlighting, so the text uses whatever colour the
+</div><div class="dhJKeW_line" data-textpreview-line="3">code block resolves to. It must stay readable on the light sidebar surface.
+</div></pre>
+  </div>
+</div>
+</body>
+</html>

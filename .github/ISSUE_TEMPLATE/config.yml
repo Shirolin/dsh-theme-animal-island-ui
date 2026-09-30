@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 贡献与验证方式
+    url: https://github.com/OWNER/REPO/blob/main/CONTRIBUTING.md
+    about: 改皮肤规则前请先读边界约束与离屏夹具的用法。
+  - name: 安全漏洞
+    url: https://github.com/OWNER/REPO/security/advisories/new
+    about: 请不要开公开 issue，走私有漏洞报告。

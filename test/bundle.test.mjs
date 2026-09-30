@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises'
 const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
 
 test('package exposes DSH client, provider ordering, peers, and prepack', () => {
-  assert.equal(packageJson.version, '0.3.4')
+  assert.equal(packageJson.version, '0.3.5')
   assert.equal(packageJson.dsh.client.platform, 'web')
   assert.deepEqual(packageJson.dsh.client.inject, [
     '@deepseek-ai/dsh-client-ui-theme',
@@ -17,6 +17,17 @@ test('package exposes DSH client, provider ordering, peers, and prepack', () => 
   assert.equal(packageJson.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(packageJson.scripts.prepack, 'pnpm run build')
   assert.equal(packageJson.peerDependencies, undefined)
+})
+
+test('package ships its docs, scripts and engine metadata', () => {
+  for (const entry of ['lib', 'README.md', 'CHANGELOG.md', 'docs', 'LICENSE', 'THIRD_PARTY_NOTICES.md']) {
+    assert.ok(packageJson.files.includes(entry), `files must ship ${entry}`)
+  }
+  assert.equal(packageJson.engines.node, '>=20')
+  assert.ok(packageJson.keywords.includes('dsh'))
+  for (const script of ['build', 'typecheck', 'test', 'check:compat', 'fixture', 'release', 'check']) {
+    assert.ok(packageJson.scripts[script], `script missing: ${script}`)
+  }
 })
 
 test('built client uses the DSH factory(require) and owned style protocols', async () => {

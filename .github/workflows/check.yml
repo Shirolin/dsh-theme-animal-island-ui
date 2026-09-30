@@ -1,0 +1,45 @@
+name: check
+
+# The repository gate: typecheck, build, unit/contract tests and the DSH
+# compatibility check against the pinned client-ui-theme dependency.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck, build, test and check compatibility
+        run: pnpm run check
+
+      - name: Pack the release tarball
+        run: pnpm pack --pack-destination "$RUNNER_TEMP/release"
+
+      - name: Upload the tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsh-theme-animal-island-ui-tarball
+          path: ${{ runner.temp }}/release/*.tgz
+          if-no-files-found: error

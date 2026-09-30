@@ -371,14 +371,24 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] header:has([data-conv
   white-space: nowrap;
 }
 
+/*
+ * DSH renders this slot inside a 24px brand box that clips its own overflow.
+ * A 14px CJK wordmark carries a ~20px font box, so `line-height: 1` leaves the
+ * glyph tops about half a pixel above that clip line — enough to shave the top
+ * strokes of 动森岛 on fonts whose ideographs fill the em. The wordmark takes a
+ * 17px line box and gives up the 3px gap instead: 17 + 0 + 7 still totals the
+ * same 24px, and the ASCII line keeps its old position, because its box begins
+ * 17px below the top either way (14 + 3 = 17).
+ */
 .animal-island-brand__name strong {
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 0.01em;
+  line-height: 17px;
 }
 
 .animal-island-brand__name small {
-  margin-top: 3px;
+  margin-top: 0;
   color: var(--animal-muted);
   font-size: 7px;
   font-weight: 800;

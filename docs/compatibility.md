@@ -63,6 +63,7 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
 - **服务注入**：客户端入口内部 `inject` 写 **Cordis 服务名**（`['theme', 'slots']`）。写包名会让插件永久停在 `pending (waiting for service: ...)`；
 - **主题注册**：必须走 `ctx.theme.overrideTokens(source, tokens)`，disposer 交给 `ctx.effect()`；禁止 `document.body`、`window`、`querySelector`、DSH 内部 CSS module hash 或直接覆盖 DSH 核心样式表；
 - **自有样式生命周期**：`<style data-plugin>` 与根属性成对安装/清理，重复 apply/dispose 不得残留；
+- **品牌字标预算**：`sidebar.brand.name` 渲染在 DSH 自己的品牌盒里，那个盒子带 `overflow: hidden` 且只有 24px 高。两行字标的行盒、间距与小字行盒合计必须 ≤ 24px，而且字标行盒要留出余量 —— 14px 的 CJK 字标带约 1.45em 的字形盒、其中约 0.28em 在字形上方，`line-height: 1` 会把这些余量吃光，顶部笔画被裁掉。`test/skin.test.mjs` 的 `brand lockup fits DSH 24px clip box` 静态锁住这两条，改小行盒或加回间距会直接失败；
 - **构建**：`lib/client.js` 必须是 DSH Module Loader 形状（`globalThis.__ModuleLoader__.load({ id, factory })`），React 由平台模块表提供，Nunito WOFF2 与原创 SVG 构建期内嵌；
 - **门禁**：`pnpm run check` = typecheck + build + `node test/run.mjs` + `check:compat`，全部必须通过；token 测试要求 light/dark key 集合一致且对比度达标，bundle 测试禁止 hash class、私有 import、DOM fallback 与 Observer。
 
@@ -70,10 +71,26 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
 
 主题的历史问题大多是「规则打到不该打的地方」，肉眼难判，因此每次改动都用离屏夹具验收：从已安装的 DSH 前端与插件包中提取**真实 CSS**，配真实 DOM 形状渲染，再截图对比。
 
-- 夹具脚本与生成页面：`.dsh/`（忽略目录），按页面分目录，例如 `.dsh/code-block/`、`.dsh/composer-chip/`、`.dsh/agent-preset/`；
+- 仓库内的夹具：`test/fixtures/<名称>/`（`fixture.json` + `body.html`），runner 是 `scripts/fixture.mjs`：
+
+  ```sh
+  pnpm run fixture document-preview-plain
+  pnpm run fixture document-preview-plain --dsh "C:\Users\me\.dsh\app"   # 默认读 ~/.dsh/app 或 $DSH_APP
+  ```
+
+- 临时探索用的夹具仍可放在 `.dsh/`（忽略目录），成熟后按上面的形状收进 `test/fixtures/`；
+- 夹具会连同**插件自己内嵌的 Nunito** 一起渲染。只渲染 `src/client/skin.css` 的话文字全部走回退字体，凡是与字宽、换行、裁切有关的回归都看不出来；
+- 侧栏品牌区的夹具是 `test/fixtures/sidebar-brand-desktop/`：它按 0.2.0-rc.2 的 `[data-windows-titlebar]` 结构还原 DOM（含 DSH 自己的 hash class），并带一个把 DSH 裁剪框关掉的对照 case —— 比较两个 case 的墨迹高度就能看出字标有没有被削顶。它跑的是**桌面客户端的 runtime**，所以要显式指定：
+
+  ```sh
+  node scripts/fixture.mjs sidebar-brand-desktop --dsh "<提取出来的桌面 app 目录>"
+  ```
+
+  该目录至少要有 `node_modules/@deepseek-ai/dsh-web-frontend/dist/assets/*.css`、`dsh-client-ui-theme/lib/client.js` 与 `dsh-client-ui-sidebar/lib/client.js`，都可以从 `%LOCALAPPDATA%\Programs\...\resources\app.asar` 里按 asar 头部的 offset 直接切出来；不指定的话默认读 `~/.dsh/app`（0.1.5 基线），hash 前缀对不上，夹具会渲染成没有样式的样子；
+- 判定要交给像素，不要交给眼睛：按行统计墨迹的横向范围与高度（把一行文字切成「墨迹带」逐带量 bbox），比放大截图可靠 —— 1px 级别的削顶在截图上看不出边界，在行统计里是差一行；
 - 输出截图：`artifacts/smoke/`（忽略目录，保留作为回归证据）；
-- 渲染命令：headless Chrome `--headless=new --screenshot`，`--user-data-dir` 用系统临时目录，**不要**往仓库里写浏览器 profile；
-- 判定优先级：先看 computed style 探针（几何/颜色/命中规则），再看截图观感；两者都通过才算修好。
+- 渲染：headless Chrome `--headless=new --screenshot`，`--user-data-dir` 用系统临时目录，**不要**往仓库里写浏览器 profile；
+- 判定优先级：先看 computed style 探针（几何/颜色/命中规则），再看截图的像素量测，最后才看观感；三者都通过才算修好。
 
 
 ## 检查目标 DSH

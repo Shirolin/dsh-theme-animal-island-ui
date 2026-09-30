@@ -61,6 +61,48 @@ test('owned CSS hard-coded text and focus combinations remain readable', () => {
   }
 })
 
+test('brand lockup fits DSH 24px clip box with CJK headroom', () => {
+  // Comments sit between rules, so they would otherwise land inside the
+  // selector text this parse splits on.
+  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
+  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const declarationsFor = (selector) => {
+    const merged = {}
+    for (const rule of rules) {
+      const selectors = rule.slice(0, rule.indexOf('{')).split(',').map((part) => part.trim())
+      if (!selectors.includes(selector)) continue
+      for (const declaration of rule.matchAll(/([a-z-]+):\s*([^;{}]+)/g)) {
+        merged[declaration[1]] = declaration[2].trim()
+      }
+    }
+    return merged
+  }
+  const px = (value) => Number.parseFloat(value)
+  const name = declarationsFor('.animal-island-brand__name')
+  const strong = declarationsFor('.animal-island-brand__name strong')
+  const small = declarationsFor('.animal-island-brand__name small')
+
+  // DSH renders this slot inside its own brand box and clips the overflow of
+  // it, so the two-line lockup has to fit that box or the glyph tops get shaved.
+  assert.equal(name.overflow, 'hidden')
+  // The ASCII line declares no line-height of its own; it inherits the grid's
+  // unitless one, which resolves against that line's own font size.
+  const smallLineHeight = small['line-height'] !== undefined
+    ? px(small['line-height'])
+    : px(name['line-height']) * px(small['font-size'])
+  const lockup = px(strong['line-height']) + px(small['margin-top']) + smallLineHeight
+  assert.ok(lockup <= 24, `brand lockup occupies ${lockup}px; DSH clips at 24px`)
+
+  // A 14px CJK wordmark carries a ~1.45em font box, and roughly 0.28em of its
+  // ascent sits above the ideograph ink. Both have to stay below the clip line.
+  const fontSize = px(strong['font-size'])
+  const clearance = (px(strong['line-height']) - 1.45 * fontSize) / 2 + 0.28 * fontSize
+  assert.ok(
+    clearance >= 2,
+    `wordmark clears the clip line by only ${clearance.toFixed(2)}px; the top strokes get shaved`,
+  )
+})
+
 test('composed dialog fields are skinned once, on the shell', () => {
   const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
   const shell = rules.find((rule) => /span:has\(> input/.test(rule) && /border: 2\.5px solid/.test(rule))
