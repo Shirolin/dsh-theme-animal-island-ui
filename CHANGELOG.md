@@ -2,9 +2,9 @@
 
 本文件记录每个发布版本对用户可见的变化。安装与验收流程见 `README.md`，设计映射见 `docs/design.md`，DSH 兼容边界见 `docs/compatibility.md`。
 
-## 未发布（P0–P1 视觉强化）
+## 0.3.6（P0–P3 视觉强化）
 
-让整体更像《动森》本尊的游戏界面。改动集中在品牌 Slot、composer、dialog 与画布，不触碰 DSH 布局几何，也不改 palette token。
+让整体更像《动森》本尊的游戏界面。改动集中在品牌 Slot、composer、dialog、画布与侧栏选中态；除侧栏 hover/active 的暖木色外，不触碰 DSH 布局几何或其它 palette token。
 
 ### 品牌与 hero
 

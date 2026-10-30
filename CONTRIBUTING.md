@@ -62,7 +62,7 @@ node scripts/fixture.mjs document-preview-plain --dsh "C:\path\to\.dsh\app"
 ## 发布
 
 ```sh
-pnpm run release 0.3.5     # 打包 + 计算 SHA-256 + 回写 README 与 artifacts/README.md
+pnpm run release 0.3.6     # 打包 + 计算 SHA-256 + 回写 README 与 artifacts/README.md
 ```
 
 脚本会：改 `package.json` 版本 → `pnpm pack --pack-destination artifacts/release-v<版本>` →
@@ -70,7 +70,7 @@ pnpm run release 0.3.5     # 打包 + 计算 SHA-256 + 回写 README 与 artifac
 
 ```sh
 cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v0.3.5/dsh-theme-animal-island-ui-0.3.5.tgz
+pnpm add file:<仓库>/artifacts/release-v0.3.6/dsh-theme-animal-island-ui-0.3.6.tgz
 ```
 
 **同一版本号不要重复出包**（除非该版本尚未分发）；已经分发过的内容请改版本号。
