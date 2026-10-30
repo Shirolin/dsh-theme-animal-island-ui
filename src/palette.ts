@@ -27,8 +27,8 @@ export const ANIMAL_ISLAND_LIGHT: Palette = {
   success: '#4d7c21',
   warn: '#8a6500',
   sidebar: '#faf8f3',
-  sidebarHover: '#d6dff0',
-  sidebarActive: '#b7c6e5',
+  sidebarHover: '#f0e2c8',
+  sidebarActive: '#e5c99b',
   bubble: '#e6f9f6',
   code: {
     bg: '#2b2118',
@@ -66,8 +66,8 @@ export const ANIMAL_ISLAND_DARK: Palette = {
   success: '#a9db69',
   warn: '#ffd15a',
   sidebar: '#303444',
-  sidebarHover: '#3b455d',
-  sidebarActive: '#4c5f86',
+  sidebarHover: '#4a3a28',
+  sidebarActive: '#6b4a2c',
   bubble: '#294640',
   code: {
     bg: '#211b16',

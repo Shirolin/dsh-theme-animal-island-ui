@@ -177,8 +177,8 @@ test('light mode follows the canonical Animal Island palette with readable seman
   assert.equal(payload['--dsw-alias-label-secondary'].light, '#654a2f')
   assert.equal(payload['--dsw-alias-button-primary-fill'].light, '#f8f8f0')
   assert.equal(payload['--shiki-background'].light, '#2b2118')
-  assert.equal(payload['--dsw-specific-sidebar-nav-item-active'].light, '#b7c6e5')
-  assert.equal(payload['--dsw-specific-sidebar-nav-item-hover'].light, '#d6dff0')
+  assert.equal(payload['--dsw-specific-sidebar-nav-item-active'].light, '#e5c99b')
+  assert.equal(payload['--dsw-specific-sidebar-nav-item-hover'].light, '#f0e2c8')
 })
 
 test('normal text, business accents, and states remain readable on their real surfaces', () => {

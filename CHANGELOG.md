@@ -2,6 +2,49 @@
 
 本文件记录每个发布版本对用户可见的变化。安装与验收流程见 `README.md`，设计映射见 `docs/design.md`，DSH 兼容边界见 `docs/compatibility.md`。
 
+## 未发布（P0–P1 视觉强化）
+
+让整体更像《动森》本尊的游戏界面。改动集中在品牌 Slot、composer、dialog 与画布，不触碰 DSH 布局几何，也不改 palette token。
+
+### 品牌与 hero
+
+- 品牌标换成原创倾斜叶片 `IslandMark`，侧栏与 hero 复用同一枚 SVG；24px 下仍保留叶尖、叶脉与轮廓；
+- hero 字标改为深绿 900 字重 + 奶油高光/投影 + 2° 微倾的贴纸字；
+- 新增 `island-horizon.svg`、`floating-leaves.svg` 两张原创资源（构建期内嵌）。
+
+### Composer 与按钮
+
+- composer 变成「对话气泡」：2px 深墨描边、顶部高光、底部小尾巴。DSH 已占用卡片的 `::after` 画 workspace 虚线环，尾巴改走 `::before`；
+- 组合器内文字按钮加顶部高光与回弹过渡；发送 / 停止键加干边 3D 与顶部高光（几何不动，仅 `box-shadow`）；
+- 修正既有选择器 bug：hover / active 之前只挂在 `[role='button']` 分支，原生 `<button>` 会永久呈现 hover 态；改用 `:is(button, [role='button'])` 后两个分支都按真实状态切换。
+
+### 画布
+
+- 绿色波点画布叠加斜纹、底部草 / 水波纹，以及低透明度漂浮叶子 / 花 / 星星；
+- 深色仍是暖棕派生方案，只去掉浅色画布装饰层，保持夜间可读。
+
+### P1 质感
+
+- Composer 奶油面叠 7% 纸纹与右侧淡叶水印（纸纹为内嵌 SVG `feTurbulence`，180px 平铺）；
+- dialog 叠纸纹 + 内缩纸边 + 2px 虚线缝线（`outline-offset: -10px`，`:not(:focus-visible)` 保留焦点环）；
+- 标题绶带从薄荷丝带换成木质告示牌：暖木正面 + 竖向木纹 + 两枚铆钉 + 深木燕尾，奶油字；深色为深木；
+- 深色画布换成「夜岛」：深青天空 + 星点 + 右上月晕，不再复用白天的草 / 水波纹；
+- 中文展示体取舍：没有可承受体积的圆胖 CJK 字库，标题继续用 900 字重 + 贴纸处理，不新增字体依赖。
+
+### P2 微交互
+
+- composer 在 `:focus-within` 时换成薄荷描边 + 3px 柔光，输入时气泡「亮起来」，不改尺寸；
+- 发送 / 停止键按压时从键位扩出一圈薄荷涟漪（`::after` + `:active`；插件没有发送事件钩子，所以是按压触发而不是发送后触发）；
+- 侧栏叶片 hover 轻摆（`rotate(-6deg) scale(1.06)`）；
+- 文字选区改为半透明薄荷；
+- 以上位移 / 过渡都纳入 `prefers-reduced-motion`。
+
+### 木牌选中态
+
+- 侧栏 hover/active 从 periwinkle 换成暖木：light `#f0e2c8` / `#e5c99b`，dark `#4a3a28` / `#6b4a2c`；通用 `--dsw-alias-interactive-bg-hover` 随之变成暖木洗色；
+- 选中的会话行 / 搜索结果行（`[role='treeitem'][aria-selected='true']`）与侧栏面板行（`[aria-current='page']`）叠竖向木纹 + 内嵌高光/压边，读作「木牌」而不是扁平胶囊；
+- 对比度：light 主文字 5.17:1、正文 5.11:1；dark 主文字 6.52:1、正文 5.74:1。
+
 ## 0.3.5
 
 修复侧栏品牌字标 `动森岛` 顶部笔画被削平的问题（桌面客户端上最先暴露）。

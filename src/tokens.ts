@@ -183,7 +183,7 @@ export function buildTokens(palette: Palette, mode: Mode): TokenMap {
     '--dsw-alias-state-business-primary': accentText,
     '--dsw-alias-state-business-tertiary': mix(accent, bg, 0.78),
 
-    // Floating chrome and the canonical periwinkle sidebar states.
+    // Floating chrome and the warm wood sidebar states.
     '--dsw-alias-toast-bg': tooltipBg,
     '--dsw-alias-tooltip-bg': tooltipBg,
     '--dsw-specific-bubble': palette.bubble,

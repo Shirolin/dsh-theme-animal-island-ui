@@ -54,9 +54,11 @@ test('slot installation uses public contracts without DOM scanning', () => {
 test('owned CSS hard-coded text and focus combinations remain readable', () => {
   assert.ok(contrastRatio('#6f451f', '#fffbe7') >= 4.5)
   assert.ok(contrastRatio('#f7e7c7', '#2a2520') >= 4.5)
-  assert.ok(contrastRatio('#fff7df', '#0f766d') >= 4.5)
+  // Wooden header ribbon: cream text on the painted plank in both modes.
+  assert.ok(contrastRatio('#fff3d6', '#8a5a33') >= 4.5)
+  assert.ok(contrastRatio('#f6e6c8', '#5a3d24') >= 4.5)
   assert.ok(contrastRatio('#9c7200', '#f0e8d8') >= 3)
-  for (const value of ['#6f451f', '#fffbe7', '#2a2520', '#0f766d', '#9c7200']) {
+  for (const value of ['#6f451f', '#fffbe7', '#2a2520', '#8a5a33', '#5a3d24', '#9c7200']) {
     assert.match(css, new RegExp(value))
   }
 })

@@ -4,7 +4,7 @@
 
 本项目将 `guokaigdg/animal-island-ui` commit `29051196bd7586d4484b55431b03178e6046fa64`（版本 2.0.0）作为视觉参考。该 commit 使用 MIT License。
 
-只提炼色相、表面层级、圆润和游戏反馈等抽象关系；波点规格、波浪路径、岛标和整体 CSS 均由本项目重新设计。标题绶带沿用参考 `Title` 的三层构造（正面主体 + 燕尾 + 折角三角），但实现是本项目在 DSH 的 `nav` 与两个伪元素上重写的，没有复制参考代码。
+只提炼色相、表面层级、圆润和游戏反馈等抽象关系；波点规格、波浪路径、岛标和整体 CSS 均由本项目重新设计。标题绶带沿用参考 `Title` 的三层构造（正面主体 + 燕尾 + 折角三角），配色改为木质告示牌；实现是本项目在 DSH 的 `nav` 与两个伪元素上重写的，没有复制参考代码。
 
 ## 三层实现
 
@@ -46,13 +46,15 @@
 | 品牌薄荷 | `#19c8b9` | 绶带、focus、装饰 |
 | 深薄荷 | `#0b7f75` | 链接和 business text |
 | Sidebar | `#faf8f3` | 浮动侧栏 |
-| Hover | `#d6dff0` | 导航 hover |
-| Active | `#b7c6e5` | 导航选中 |
+| Hover | `#f0e2c8` | 导航 hover（暖木浅色） |
+| Active | `#e5c99b` | 导航选中（木牌） |
 | 波浪 | `#a2b0e7` | 侧栏底部原创 SVG |
 | 代码背景 | `#2b2118` | 完整代码块 |
 | 代码前景 | `#e8d5bc` | 代码正文 |
+| 木牌绶带 | `#8a5a33` | 标题木牌正面（字 `#fff3d6`） |
+| 木牌阴影 | `#5a3719` | 燕尾折角与铆钉圈 |
 
-主文字使用比参考 canonical 更深的暖棕，以在 `#b7c6e5` active 背景上达到 4.5:1。品牌薄荷不直接承担白色小字或 11px 文字。
+主文字使用比参考 canonical 更深的暖棕，以在 `#e5c99b` active 背景上达到 4.5:1（实测 5.17:1）。品牌薄荷不直接承担白色小字或 11px 文字。
 
 ## Dark
 
@@ -60,21 +62,31 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 
 - 暖黑半透明内容面（`--animal-cream: #40362b` 作浮层面，`#2a2520` 作 composer 面）；
 - 深蓝紫侧栏与波浪（侧栏是整套 dark 里唯一的冷色面，与暖色内容区形成对比）；
+- 选中/悬停是暖木牌，形成「蓝墙挂木牌」的对比；
 - 亮薄荷 brand/business；
 - 深棕代码岛；
-- 绿色波点改为低对比深青绿。
+- 浅色画布装饰层换成「夜岛」：深青天空 + 星点 + 右上月晕（不再复用白天的草/水波纹与漂浮叶子）。
 
 > 注意：dark 下 `--animal-cream` 不能取侧栏的 `#303444` —— 它同时供对话框、卡片与 composer 按钮使用，取侧栏色会让对话框整块变冷，与暖色卡片、代码块打架。
 
 ## 形状与反馈
 
+- 品牌标：原创倾斜叶片（叶尖朝上、叶脉提亮），24px 侧栏标仍可辨认，侧栏与 hero 复用同一枚 SVG；
+- Hero 字标：深绿 900 字重 + 奶油高光/投影 + 2° 微倾的「贴纸字」；
+- Composer：作为「对话气泡」——2px 深墨描边、顶部高光与底部小尾巴；尾巴走 `::before`，因为 DSH 已用卡片的 `::after` 画 workspace 触发虚线环；奶油面叠 7% 纸纹与右侧淡叶水印；
+- 交互按钮：顶部高光 + 硬底 + 回弹；hover/active 对原生 `button` 与 `role='button'` 走同一规则（旧版只挂在 `role='button'` 分支，原生按钮会永久呈现 hover 态）；
+- 输入焦点：composer `:focus-within` 换薄荷描边 + 3px 柔光（只改颜色/阴影，不改尺寸）；
+- 发送键按压：`::after` 薄荷环从键位扩出（`:active`；插件没有发送事件钩子，所以是按压反馈而非发送后动画）；
+- 侧栏叶片 hover 轻摆 `rotate(-6deg) scale(1.06)`；选区为半透明薄荷；以上都在 `prefers-reduced-motion` 下关闭；
+- 画布：波点 + 45° 斜纹 + 底部草/水双波纹 + 低透明度漂浮叶子/花/星；深色换成「夜岛」深青天空 + 星点 + 右上月晕；
 - Sidebar：18px 圆角、2px 白边、暖色 soft shadow；
-- Header ribbon：参考 `Title` 的三层构造 —— 薄荷正面主体（`::after`）+ 深青燕尾与折角三角（`::before`：燕尾走 `clip-path`，折角用两枚渐变三角）；三层全部收在 `nav` 盒内，因为 DSH 的 `.crumbs` 是 `overflow: hidden`；
+- Header ribbon：木质告示牌 —— 暖木正面（`::after`，竖向木纹 + 两枚铆钉）+ 深木燕尾与折角三角（`::before`：燕尾走 `clip-path`，折角用两枚渐变三角）；奶油字 `#fff3d6`（深色 `#f6e6c8`）；三层全部收在 `nav` 盒内，因为 DSH 的 `.crumbs` 是 `overflow: hidden`；
 - 文本按钮：pill、2px 暖边、4px 立体底边；
 - 输入/contenteditable：24px 圆角、2.5px 边、3px 输入底边；
 - DSH 组合式输入（`span > 图标 + input`）：由外壳承担输入外观，内部 `input` 保持透明，键盘焦点环随之移到外壳，避免同一字段出现两层边框；
-- Composer/dialog：24–28px 圆角、奶油卡片；菜单/弹出层不套这层卡片外观，沿用 DSH 自己的弹出chrome，表面取 `--dsw-specific-menu`（= `surface` 白，避免和 composer 的 `#fffbe7` 糊成一片）；
-- 弹出层行列高亮（`[role='option'|'menuitem']` 的 hover / `aria-selected`）用薄荷 `--dsw-alias-interactive-bg-hover-accent`；通用的 `--dsw-alias-interactive-bg-hover` 保持 periwinkle，因为侧栏会话行与它共用；
+- Composer/dialog：24–28px 圆角、奶油卡片；dialog 另叠 7% 纸纹 + 内缩纸边 + 虚线缝线（`outline-offset: -10px`，`:not(:focus-visible)` 保留焦点环）；菜单/弹出层不套这层卡片外观，沿用 DSH 自己的弹出chrome，表面取 `--dsw-specific-menu`（= `surface` 白，避免和 composer 的 `#fffbe7` 糊成一片）；
+- 选中态：侧栏会话行 / 面板行用「木牌」——暖木底 + 竖向木纹 + 内嵌高光/压边（`[role='treeitem'][aria-selected='true']`、`[aria-current='page']`）；
+- 弹出层行列高亮（`[role='option'|'menuitem']` 的 hover / `aria-selected`）用薄荷 `--dsw-alias-interactive-bg-hover-accent`；通用的 `--dsw-alias-interactive-bg-hover` 是暖木色，因为侧栏会话行与它共用；
 - 命令面板（`/`、`@`）的滚动高度由组件按可用空间内联算出，主题只给面板底边加 16px 渐隐（`[data-trigger-menu]::after`，颜色取面板自身表面），让被裁掉的半行读作「下面还有」—— 不改高度，短列表不滚动时不受影响；
 - Code block：圆角/底色跟随 DSH 的代码块变量（圆角 12px，不另立数值 —— 容器变量一旦在容器上覆写，会连带顶掉文档预览刻意设的 `0px` 平面样式）；`pre` 只保留 20/24px padding 与排版，不自己画边框/圆角/底色；banner 文字（语言标签 + 复制按钮）用代码前景色：标签自己声明了 `label-primary`、复制按钮只是 `inherit`，所以 banner 本身与它的直接子元素都要覆盖 —— 否则会出现「右边改好了、左边还是看不清」；右侧栏「文档」预览（`data-code-preview`）是**平面**代码视图，那里必须让文字回到 DSH 自己的颜色：深色代码岛的前景/配色落到浅色面板上只有 1.35:1，灰成一片（高亮的「代码」视图不受影响）；
 - Code：inline code chip 只作用于无 class 的 `<code>`，自带样式的组件（预设 id 之类）保留原生外观；
@@ -99,7 +111,11 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 ## 原创资源
 
 - `src/client/assets/sidebar-wave.svg`：本项目原创贝塞尔路径；
-- Brand/Hero Mark：React 内联原创 SVG；
+- `src/client/assets/island-horizon.svg`：底部草/水波纹与小花；
+- `src/client/assets/floating-leaves.svg`：漂浮叶子/花/星点阵（低透明度，浅色画布用）；
+- `src/client/assets/paper-grain.svg`：`feTurbulence` 纸纹（composer / dialog 平铺）；
+- `src/client/assets/leaf-watermark.svg`：composer 右侧的淡叶水印；
+- Brand/Hero Mark：React 内联原创叶片 SVG；
 - 波点：30px/15px 的原创双点阵；
 - 没有使用参考项目 Logo、照片、插画、图标包或 GROBOLD 字体。
 

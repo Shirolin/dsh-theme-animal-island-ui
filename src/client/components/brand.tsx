@@ -14,12 +14,34 @@ export function IslandMark({ size, className }: IslandMarkProps): React.JSX.Elem
       height={size}
       viewBox="0 0 64 64"
     >
-      <circle cx="47" cy="17" r="7" fill="#ffcc58" />
-      <path d="M8 43c13-11 35-11 48 0-6 9-42 9-48 0Z" fill="#50b88a" />
-      <path d="M14 45c9 4 27 4 36 0-3 7-33 7-36 0Z" fill="#3f9fc4" />
-      <path d="M30 38c0-9 3-17 10-22-1 10-3 17-10 22Z" fill="#3f9f5f" />
-      <path d="M33 30c4-5 9-8 15-9-3 6-8 10-15 9Z" fill="#6ccb84" />
-      <path d="M16 39c-4-7-3-13 2-18 4 6 4 12-2 18Z" fill="#76c98b" />
+      {/* Original tilted island leaf: the one shape that reads "Animal Island"
+          even at 16–24px. Outline, central vein and side veins are kept thick so
+          the silhouette survives the small sidebar mark. */}
+      <g transform="rotate(-18 32 32)">
+        <path d="M32 54c0 5-2 8-7 9" fill="none" stroke="#2f7d3c" strokeWidth="4.5" strokeLinecap="round" />
+        <path
+          d="M32 6C19 16 10 27 10 38c0 11 10 18 22 18s22-7 22-18C54 27 45 16 32 6Z"
+          fill="#6cc35a"
+          stroke="#2f7d3c"
+          strokeWidth="3.2"
+          strokeLinejoin="round"
+        />
+        <path d="M32 12v37" stroke="#d9f2c1" strokeWidth="3.4" strokeLinecap="round" />
+        <path
+          d="M32 25c-6-1-10-4-13-9M32 34c-7-1-12-4-15-8M32 43c-6 0-10-2-14-6"
+          fill="none"
+          stroke="#a6dd8c"
+          strokeWidth="2.6"
+          strokeLinecap="round"
+        />
+        <path
+          d="M32 25c6-1 10-4 13-9M32 34c7-1 12-4 15-8M32 43c6 0 10-2 14-6"
+          fill="none"
+          stroke="#a6dd8c"
+          strokeWidth="2.6"
+          strokeLinecap="round"
+        />
+      </g>
     </svg>
   )
 }
