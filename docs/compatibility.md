@@ -21,6 +21,7 @@ DSH 仍处于 0.1.x 预发布阶段。本插件承诺支持已验证的公开 se
 - `ctx.slots.inject/register/spec`
 - `sidebar.brand.mark`、`sidebar.brand.name`
 - `conversation.hero.brand.mark`
+- `settings.plugins.tab`（插件自有的「动森外观」设置页入口）
 - `body[data-ds-dark-theme]`
 - DSH 当前公开 `--dsw-*` / `--shiki-*` token 名称
 
@@ -42,9 +43,9 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
 | `[role='treeitem'][aria-selected='true']` | 选中的会话 / 搜索结果行：木牌底 + 木纹 + 压边 | 工作区树行的 ARIA 选中状态，跨版本稳定 |
 | `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |
-| `[aria-pressed]`、`[aria-selected]` | 选中态（预设卡片、列表项） | ARIA 状态属性 |
+| `[aria-pressed]`、`[aria-selected]`、`[aria-checked]` | 选中态（预设卡片、列表项、外观预设） | ARIA 状态属性 |
 
-不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。
+插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。
 
 ## 插件自有布局
 

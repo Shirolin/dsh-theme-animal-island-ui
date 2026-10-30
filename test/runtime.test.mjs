@@ -108,13 +108,19 @@ test('client factory registers and releases coordinated theme, style, and public
     assert.match(style.textContent, /--animal-mint:\s*#19c8b9/)
     assert.deepEqual(
       slots.registrations.map((entry) => entry.key).sort(),
-      ['conversation.hero.brand.mark', 'sidebar.brand.mark', 'sidebar.brand.name'],
+      ['conversation.hero.brand.mark', 'settings.plugins.tab', 'sidebar.brand.mark', 'sidebar.brand.name'],
     )
-    assert.ok(slots.registrations.every((entry) => entry.priority === -100))
+    // Brand slots keep their fixed priority; the appearance tab is an ordinary
+    // list-slot entry and carries no priority.
+    assert.ok(slots.registrations.filter((entry) => entry.key !== 'settings.plugins.tab').every((entry) => entry.priority === -100))
+    assert.ok(slots.registrations.some((entry) => entry.key === 'settings.plugins.tab'))
+    // The saved appearance preference is painted on the root as a CSS variable.
+    assert.equal(document.documentElement.style.getPropertyValue('--animal-canvas-veil'), '0.4')
 
     disposeEffects()
     assert.equal(disposedTheme, 1)
     assert.equal(document.documentElement.hasAttribute('data-dsh-animal-island-skin'), false)
+    assert.equal(document.documentElement.style.getPropertyValue('--animal-canvas-veil'), '')
     assert.equal(document.head.querySelectorAll('style[data-plugin="dsh-theme-animal-island-ui"]').length, 0)
     assert.deepEqual(slots.registrations, [])
   })

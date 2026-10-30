@@ -15,6 +15,7 @@ html[data-dsh-animal-island-skin] {
   --animal-shadow-input: #d4c9b4;
   --animal-shadow-soft: rgba(61, 52, 40, 0.1);
   --animal-shadow-card: rgba(61, 52, 40, 0.14);
+  --animal-canvas-veil: 0.4;
   --animal-font-family: Nunito, "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --animal-code-family: "SFMono-Regular", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", monospace;
   background-color: #8fcaa5;
@@ -28,7 +29,7 @@ html[data-dsh-animal-island-skin] {
 }
 
 html[data-dsh-animal-island-skin] body {
-  --dsw-alias-bg-base: rgba(248, 248, 240, 0.52) !important;
+  --dsw-alias-bg-base: rgba(248, 248, 240, var(--animal-canvas-veil, 0.4)) !important;
   --dsw-specific-sidebar-fill: rgba(250, 248, 243, 0.82) !important;
   isolation: isolate;
   color: var(--animal-body);
@@ -627,6 +628,138 @@ html[data-dsh-animal-island-skin] ::selection {
 
 html[data-dsh-animal-island-skin] body[data-ds-dark-theme] ::selection {
   background: rgba(97, 217, 203, 0.3);
+}
+
+/* Settings → Plugins → 动森外观. A public `settings.plugins.tab` entry; the card
+   only draws its own internals. Presets map to the same veil the CSS variable
+   already drives, so the control and the canvas can never disagree. */
+html[data-dsh-animal-island-skin] .animal-island-appearance {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 560px;
+  padding: 4px 2px 18px;
+  color: var(--animal-body);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance h3 {
+  margin: 0;
+  color: var(--animal-ink);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance p {
+  margin: 0;
+  color: var(--animal-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__preset {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 112px;
+  padding: 8px 14px;
+  border: 2px solid var(--animal-border);
+  border-radius: 14px;
+  background: var(--animal-cream);
+  color: var(--animal-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.55), 0 3px 0 var(--animal-shadow-button);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__preset small {
+  color: var(--animal-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__preset[aria-checked='true'] {
+  border-color: var(--animal-border-strong);
+  background-color: #e5c99b;
+  background-image: repeating-linear-gradient(90deg, rgba(90, 55, 25, 0.07) 0 2px, transparent 2px 9px);
+  color: #4a2f17;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45), inset 0 -2px 0 rgba(90, 55, 25, 0.2);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__preset[aria-checked='true'] small {
+  color: #6b4a2c;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-appearance__preset[aria-checked='true'] {
+  border-color: #8a7057;
+  background-color: #6b4a2c;
+  background-image: repeating-linear-gradient(90deg, rgba(20, 12, 6, 0.2) 0 2px, transparent 2px 9px);
+  color: #f6e6c8;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-appearance__preset[aria-checked='true'] small {
+  color: #d8c2a0;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--animal-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__slider input[type='range'] {
+  flex: 1;
+  min-width: 120px;
+  accent-color: var(--animal-mint);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__slider output {
+  min-width: 40px;
+  color: var(--animal-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__reset {
+  align-self: flex-start;
+  padding: 4px 16px;
+  border: 2px solid var(--animal-border);
+  border-radius: 999px;
+  background: var(--animal-cream);
+  color: var(--animal-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.55), 0 3px 0 var(--animal-shadow-button);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__reset:hover {
+  border-color: var(--animal-mint);
+  color: var(--animal-mint-deep);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__note {
+  font-size: 11px;
+}
+
+/* Accessibility: a system request for more contrast wins over the slider. */
+@media (prefers-contrast: more) {
+  html[data-dsh-animal-island-skin] {
+    --animal-canvas-veil: 0.52 !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,7 +2,7 @@
 
 `Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创资源与 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
 
-当前版本 **0.3.6**：叶子品牌标、气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态；逐条可见变化见 [CHANGELOG.md](CHANGELOG.md)。
+当前版本 **0.3.7**：叶子品牌标、气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态，并新增「设置 → 插件 → 动森外观」的透明度调节；逐条可见变化见 [CHANGELOG.md](CHANGELOG.md)。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 
@@ -15,6 +15,7 @@
 - 奶油色 3D 主按钮和 hover/active 按压反馈；
 - 输入时气泡发光、发送键按压涟漪、叶片 hover 轻摆；
 - Light / Dark 均可读的深棕色代码块与 Shiki 配色；深色画布为「夜岛」星空；
+- 设置 → 插件 → 动森外观：纸白 / 均衡 / 海岛三档预设 + 0.15–0.60 滑杆，默认均衡 0.40；
 - 内嵌 Nunito Latin 字体，中文回退 Noto Sans SC / 苹方 / 微软雅黑。
 
 设计图是方向性 specimen；真实 DSH 截图是最终验收依据。
@@ -36,7 +37,7 @@
 
 1. `ctx.theme.overrideTokens()` 管理 Light / Dark / System token；
 2. DSH `dsh.client` Module Loader；
-3. `ctx.slots` 的公开品牌和 hero Slot，同时保留 DSH 官方 Sidebar 根组件；
+3. `ctx.slots` 的公开品牌 / hero Slot，以及 Plugins 设置区的 `settings.plugins.tab` 入口，同时保留 DSH 官方 Sidebar 根组件；
 4. 插件自己创建并清理的 `<style>`、根属性和原创资源；
 5. 少量有版本测试的语义 `data-*` / ARIA 增强（清单见 [docs/compatibility.md](docs/compatibility.md)）。
 
@@ -52,7 +53,7 @@ plugin-owned CSS / fonts / original SVG
 official Sidebar + public Brand/Hero slots
 ```
 
-主题仍叠加在 DSH Light / Dark / System 之上，不新增持久化外观设置。
+主题仍叠加在 DSH Light / Dark / System 之上；唯一的持久化外观设置是「画布透明度」，保存在本机 `localStorage`（不同 web/desktop 客户端各自记忆）。
 
 ## 开发
 
@@ -97,15 +98,15 @@ pnpm run release 0.3.6     # 打包 + 回写 SHA；版本号必须是新的
 `prepack` 会自动重建 `lib`。当前规范产物为：
 
 ```text
-artifacts/release-v0.3.6/dsh-theme-animal-island-ui-0.3.6.tgz
-SHA-256: E47FF28721BEEBF6426E40F708FE791436C1AAE3F70700408E051D5D30C39DF8
+artifacts/release-v0.3.7/dsh-theme-animal-island-ui-0.3.7.tgz
+SHA-256: 8AB3DAC0A7AE19219B5312F85F258F01C258D4EACF26EEE0057C8A138C0E8C0F
 ```
 
 把 `.tgz` 装进目标 `web` profile 并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）：
 
 ```sh
 cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v0.3.6/dsh-theme-animal-island-ui-0.3.6.tgz
+pnpm add file:<仓库>/artifacts/release-v0.3.7/dsh-theme-animal-island-ui-0.3.7.tgz
 ```
 
 之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。

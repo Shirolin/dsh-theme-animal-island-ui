@@ -1,0 +1,72 @@
+import { useSyncExternalStore } from 'react'
+import {
+  APPEARANCE_PRESETS,
+  getAppearance,
+  setAppearance,
+  subscribeAppearance,
+  type AppearancePreset,
+} from '../appearance.ts'
+
+type NamedPreset = Exclude<AppearancePreset, 'custom'>
+
+const PRESET_LABELS: Record<NamedPreset, string> = {
+  paper: '纸白',
+  balanced: '均衡',
+  island: '海岛',
+}
+
+const PRESET_ORDER: NamedPreset[] = ['paper', 'balanced', 'island']
+
+export function AppearanceTab(): React.JSX.Element {
+  const state = useSyncExternalStore(subscribeAppearance, getAppearance, getAppearance)
+
+  return (
+    <section className="animal-island-appearance">
+      <h3>动森外观</h3>
+      <p>
+        画布上那层奶油「纸面」的透明度。越低越绿、越像游戏；越高越纸白、越好读。
+      </p>
+
+      <div className="animal-island-appearance__presets" role="radiogroup" aria-label="外观预设">
+        {PRESET_ORDER.map((preset) => (
+          <button
+            key={preset}
+            type="button"
+            role="radio"
+            aria-checked={state.preset === preset}
+            className="animal-island-appearance__preset"
+            onClick={() => setAppearance({ preset, veil: APPEARANCE_PRESETS[preset] })}
+          >
+            {PRESET_LABELS[preset]}
+            <small>{APPEARANCE_PRESETS[preset].toFixed(2)}</small>
+          </button>
+        ))}
+      </div>
+
+      <label className="animal-island-appearance__slider">
+        <span>自定义</span>
+        <input
+          type="range"
+          min={0.15}
+          max={0.6}
+          step={0.01}
+          value={state.veil}
+          onChange={(event) => setAppearance({ preset: 'custom', veil: Number(event.target.value) })}
+        />
+        <output>{state.veil.toFixed(2)}</output>
+      </label>
+
+      <button
+        type="button"
+        className="animal-island-appearance__reset"
+        onClick={() => setAppearance({ preset: 'balanced', veil: APPEARANCE_PRESETS.balanced })}
+      >
+        恢复默认（均衡 0.40）
+      </button>
+
+      <p className="animal-island-appearance__note">
+        偏好保存在本机这个客户端；系统开启「高对比」时会自动回到纸白。
+      </p>
+    </section>
+  )
+}

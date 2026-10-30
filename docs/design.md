@@ -35,7 +35,7 @@
 | 角色 | 值 | 用途 |
 | --- | --- | --- |
 | 波点画布 | `#8fcaa5` | 页面外层 |
-| 主内容 | `rgba(248,248,240,.90)` | 暖白半透明中心 |
+| 主内容 | `rgba(248,248,240,var(--animal-canvas-veil,.4))` | 暖白半透明中心，透明度可调 |
 | 白色表面 | `#ffffff` | 主卡片 |
 | 奶油表面 | `#f7f3df` | 内容层、inline code |
 | 输入高光 | `#fffbe7` | composer、输入 |
@@ -79,6 +79,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - 发送键按压：`::after` 薄荷环从键位扩出（`:active`；插件没有发送事件钩子，所以是按压反馈而非发送后动画）；
 - 侧栏叶片 hover 轻摆 `rotate(-6deg) scale(1.06)`；选区为半透明薄荷；以上都在 `prefers-reduced-motion` 下关闭；
 - 画布：波点 + 45° 斜纹 + 底部草/水双波纹 + 低透明度漂浮叶子/花/星；深色换成「夜岛」深青天空 + 星点 + 右上月晕；
+- 画布透明度：主内容的奶油面由 `--animal-canvas-veil`（默认 .4）驱动；「设置 → 插件 → 动森外观」提供纸白 .52 / 均衡 .40 / 海岛 .28 三档 + .15–.60 滑杆，选择存本机 `localStorage`；`prefers-contrast: more` 强制 .52；
 - Sidebar：18px 圆角、2px 白边、暖色 soft shadow；
 - Header ribbon：木质告示牌 —— 暖木正面（`::after`，竖向木纹 + 两枚铆钉）+ 深木燕尾与折角三角（`::before`：燕尾走 `clip-path`，折角用两枚渐变三角）；奶油字 `#fff3d6`（深色 `#f6e6c8`）；三层全部收在 `nav` 盒内，因为 DSH 的 `.crumbs` 是 `overflow: hidden`；
 - 文本按钮：pill、2px 暖边、4px 立体底边；

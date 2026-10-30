@@ -2,6 +2,18 @@
 
 本文件记录每个发布版本对用户可见的变化。安装与验收流程见 `README.md`，设计映射见 `docs/design.md`，DSH 兼容边界见 `docs/compatibility.md`。
 
+## 0.3.7（外观设置）
+
+把「画布有多绿」交给用户，而不是替他二选一。新增「设置 → 插件 → 动森外观」页：三档预设 + 透明度滑杆。
+
+### 外观设置
+
+- 新增公开 Slot `settings.plugins.tab` 的「动森外观」页：**纸白 0.52 / 均衡 0.40 / 海岛 0.28** 三档预设，外加 0.15–0.60 自定义滑杆与「恢复默认」；
+- 默认**均衡 0.40**；选择写入本机 `localStorage`，刷新 / 重启保留；
+- 画布奶油面透明度改由 `--animal-canvas-veil` 驱动（`rgba(248, 248, 240, var(--animal-canvas-veil, .4))`），不再写死 0.52；
+- `prefers-contrast: more` 时自动回到纸白 0.52，滑杆不会再把对比度压低；
+- 该页由插件自己的浏览器半注册到 Plugins 设置区，不依赖 Host 设置文档；web 与 desktop 各自记住本客户端的选择。
+
 ## 0.3.6（P0–P3 视觉强化）
 
 让整体更像《动森》本尊的游戏界面。改动集中在品牌 Slot、composer、dialog、画布与侧栏选中态；除侧栏 hover/active 的暖木色外，不触碰 DSH 布局几何或其它 palette token。
