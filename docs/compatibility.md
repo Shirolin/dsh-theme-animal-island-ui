@@ -11,7 +11,7 @@
 
 DSH 仍处于 0.1.x 预发布阶段。本插件承诺支持已验证的公开 seam，不承诺未知 future major。
 
-官方桌面客户端内置的 runtime 与上面的仓库基线**不是同一版**（验证时为 `0.2.0-rc.2`），它跑同一套 web
+官方桌面客户端内置的 runtime 与上面的仓库基线**不是同一版**（验证时为 `0.2.1-rc.5`），它跑同一套 web
 应用、同一套客户端插件契约 —— 桌面环境的 profile 隔离、安装、重启时机与夹具做法见
 [desktop.md](desktop.md)。
 
@@ -40,6 +40,8 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
 | `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
+| `[role='treeitem'][aria-selected='true']` | 选中的会话 / 搜索结果行：木牌底 + 木纹 + 压边 | 工作区树行的 ARIA 选中状态，跨版本稳定 |
+| `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |
 | `[aria-pressed]`、`[aria-selected]` | 选中态（预设卡片、列表项） | ARIA 状态属性 |
 
 不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。
@@ -84,7 +86,7 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
 
 - 临时探索用的夹具仍可放在 `.dsh/`（忽略目录），成熟后按上面的形状收进 `test/fixtures/`；
 - 夹具会连同**插件自己内嵌的 Nunito** 一起渲染。只渲染 `src/client/skin.css` 的话文字全部走回退字体，凡是与字宽、换行、裁切有关的回归都看不出来；
-- 侧栏品牌区的夹具是 `test/fixtures/sidebar-brand-desktop/`：它按 0.2.0-rc.2 的 `[data-windows-titlebar]` 结构还原 DOM（含 DSH 自己的 hash class），并带一个把 DSH 裁剪框关掉的对照 case —— 比较两个 case 的墨迹高度就能看出字标有没有被削顶。它跑的是**桌面客户端的 runtime**，所以要显式指定：
+- 侧栏品牌区的夹具是 `test/fixtures/sidebar-brand-desktop/`：它按 0.2.1-rc.5 的 `[data-windows-titlebar]` 结构还原 DOM（含 DSH 自己的 hash class），并带一个把 DSH 裁剪框关掉的对照 case —— 比较两个 case 的墨迹高度就能看出字标有没有被削顶。它跑的是**桌面客户端的 runtime**，所以要显式指定：
 
   ```sh
   node scripts/fixture.mjs sidebar-brand-desktop --dsh "<提取出来的桌面 app 目录>"

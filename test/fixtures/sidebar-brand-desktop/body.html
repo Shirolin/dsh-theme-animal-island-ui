@@ -2,7 +2,7 @@
 <!--
   Desktop client (Electron) sidebar brand area.
 
-  DSH 0.2.0-rc.2 renders the sidebar under [data-windows-titlebar]: the logo row
+  DSH 0.2.1-rc.5 renders the sidebar under [data-windows-titlebar]: the logo row
   is 40px tall with no padding, the collapse toggle is position:fixed, and
   brandIdentity/brandMark carry a 1px transform. The plugin's brand-name slot
   lands inside DSH's `.brand`, a 24px box with `overflow: hidden` — so the whole
@@ -12,13 +12,13 @@
   the `.brand` clipper switched off, so comparing the two cases' ink heights
   shows a shaved top the moment the budget is spent wrongly again.
 
-  Hash prefixes are DSH's own CSS-module hashes for 0.2.0-rc.2. The skin must
+  Hash prefixes are DSH's own CSS-module hashes for 0.2.1-rc.5. The skin must
   never use them; a fixture may, because it reproduces a real DOM shape.
 -->
 <html lang="zh-CN" data-dsh-animal-island-skin="active">
 <head>
 <meta charset="utf-8">
-<title>sidebar brand — desktop 0.2.0-rc.2</title>
+<title>sidebar brand — desktop 0.2.1-rc.5</title>
 <!--{{DSH_CSS}}-->
 <!--{{THEME_BASE_CSS}}-->
 <!--{{PLUGIN_CSS}}-->
@@ -32,22 +32,23 @@
   #probe { font: 11px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre;
            background: #fff; color: #111; padding: 10px 12px; border: 1px solid #bbb; margin: 14px 0 0; }
   /* Control only: DSH's `.brand` is the clip box, so switch it off here. */
-  .noBrandClip ._2H3hWW_brand { overflow: visible; }
+  .noBrandClip .wtg9ga_brand { overflow: visible; }
 </style>
 </head>
 <body {{BODY_ATTRIBUTES}} style="{{BODY_STYLE}} {{TOKENS}}">
-<h1>侧栏品牌区 · 桌面版 0.2.0-rc.2（[data-windows-titlebar]，DSH 的 24px 品牌盒会裁剪）</h1>
+<h1>侧栏品牌区 · 桌面版 0.2.1-rc.5（[data-windows-titlebar]，DSH 的 24px 品牌盒会裁剪）</h1>
 <div class="cases" id="cases"></div>
 <pre id="probe"></pre>
 <script>
-const H = '_2H3hWW_';
+const H = 'wtg9ga_';
 const MARK = '<svg aria-hidden="true" class="animal-island-brand__mark" width="24" height="24" viewBox="0 0 64 64">'
-  + '<circle cx="47" cy="17" r="7" fill="#ffcc58"/>'
-  + '<path d="M8 43c13-11 35-11 48 0-6 9-42 9-48 0Z" fill="#50b88a"/>'
-  + '<path d="M14 45c9 4 27 4 36 0-3 7-33 7-36 0Z" fill="#3f9fc4"/>'
-  + '<path d="M30 38c0-9 3-17 10-22-1 10-3 17-10 22Z" fill="#3f9f5f"/>'
-  + '<path d="M33 30c4-5 9-8 15-9-3 6-8 10-15 9Z" fill="#6ccb84"/>'
-  + '<path d="M16 39c-4-7-3-13 2-18 4 6 4 12-2 18Z" fill="#76c98b"/></svg>';
+  + '<g transform="rotate(-18 32 32)">'
+  + '<path d="M32 54c0 5-2 8-7 9" fill="none" stroke="#2f7d3c" stroke-width="4.5" stroke-linecap="round"/>'
+  + '<path d="M32 6C19 16 10 27 10 38c0 11 10 18 22 18s22-7 22-18C54 27 45 16 32 6Z" fill="#6cc35a" stroke="#2f7d3c" stroke-width="3.2" stroke-linejoin="round"/>'
+  + '<path d="M32 12v37" stroke="#d9f2c1" stroke-width="3.4" stroke-linecap="round"/>'
+  + '<path d="M32 25c-6-1-10-4-13-9M32 34c-7-1-12-4-15-8M32 43c-6 0-10-2-14-6" fill="none" stroke="#a6dd8c" stroke-width="2.6" stroke-linecap="round"/>'
+  + '<path d="M32 25c6-1 10-4 13-9M32 34c7-1 12-4 15-8M32 43c6 0 10-2 14-6" fill="none" stroke="#a6dd8c" stroke-width="2.6" stroke-linecap="round"/>'
+  + '</g></svg>';
 
 function sidebar(width, extraClass) {
   return '<div data-windows-titlebar class="' + (extraClass ?? '') + '" style="display:inline-block">'

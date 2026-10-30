@@ -1,5 +1,5 @@
 {
-  "title": "侧栏品牌区（桌面版 0.2.0-rc.2，Windows titlebar 布局）",
+  "title": "侧栏品牌区（桌面版 0.2.1-rc.5，Windows titlebar 布局）",
   "pluginCss": ["@deepseek-ai/dsh-client-ui-sidebar"],
   "variants": [
     { "id": "light", "mode": "light", "window": "1700,520" },

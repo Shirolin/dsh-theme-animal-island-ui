@@ -2,7 +2,7 @@
 
 `Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创资源与 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
 
-当前版本 **0.3.4**：修复主题规则越界改写 DSH 与插件自有界面的一系列问题（标题绶带、弹出层表面、命令面板行高、粘贴图片缩略图、代码块圆角、预设页与 opencode-go 设置页），逐条可见变化见 [CHANGELOG.md](CHANGELOG.md)。
+当前发布版本 **0.3.5**；P0–P3 视觉强化（叶子品牌标、气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态）已进仓库、待在下一个版本发布，逐条见 [CHANGELOG.md](CHANGELOG.md)。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 

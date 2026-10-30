@@ -6,7 +6,7 @@
 ## 它是什么
 
 - 外壳是 `@deepseek-ai/dsh-desktop`（Electron），内置 runtime `@deepseek-ai/dsh-desktop-runtime`；
-  本文的验证基线是 `0.2.0-rc.2`。
+  本文的验证基线是 `0.2.1-rc.5`。
 - 桌面宿主 `dsh-desktop-host/lib/index.js` 的 `main()` 直接调用：
 
   ```js
@@ -16,7 +16,7 @@
   也就是与 `dsh web` **同一套** web 应用（`dsh-web-app` + `dsh-web-frontend`），只是换了 profile
   目录，外面套了 Electron。
 - 所以客户端插件不需要为桌面版改造：`dsh-client-modules` 仍然只认 `dsh.client.platform === "web"`
-  （0.2.0-rc.2 里还是这一行），本主题的 `package.json` 声明的正是这个值。
+  （0.2.1-rc.5 里还是这一行），本主题的 `package.json` 声明的正是这个值。
 
 ## profile 是隔离的
 
@@ -71,7 +71,7 @@ console.log(profile.skippedBundles, profile.layers.map((layer) => layer.packageN
 - 豁免写在 profile 自己的 `compatibility.json`（与 `package.json`、`cordis.patch.yml` 并列），把精确的
   `package-name@version` 映射到精确的 DSH runtime 版本；授权与风险确认由插件管理器负责。
 - 本主题不声明 `peerDependencies`，所以不受这条门禁影响。但要注意**开发基线与桌面 runtime 可能不同**：
-  仓库锁的是 `0.1.5-rc.3`，桌面内置的是 `0.2.0-rc.2`。桌面打包时剥掉了 `lib/types/**`，因此
+  仓库锁的是 `0.1.5-rc.3`，桌面内置的是 `0.2.1-rc.5`。桌面打包时剥掉了 `lib/types/**`，因此
   `scripts/check-compat.mjs` 不能直接对着桌面包跑（它读 `lib/types/client/index.d.ts` 拿
   `overrideTokens` 的返回类型）。要对桌面版做接缝检查，先把类型声明补出来，或临时把基线
   devDependency 升到桌面 runtime 的版本。
@@ -93,6 +93,9 @@ console.log(profile.skippedBundles, profile.layers.map((layer) => layer.packageN
 ```sh
 node scripts/fixture.mjs sidebar-brand-desktop --dsh <抽出来的目录>
 ```
+
+夹具 `body.html` 里的 hash 前缀取自当前桌面 runtime（`0.2.1-rc.5` 是 `wtg9ga_`）；桌面升级后要同步
+更新这一处，否则真实 CSS 不命中，夹具会渲染成没有样式的样子。
 
 抽 asar 时注意头部偏移 —— **`dataStart = 8 + readUInt32LE(4)`**，不是
 `8 + readUInt32LE(12)`：后者会早 8 字节，读出来的 JSON 带一段垃圾前缀、文件尾部被截掉，而且包的

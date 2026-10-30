@@ -121,3 +121,36 @@ test('wave artwork is an original local SVG rather than a reference asset', () =
   assert.match(wave, /C28 42 58 40 90 62/)
   assert.doesNotMatch(wave, /image\/|href=.*\.png|href=.*\.jpg/)
 })
+
+test('skin uses only the reviewed ARIA role seams', () => {
+  const roles = new Set([...css.matchAll(/role='([^']+)'/g)].map((match) => match[1]))
+  const allowed = new Set([
+    'button',
+    'checkbox',
+    'dialog',
+    'group',
+    'listbox',
+    'menu',
+    'menuitem',
+    'menuitemradio',
+    'option',
+    'radio',
+    'switch',
+    'treeitem',
+  ])
+  assert.deepEqual([...roles].filter((role) => !allowed.has(role)), [])
+})
+
+test("selected-row wood grain survives DSH's selected shorthand", () => {
+  // DSH paints `.sessionRow.selected` with a `background` shorthand that also
+  // resets background-image, and its class specificity beats our attribute
+  // selector. The plank's colour, grain and bevel therefore have to be
+  // `!important` or the grain silently disappears on the real rows.
+  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const rule = rules.find((candidate) => /\[role='treeitem'\]\[aria-selected='true'\]/.test(candidate))
+  assert.ok(rule, 'the selected-row wood-plank rule is missing')
+  for (const declaration of ['background-color:', 'background-image:', 'box-shadow:']) {
+    const line = rule.slice(rule.indexOf(declaration)).split(';')[0]
+    assert.match(line, /!important/, `${declaration} must beat DSH's selected shorthand`)
+  }
+})
