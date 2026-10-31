@@ -64,10 +64,12 @@ const fontCss = await Promise.all(fontWeights.map(async (weight) => {
 
 const skinCss = await readFile('src/client/skin.css', 'utf8')
 const asset = async (file) => `data:image/svg+xml,${encodeURIComponent(await readFile(`src/client/assets/${file}`, 'utf8'))}`
-const [waveDataUri, horizonDataUri, leavesDataUri, grainDataUri, leafDataUri] = await Promise.all([
+const [waveDataUri, horizonDataUri, leavesDataUri, nightHorizonDataUri, nightLeavesDataUri, grainDataUri, leafDataUri] = await Promise.all([
   asset('sidebar-wave.svg'),
   asset('island-horizon.svg'),
   asset('floating-leaves.svg'),
+  asset('night-horizon.svg'),
+  asset('night-leaves.svg'),
   asset('paper-grain.svg'),
   asset('leaf-watermark.svg'),
 ])
@@ -77,6 +79,8 @@ const transformedCss = transform({
     .replaceAll('__ANIMAL_ISLAND_WAVE__', waveDataUri)
     .replaceAll('__ANIMAL_ISLAND_HORIZON__', horizonDataUri)
     .replaceAll('__ANIMAL_ISLAND_LEAVES__', leavesDataUri)
+    .replaceAll('__ANIMAL_ISLAND_NIGHT_HORIZON__', nightHorizonDataUri)
+    .replaceAll('__ANIMAL_ISLAND_NIGHT_LEAVES__', nightLeavesDataUri)
     .replaceAll('__ANIMAL_ISLAND_GRAIN__', grainDataUri)
     .replaceAll('__ANIMAL_ISLAND_LEAF__', leafDataUri)),
   minify: false,

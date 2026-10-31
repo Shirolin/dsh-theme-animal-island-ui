@@ -65,7 +65,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - 选中/悬停是暖木牌，形成「蓝墙挂木牌」的对比；
 - 亮薄荷 brand/business；
 - 深棕代码岛；
-- 浅色画布装饰层换成「夜岛」：深青天空 + 星点 + 右上月晕（不再复用白天的草/水波纹与漂浮叶子）。
+- 浅色画布装饰层换成「夜岛」：深青天空 + 星点 + 右上月晕 + 低对比夜叶/萤火虫 + 深青分层山影与水纹。
 
 > 注意：dark 下 `--animal-cream` 不能取侧栏的 `#303444` —— 它同时供对话框、卡片与 composer 按钮使用，取侧栏色会让对话框整块变冷，与暖色卡片、代码块打架。
 
@@ -78,7 +78,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - 输入焦点：composer `:focus-within` 换薄荷描边 + 3px 柔光（只改颜色/阴影，不改尺寸）；
 - 发送键按压：`::after` 薄荷环从键位扩出（`:active`；插件没有发送事件钩子，所以是按压反馈而非发送后动画）；
 - 侧栏叶片 hover 轻摆 `rotate(-6deg) scale(1.06)`；选区为半透明薄荷；以上都在 `prefers-reduced-motion` 下关闭；
-- 画布：波点 + 45° 斜纹 + 底部草/水双波纹 + 低透明度漂浮叶子/花/星；深色换成「夜岛」深青天空 + 星点 + 右上月晕；
+- 画布：波点 + 45° 斜纹 + 底部草/水双波纹 + 低透明度漂浮叶子/花/星；深色换成「夜岛」深青天空 + 星点 + 右上月晕 + 夜叶/萤火虫与深青山影；
 - 画布透明度：主内容的奶油面由 `--animal-canvas-veil`（默认 .4）驱动；「设置 → 插件 → 动森外观」提供纸白 .52 / 均衡 .40 / 海岛 .28 三档 + .15–.60 滑杆，面板内用同一变量渲染「画布预览」（绿色波点画布 + 同透明度奶油层），设置弹层本身保持固定纸面，选择存本机 `localStorage`；深色纸面同样跟随该变量（.40 落在原 .84，默认观感不变）；`prefers-contrast: more` 强制 .52；Windows 桌面外壳的 AppFrame 默认用不透明 sidebar-fill 盖住画布，皮肤在 `html[data-windows-titlebar]` 下把 frame 清成透明，并在 **frame 元素**上把外壳自带的 16px 内容圆角设为 0px，与 web 一样是直角（变量必须写在 frame 上，写在 `<html>` 上会被 DSH 的 `.frame` 声明覆盖；见 [web-vs-desktop.md](web-vs-desktop.md) 与 #9490）；40px 标题栏条是 native titleBarOverlay，皮肤不试图覆盖；
 - Sidebar：18px 圆角、2px 白边、暖色 soft shadow；
 - Header ribbon：木质告示牌 —— 暖木正面（`::after`，竖向木纹 + 两枚铆钉）+ 深木燕尾与折角三角（`::before`：燕尾走 `clip-path`，折角用两枚渐变三角）；奶油字 `#fff3d6`（深色 `#f6e6c8`）；三层全部收在 `nav` 盒内，因为 DSH 的 `.crumbs` 是 `overflow: hidden`；
@@ -114,6 +114,8 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - `src/client/assets/sidebar-wave.svg`：本项目原创贝塞尔路径；
 - `src/client/assets/island-horizon.svg`：底部草/水波纹与小花；
 - `src/client/assets/floating-leaves.svg`：漂浮叶子/花/星点阵（低透明度，浅色画布用）；
+- `src/client/assets/night-leaves.svg`：深色画布的夜叶、萤火虫与星环点阵；
+- `src/client/assets/night-horizon.svg`：深色画布的层叠山影、水纹与萤火；
 - `src/client/assets/paper-grain.svg`：`feTurbulence` 纸纹（composer / dialog 平铺）；
 - `src/client/assets/leaf-watermark.svg`：composer 右侧的淡叶水印；
 - Brand/Hero Mark：React 内联原创叶片 SVG；

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 220" preserveAspectRatio="none" role="img" aria-label="Night island horizon">
+  <path d="M0 104C112 80 198 126 318 104 438 82 528 132 646 106 764 80 852 130 970 104 1086 78 1142 116 1200 98V220H0Z" fill="#3e706d" opacity=".88"/>
+  <path d="M0 130C108 108 214 148 332 130 450 112 546 154 664 132 782 110 882 152 1000 130 1112 108 1152 142 1200 126V220H0Z" fill="#386a5d" opacity=".88"/>
+  <path d="M0 162C92 146 182 176 282 160 382 144 474 178 574 162 674 146 766 180 866 164 966 148 1064 178 1164 162 1182 158 1194 160 1200 160V220H0Z" fill="#315f4f" opacity=".9"/>
+  <path d="M0 184C126 174 226 196 342 186 458 176 560 202 678 190 796 178 892 202 1008 190 1110 180 1162 192 1200 186V220H0Z" fill="#284c41" opacity=".94"/>
+  <g fill="none" stroke="#9bcbb4" stroke-linecap="round" opacity=".42">
+    <path d="M116 187c-3-14 0-24 7-32" stroke-width="2.2"/>
+    <path d="M136 187c1-10 5-17 12-22" stroke-width="2"/>
+    <path d="M422 190c-2-14 1-24 8-32" stroke-width="2.2"/>
+    <path d="M444 190c2-9 6-15 11-20" stroke-width="1.8"/>
+    <path d="M792 188c-1-12 2-21 8-28" stroke-width="2"/>
+    <path d="M1002 188c-2-13 2-23 8-29" stroke-width="2.1"/>
+  </g>
+  <g fill="none" stroke="#8cc6af" stroke-width="2" stroke-linecap="round" opacity=".3">
+    <path d="M28 201c72-12 134 10 198-2 72-14 126 8 190-4"/>
+    <path d="M510 211c84-10 146 10 218-2 68-12 126 7 186-3"/>
+  </g>
+  <g opacity=".74">
+    <circle cx="196" cy="170" r="2.4" fill="#ffe29a"/>
+    <circle cx="196" cy="170" r="7" fill="none" stroke="#ffe29a" stroke-width="1.3" opacity=".58"/>
+    <circle cx="690" cy="174" r="2" fill="#f1c986"/>
+    <circle cx="690" cy="174" r="6" fill="none" stroke="#f1c986" stroke-width="1.2" opacity=".52"/>
+    <circle cx="1042" cy="172" r="2.2" fill="#ffe29a"/>
+    <circle cx="1042" cy="172" r="6.5" fill="none" stroke="#ffe29a" stroke-width="1.3" opacity=".54"/>
+  </g>
+</svg>

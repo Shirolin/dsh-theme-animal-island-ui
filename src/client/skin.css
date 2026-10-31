@@ -85,14 +85,16 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
   color: var(--animal-body);
   background-color: #14242a;
   background-image:
+    url("__ANIMAL_ISLAND_NIGHT_LEAVES__"),
     radial-gradient(circle at 78% 14%, rgba(255, 238, 190, 0.16) 0 80px, rgba(255, 238, 190, 0.06) 130px, transparent 210px),
+    url("__ANIMAL_ISLAND_NIGHT_HORIZON__"),
     radial-gradient(circle, rgba(255, 248, 220, 0.45) 1px, transparent 1.5px),
     radial-gradient(circle, rgba(160, 230, 220, 0.3) 0.8px, transparent 1.2px),
-    radial-gradient(circle, rgba(118, 185, 145, 0.16) 1.2px, transparent 1.6px);
-  background-position: center top, 0 0, 44px 62px, 0 0;
-  background-size: 100% 100%, 96px 96px, 148px 148px, 30px 30px;
-  background-repeat: no-repeat, repeat, repeat, repeat;
-  background-attachment: fixed, fixed, fixed, fixed;
+    repeating-linear-gradient(135deg, rgba(134, 200, 179, 0.025) 0 2px, transparent 2px 9px);
+  background-position: 0 0, center top, center bottom, 0 0, 44px 62px, 0 0;
+  background-size: 520px 520px, 100% 100%, 100% 240px, 96px 96px, 148px 148px, auto;
+  background-repeat: repeat, no-repeat, no-repeat, repeat, repeat, repeat;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
 }
 
 html[data-dsh-animal-island-skin] :where(button, input, textarea, select, [role='button']),

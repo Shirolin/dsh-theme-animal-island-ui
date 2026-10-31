@@ -104,10 +104,12 @@ const tokenVars = (mode) => Object.entries(overrides).map(([token, value]) => `$
 
 const { transform } = await import('lightningcss')
 const asset = async (file) => `data:image/svg+xml,${encodeURIComponent(await readFile(join(root, 'src', 'client', 'assets', file), 'utf8'))}`
-const [wave, horizon, leaves, grain, leaf] = await Promise.all([
+const [wave, horizon, leaves, nightHorizon, nightLeaves, grain, leaf] = await Promise.all([
   asset('sidebar-wave.svg'),
   asset('island-horizon.svg'),
   asset('floating-leaves.svg'),
+  asset('night-horizon.svg'),
+  asset('night-leaves.svg'),
   asset('paper-grain.svg'),
   asset('leaf-watermark.svg'),
 ])
@@ -117,6 +119,8 @@ const skin = transform({
     .replaceAll('__ANIMAL_ISLAND_WAVE__', wave)
     .replaceAll('__ANIMAL_ISLAND_HORIZON__', horizon)
     .replaceAll('__ANIMAL_ISLAND_LEAVES__', leaves)
+    .replaceAll('__ANIMAL_ISLAND_NIGHT_HORIZON__', nightHorizon)
+    .replaceAll('__ANIMAL_ISLAND_NIGHT_LEAVES__', nightLeaves)
     .replaceAll('__ANIMAL_ISLAND_GRAIN__', grain)
     .replaceAll('__ANIMAL_ISLAND_LEAF__', leaf)),
   minify: false,

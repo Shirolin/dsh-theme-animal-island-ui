@@ -9,6 +9,8 @@ const slots = await readFile(new URL('../src/client/slots.ts', import.meta.url),
 const install = await readFile(new URL('../src/client/install.ts', import.meta.url), 'utf8')
 const brand = await readFile(new URL('../src/client/components/brand.tsx', import.meta.url), 'utf8')
 const wave = await readFile(new URL('../src/client/assets/sidebar-wave.svg', import.meta.url), 'utf8')
+const nightLeaves = await readFile(new URL('../src/client/assets/night-leaves.svg', import.meta.url), 'utf8')
+const nightHorizon = await readFile(new URL('../src/client/assets/night-horizon.svg', import.meta.url), 'utf8')
 const mastheadFixture = await readFile(new URL('./fixtures/sidebar-masthead/body.html', import.meta.url), 'utf8')
 
 test('skin CSS is plugin-scoped and avoids generated DSH selectors', () => {
@@ -353,6 +355,23 @@ test('wave artwork is an original local SVG rather than a reference asset', () =
   assert.match(wave, /viewBox="0 0 240 130"/)
   assert.match(wave, /C28 42 58 40 90 62/)
   assert.doesNotMatch(wave, /image\/|href=.*\.png|href=.*\.jpg/)
+})
+
+test('dark canvas keeps original night leaf and horizon textures', () => {
+  for (const art of [nightLeaves, nightHorizon]) {
+    assert.match(art, /<path /)
+    assert.doesNotMatch(art, /image\/|href=.*\.png|href=.*\.jpg/)
+  }
+
+  const darkCanvas = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)]
+    .map((match) => match[0])
+    .find((rule) => (
+      rule.includes('body[data-ds-dark-theme]') &&
+      rule.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__')
+    ))
+  assert.ok(darkCanvas, 'the night canvas textures are missing')
+  assert.match(darkCanvas, /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
+  assert.match(darkCanvas, /100% 240px/)
 })
 
 test('skin uses only the reviewed ARIA role seams', () => {
