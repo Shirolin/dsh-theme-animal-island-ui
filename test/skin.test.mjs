@@ -47,6 +47,49 @@ test('skin uses only the reviewed stable data hooks', () => {
   assert.deepEqual([...new Set(hooks)].filter((hook) => !allowed.has(hook)), [])
 })
 
+test('composer 3D send styling leaves text-bearing triggers flat', () => {
+  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
+  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const sendRules = rules.filter((rule) => rule.includes('[data-composer-card] button[aria-label]'))
+
+  assert.ok(sendRules.length >= 5, 'the composer send-key rules are missing')
+  for (const rule of sendRules) {
+    assert.match(rule, /:has\(svg\):not\(:has\(span\)\)/)
+  }
+
+  const selector = sendRules
+    .find((rule) => rule.includes('position: relative'))
+    ?.slice(0, sendRules.find((rule) => rule.includes('position: relative')).indexOf('{'))
+    .trim()
+  assert.ok(selector, 'the base send-key selector is missing')
+
+  const { document } = new JSDOM(`
+    <div data-composer-card>
+      <button aria-label="访问模式，当前：工作区内修改">
+        <span><svg></svg></span><span>工作区内修改</span>
+      </button>
+      <button aria-label="发送消息"><svg></svg></button>
+    </div>
+  `).window
+  document.documentElement.setAttribute('data-dsh-animal-island-skin', '')
+  const workspace = document.querySelector('button[aria-label^="访问模式"]')
+  const send = document.querySelector('button[aria-label="发送消息"]')
+
+  assert.equal(workspace.matches(selector), false)
+  assert.equal(send.matches(selector), true)
+})
+
+test('composer focus ring colors the speech-bubble tail', () => {
+  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
+  const rule = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)]
+    .map((match) => match[0])
+    .find((candidate) => candidate.includes('[data-composer-card]:focus-within::before'))
+
+  assert.ok(rule, 'the focused composer tail rule is missing')
+  assert.match(rule, /border-right-color:\s*var\(--animal-mint\)/)
+  assert.match(rule, /border-bottom-color:\s*var\(--animal-mint\)/)
+})
+
 test('windows shell frame is transparent and its content corner is flattened', () => {
   // DSH's Windows AppFrame paints `--dsw-specific-sidebar-fill` over the whole
   // window and rounds the content's top-left corner; macOS/web do neither.
