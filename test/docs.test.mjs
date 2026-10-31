@@ -16,6 +16,7 @@ const documents = [
   'docs/design.md',
   'docs/compatibility.md',
   'docs/desktop.md',
+  'docs/web-vs-desktop.md',
   'docs/session-list-blank.md',
 ]
 

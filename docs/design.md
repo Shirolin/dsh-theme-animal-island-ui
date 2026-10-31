@@ -71,7 +71,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 
 ## 形状与反馈
 
-- 品牌标：原创倾斜叶片（叶尖朝上、叶脉提亮），24px 侧栏标仍可辨认，侧栏与 hero 复用同一枚 SVG；
+- 品牌标：原创倾斜叶片（叶尖朝上、叶脉提亮）；侧栏头图是一张 216×60 的「渡岛船票」—— 薄荷色票根、奶油叶徽、20px 深绿字标与 7px 棕色拉丁行；深棕实心底与内层纸面的透明 2px 边框共同形成连续轮廓，圆角由内外半径的差值产生，票根上下每个缺口的两层遮罩也共用同一圆心与 2px 半径差；票根贴住纸面左缘，虚线撕口居中于这条边缘；折叠态与 hero 复用同一枚 SVG；
 - Hero 字标：深绿 900 字重 + 奶油高光/投影 + 2° 微倾的「贴纸字」；
 - Composer：作为「对话气泡」——2px 深墨描边、顶部高光与底部小尾巴；尾巴走 `::before`，因为 DSH 已用卡片的 `::after` 画 workspace 触发虚线环；奶油面叠 7% 纸纹与右侧淡叶水印；
 - 交互按钮：顶部高光 + 硬底 + 回弹；hover/active 对原生 `button` 与 `role='button'` 走同一规则（旧版只挂在 `role='button'` 分支，原生按钮会永久呈现 hover 态）；
@@ -79,7 +79,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - 发送键按压：`::after` 薄荷环从键位扩出（`:active`；插件没有发送事件钩子，所以是按压反馈而非发送后动画）；
 - 侧栏叶片 hover 轻摆 `rotate(-6deg) scale(1.06)`；选区为半透明薄荷；以上都在 `prefers-reduced-motion` 下关闭；
 - 画布：波点 + 45° 斜纹 + 底部草/水双波纹 + 低透明度漂浮叶子/花/星；深色换成「夜岛」深青天空 + 星点 + 右上月晕；
-- 画布透明度：主内容的奶油面由 `--animal-canvas-veil`（默认 .4）驱动；「设置 → 插件 → 动森外观」提供纸白 .52 / 均衡 .40 / 海岛 .28 三档 + .15–.60 滑杆，选择存本机 `localStorage`；`prefers-contrast: more` 强制 .52；
+- 画布透明度：主内容的奶油面由 `--animal-canvas-veil`（默认 .4）驱动；「设置 → 插件 → 动森外观」提供纸白 .52 / 均衡 .40 / 海岛 .28 三档 + .15–.60 滑杆，面板内用同一变量渲染「画布预览」（绿色波点画布 + 同透明度奶油层），设置弹层本身保持固定纸面，选择存本机 `localStorage`；深色纸面同样跟随该变量（.40 落在原 .84，默认观感不变）；`prefers-contrast: more` 强制 .52；Windows 桌面外壳的 AppFrame 默认用不透明 sidebar-fill 盖住画布，皮肤在 `html[data-windows-titlebar]` 下把 frame 清成透明，并在 **frame 元素**上把外壳自带的 16px 内容圆角设为 0px，与 web 一样是直角（变量必须写在 frame 上，写在 `<html>` 上会被 DSH 的 `.frame` 声明覆盖；见 [web-vs-desktop.md](web-vs-desktop.md) 与 #9490）；40px 标题栏条是 native titleBarOverlay，皮肤不试图覆盖；
 - Sidebar：18px 圆角、2px 白边、暖色 soft shadow；
 - Header ribbon：木质告示牌 —— 暖木正面（`::after`，竖向木纹 + 两枚铆钉）+ 深木燕尾与折角三角（`::before`：燕尾走 `clip-path`，折角用两枚渐变三角）；奶油字 `#fff3d6`（深色 `#f6e6c8`）；三层全部收在 `nav` 盒内，因为 DSH 的 `.crumbs` 是 `overflow: hidden`；
 - 文本按钮：pill、2px 暖边、4px 立体底边；

@@ -40,12 +40,14 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `[data-code-preview]`、`[data-textpreview-plain]` | 右侧栏「文档」预览的两条平面视图（高亮代码体 / 纯文本页）：把它们的 `<pre>` 从主题代码排版规则里排除，保留 DSH 自己的内边距与文字颜色 | 预览 `CodeBody` / `TextBody` 自己渲染的属性；纯文本视图**不是** `CodeBlock` 那条路径，单独用 `data-textpreview-plain` 才命中 |
 | `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
+| `[data-windows-titlebar]` | 桌面端（仅 Windows）外壳标记：用它把 DSH 自己画在 AppFrame 上的不透明 sidebar-fill 清成透明，画布才透得出来 | Electron 桌面壳自己写的平台标记；macOS 给同一个 frame 的是 `background: 0 0`，Windows 分支漏了这行（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)）。侧栏/右栏各自重画自己的表面，所以只清 frame 不影响可读性 |
+| `--dsh-windows-content-radius` | Windows 内容列/全屏右栏 dock pane 的左上角圆角；皮肤在 **frame 元素**上设为 `0px`，去掉外壳自带的 16px 圆角 | layout 插件公开的 Windows 几何变量，仅改圆角，不改列宽。**必须写在 frame 上**：DSH 的 `[data-windows-titlebar] .frame` 自己声明了 `16px`，写在 `<html>` 上会被它覆盖 |
 | `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
 | `[role='treeitem'][aria-selected='true']` | 选中的会话 / 搜索结果行：木牌底 + 木纹 + 压边 | 工作区树行的 ARIA 选中状态，跨版本稳定 |
 | `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |
 | `[aria-pressed]`、`[aria-selected]`、`[aria-checked]` | 选中态（预设卡片、列表项、外观预设） | ARIA 状态属性 |
 
-插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。
+插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。唯一例外是 Windows 外壳 frame：`html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490），`test/skin.test.mjs` 静态锁住它。
 
 ## 插件自有布局
 
@@ -70,7 +72,7 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
 - **服务注入**：客户端入口内部 `inject` 写 **Cordis 服务名**（`['theme', 'slots']`）。写包名会让插件永久停在 `pending (waiting for service: ...)`；
 - **主题注册**：必须走 `ctx.theme.overrideTokens(source, tokens)`，disposer 交给 `ctx.effect()`；禁止 `document.body`、`window`、`querySelector`、DSH 内部 CSS module hash 或直接覆盖 DSH 核心样式表；
 - **自有样式生命周期**：`<style data-plugin>` 与根属性成对安装/清理，重复 apply/dispose 不得残留；
-- **品牌字标预算**：`sidebar.brand.name` 渲染在 DSH 自己的品牌盒里，那个盒子带 `overflow: hidden` 且只有 24px 高。两行字标的行盒、间距与小字行盒合计必须 ≤ 24px，而且字标行盒要留出余量 —— 14px 的 CJK 字标带约 1.45em 的字形盒、其中约 0.28em 在字形上方，`line-height: 1` 会把这些余量吃光，顶部笔画被裁掉。`test/skin.test.mjs` 的 `brand lockup fits DSH 24px clip box` 静态锁住这两条，改小行盒或加回间距会直接失败；
+- **品牌船票**：`sidebar.brand.name` 渲染在 DSH 自己的品牌按钮里，按钮本体只有 24px 高且 `overflow: hidden`。主题用 `:has(.animal-island-brand__name)` 把按钮做成 216×60 的渡岛船票，并把 logoRow 长到 80px、放开它的 `overflow`（focus ring 要画在行外）；按钮内 24px 的 identity/name 盒释放成 `height: auto`。按钮实心底与纸面透明边框共同形成连续 2px 轮廓；纸面遮罩比底遮罩大 2px，每个缺口的两层遮罩共用票根边缘的同一圆心，因此圆角、直边与上下缺口不会错位。票根由 mark slot 的父级承载，宽度随窄侧栏从约 54px 收到 44px；Windows 的 4px 左内边距必须清零，否则票根会脱离纸面边缘。`:has()` 不能嵌套（浏览器会整条丢弃规则），所以行选择器用 `> button .animal-island-brand__name` 的直系结构；`test/skin.test.mjs` 的 `brand ferry ticket grows DSH clip box` 锁住 80px 行高、60px 船票、216px 宽度、双层遮罩的 2px 半径差、贴边票根、`overflow: visible`、`height: auto` 与「不得嵌套 `:has()`」；
 - **构建**：`lib/client.js` 必须是 DSH Module Loader 形状（`globalThis.__ModuleLoader__.load({ id, factory })`），React 由平台模块表提供，Nunito WOFF2 与原创 SVG 构建期内嵌；
 - **门禁**：`pnpm run check` = typecheck + build + `node test/run.mjs` + `check:compat`，全部必须通过；token 测试要求 light/dark key 集合一致且对比度达标，bundle 测试禁止 hash class、私有 import、DOM fallback 与 Observer。
 
@@ -87,10 +89,10 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
 
 - 临时探索用的夹具仍可放在 `.dsh/`（忽略目录），成熟后按上面的形状收进 `test/fixtures/`；
 - 夹具会连同**插件自己内嵌的 Nunito** 一起渲染。只渲染 `src/client/skin.css` 的话文字全部走回退字体，凡是与字宽、换行、裁切有关的回归都看不出来；
-- 侧栏品牌区的夹具是 `test/fixtures/sidebar-brand-desktop/`：它按 0.2.1-rc.5 的 `[data-windows-titlebar]` 结构还原 DOM（含 DSH 自己的 hash class），并带一个把 DSH 裁剪框关掉的对照 case —— 比较两个 case 的墨迹高度就能看出字标有没有被削顶。它跑的是**桌面客户端的 runtime**，所以要显式指定：
+- 侧栏品牌区的夹具是 `test/fixtures/sidebar-masthead/`：按 0.2.1-rc.5 的 `[data-windows-titlebar]` 结构还原真实侧栏（`wtg9ga_*` 模块 class、logoRow、新会话、面板行），并在 280 / 240 / 180 三个宽度下同时看浅色与深色。它跑的是**桌面客户端的 runtime**，所以要显式指定：
 
   ```sh
-  node scripts/fixture.mjs sidebar-brand-desktop --dsh "<提取出来的桌面 app 目录>"
+  node scripts/fixture.mjs sidebar-masthead --dsh "<提取出来的桌面 app 目录>"
   ```
 
   该目录至少要有 `node_modules/@deepseek-ai/dsh-web-frontend/dist/assets/*.css`、`dsh-client-ui-theme/lib/client.js` 与 `dsh-client-ui-sidebar/lib/client.js`，都可以从 `%LOCALAPPDATA%\Programs\...\resources\app.asar` 里按 asar 头部的 offset 直接切出来；不指定的话默认读 `~/.dsh/app`（0.1.5 基线），hash 前缀对不上，夹具会渲染成没有样式的样子；

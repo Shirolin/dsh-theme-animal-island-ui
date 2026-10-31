@@ -35,7 +35,7 @@
 ```powershell
 $prof = "$env:USERPROFILE\.dsh\profiles\desktop"
 $exe  = "C:\Software\DeepSeek Harness\DeepSeek Harness.exe"          # 安装目录下的可执行文件
-$pnpm = "C:\Software\DeepSeek Harness\resources\runtime\pnpm\bin\pnpm.mjs"
+$pnpm = "C:\Software\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\pnpm\bin\pnpm.mjs"
 
 $env:ELECTRON_RUN_AS_NODE = "1"
 $env:DSH_DESKTOP_NODE_EXECUTABLE = $exe
@@ -91,7 +91,7 @@ console.log(profile.skippedBundles, profile.layers.map((layer) => layer.packageN
 `dsh-client-ui-*/lib/client.js` 与 `dsh-client-ui-theme/lib/client.js`。
 
 ```sh
-node scripts/fixture.mjs sidebar-brand-desktop --dsh <抽出来的目录>
+node scripts/fixture.mjs sidebar-masthead --dsh <抽出来的目录>
 ```
 
 夹具 `body.html` 里的 hash 前缀取自当前桌面 runtime（`0.2.1-rc.5` 是 `wtg9ga_`）；桌面升级后要同步
@@ -101,9 +101,70 @@ node scripts/fixture.mjs sidebar-brand-desktop --dsh <抽出来的目录>
 `8 + readUInt32LE(12)`：后者会早 8 字节，读出来的 JSON 带一段垃圾前缀、文件尾部被截掉，而且包的
 `package.json` 会直接解析失败。
 
+## 截图与远程调试
+
+不要用 `CopyFromScreen` 抓桌面窗口：它抓的是屏幕，被别的窗口挡住就拍到别人。`PrintWindow` 只能当
+背景参考：Electron 的 GPU 文字/滤镜层经常画不进 GDI DC，会出现“背景对、字没了”的假图。正确做法是
+抓渲染器的合成表面：
+
+- **日常主题/CSS 检查**：用 web 客户端（同一个 client bundle），Playwright/CDP 截图，跟窗口 z-order
+  无关；Windows 专属分支可以在页面里模拟 `data-windows-titlebar`。
+- **桌面壳专属检查**（caption、窗口按钮、原生圆角、acrylic）：给 Electron 开 CDP 端口，再走
+  `Page.captureScreenshot`。这是一次性的启动参数，之后随时能抓，窗口在后台也行。
+
+### 1. 调试启动（需要先退出正在运行的客户端）
+
+```bat
+scripts\dsh-desktop-debug.cmd
+```
+
+或从仓库根目录：
+
+```sh
+pnpm run desktop:debug
+```
+
+它会用 `--remote-debugging-port=9222` 启动客户端，并确认 `http://127.0.0.1:9222/json/list` 可访问。
+如果客户端已经在运行，脚本会拒绝启动并提示先退出——调试端口只在启动时生效，单实例不会把参数补上。
+端口只监听 localhost，但本地进程能控制这个窗口；只在调试时开。
+
+### 2. 截图
+
+```powershell
+# 仓库根目录的快捷方式（等价于下面的 capture-desktop.ps1）
+pnpm run capture:desktop
+
+# CDP 优先；没有调试端口时自动回退到 DWM
+powershell -ExecutionPolicy Bypass -File scripts\capture-desktop.ps1
+
+# 指定输出、整页
+powershell -ExecutionPolicy Bypass -File scripts\capture-desktop.ps1 `
+  -OutFile artifacts\smoke\desktop.png -FullPage
+
+# 只走 CDP，不降级
+powershell -ExecutionPolicy Bypass -File scripts\capture-desktop.ps1 -NoFallback
+```
+
+脚本先调用 `scripts/cdp-shot.mjs`（Node 22+ 的全局 WebSocket，无额外依赖；Node 20 需加 `--experimental-websocket`）；失败时用
+`scripts/dwm-shot.ps1` 把目标窗口注册成离屏 DWM 缩略图再截宿主。DWM 路径被其它窗口挡住也能拍，
+最小化时可能冻结/空白；它走 Windows PowerShell 5.1，因为 pwsh 7 的 .NET 10 WinForms/GDI+ 引用链
+不值得维护。
+
+两者覆盖的范围不同：**CDP 截的是 web 内容**（不含 native caption/titleBarOverlay），**DWM 截的是
+整个窗口**（含原生标题栏）。验主题表面用 CDP；验 caption/窗口按钮用 DWM。
+
 ## 桌面侧已知差异
 
 - `[data-windows-titlebar]`：logoRow 变成 40px 且没有内边距，折叠按钮改成 `position: fixed`，
   `brandIdentity` / `brandMark` 各带一个 1px transform。
-- 侧栏品牌区落在 DSH 自己的 24px 品牌盒里，那个盒子 `overflow: hidden` —— 预算约束见
-  [compatibility.md](compatibility.md) 的「品牌字标预算」。
+- Windows 外壳的 AppFrame（`.frame`）被画成 `--dsw-specific-sidebar-fill`，而 macOS 给同一个
+  frame 的是 `background: 0 0`。这块不透明底会把插件画在 UI 后面的画布盖掉，所以皮肤在
+  `html[data-windows-titlebar]` 下把它清成透明；侧栏/右栏各自重画自己的表面，不影响可读性。
+  这是 DSH Windows 分支与 macOS 不一致导致的（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)），
+  在 DSH 修掉之前需要保留这条 workaround。
+- 侧栏品牌区落在 DSH 自己的品牌按钮里：按钮本体只有 24px 高、`overflow: hidden`，而主题把
+  logoRow 长到 80px、把按钮做成 216×60 的渡岛船票，并把内层 24px 盒释放成 auto。Windows 分支给
+  `brand` 的 4px 左内边距由主题清零，票根才能贴住纸面边缘；约束与测试见
+  [compatibility.md](compatibility.md) 的「品牌船票」。
+- 其余 web / Windows 样式差异（标题栏、折叠侧栏、右栏全屏、dock float、macOS）统一登记在
+  [web-vs-desktop.md](web-vs-desktop.md)，改皮肤前先对照那张表判断是平台分支还是主题问题。

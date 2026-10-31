@@ -1,0 +1,8 @@
+{
+  "title": "侧栏品牌区 · 渡岛船票（0.2.1-rc.5 真实侧栏 DOM）",
+  "pluginCss": ["@deepseek-ai/dsh-client-ui-sidebar"],
+  "variants": [
+    { "id": "light", "mode": "light", "window": "840,820" },
+    { "id": "dark", "mode": "dark", "window": "840,820" }
+  ]
+}

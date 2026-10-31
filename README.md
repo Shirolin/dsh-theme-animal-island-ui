@@ -2,20 +2,20 @@
 
 `Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创资源与 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
 
-当前版本 **0.3.7**：叶子品牌标、气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态，并新增「设置 → 插件 → 动森外观」的透明度调节；逐条可见变化见 [CHANGELOG.md](CHANGELOG.md)。
+当前发布 **0.3.18**。开发中的侧栏品牌已换成 **216×60 的渡岛船票**（奶油纸面 + 薄荷票根 + 虚线撕口）；其余已发布内容包含气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态，「设置 → 插件 → 动森外观」的透明度调节（含与真实画布同层数的预览），以及 Windows 桌面端外壳透明化与圆角归零。Windows 只保留一个 parity 分支。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 
 ## 视觉范围
 
 - 绿色双层波点画布 + 底部草/水波纹 + 漂浮叶子；
-- 奶油白侧栏、蓝紫底部波浪与原创叶片标；
+- 奶油白侧栏、蓝紫底部波浪、原创叶片标与渡岛船票品牌区；
 - 木质标题绶带、暖棕文字和木牌 active；
 - 白色/奶油色卡片、对话气泡 composer、纸纹 dialog、pill 输入与文字按钮；
 - 奶油色 3D 主按钮和 hover/active 按压反馈；
 - 输入时气泡发光、发送键按压涟漪、叶片 hover 轻摆；
 - Light / Dark 均可读的深棕色代码块与 Shiki 配色；深色画布为「夜岛」星空；
-- 设置 → 插件 → 动森外观：纸白 / 均衡 / 海岛三档预设 + 0.15–0.60 滑杆，默认均衡 0.40；
+- 设置 → 插件 → 动森外观：纸白 / 均衡 / 海岛三档预设 + 0.15–0.60 滑杆，默认均衡 0.40，面板内附实时「画布预览」；
 - 内嵌 Nunito Latin 字体，中文回退 Noto Sans SC / 苹方 / 微软雅黑。
 
 设计图是方向性 specimen；真实 DSH 截图是最终验收依据。
@@ -28,7 +28,8 @@
 | [docs/design.md](docs/design.md) | 色板、形状与反馈、暗色派生、**样式边界**（不得越界的地方） |
 | [docs/compatibility.md](docs/compatibility.md) | DSH 接缝、已审阅属性/变量、工程约束、离屏验收夹具 |
 | [docs/session-list-blank.md](docs/session-list-blank.md) | 侧栏会话区空白一次误判的排查记录（结论：DSH 侧） |
-| [docs/desktop.md](docs/desktop.md) | 桌面客户端（Electron）：profile 隔离、安装/验证/回滚、何时要重启、怎么对着桌面 runtime 跑夹具 |
+| [docs/desktop.md](docs/desktop.md) | 桌面客户端（Electron）：profile 隔离、安装/验证/回滚、截图与远程调试（CDP/DWM）、何时要重启、怎么对着桌面 runtime 跑夹具 |
+| [docs/web-vs-desktop.md](docs/web-vs-desktop.md) | Web / Windows 桌面端样式差异清单：平台分支、版本差异、历史问题归类与待定项 |
 | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | 参考项目基线与许可证 |
 
 ## 稳定边界
@@ -98,15 +99,15 @@ pnpm run release 0.3.6     # 打包 + 回写 SHA；版本号必须是新的
 `prepack` 会自动重建 `lib`。当前规范产物为：
 
 ```text
-artifacts/release-v0.3.7/dsh-theme-animal-island-ui-0.3.7.tgz
-SHA-256: 8AB3DAC0A7AE19219B5312F85F258F01C258D4EACF26EEE0057C8A138C0E8C0F
+artifacts/release-v0.3.18/dsh-theme-animal-island-ui-0.3.18.tgz
+SHA-256: 2C375E601CB7F411418E809DC7307756672959B2D9591BDEB917B9C687E1A965
 ```
 
 把 `.tgz` 装进目标 `web` profile 并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）：
 
 ```sh
 cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v0.3.7/dsh-theme-animal-island-ui-0.3.7.tgz
+pnpm add file:<仓库>/artifacts/release-v0.3.18/dsh-theme-animal-island-ui-0.3.18.tgz
 ```
 
 之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。

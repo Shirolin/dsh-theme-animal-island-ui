@@ -2,6 +2,92 @@
 
 本文件记录每个发布版本对用户可见的变化。安装与验收流程见 `README.md`，设计映射见 `docs/design.md`，DSH 兼容边界见 `docs/compatibility.md`。
 
+## 未发布（渡岛船票）
+
+- 侧栏品牌从 216×52 木质门牌换成 216×60 渡岛船票：奶油纸面、薄荷票根、虚线撕口与上下透明半圆缺口；
+- 外轮廓改由深棕实心底与内层透明 2px 边框共同形成，圆角、直边和两个缺口都从这层厚度推导；纸面遮罩的缺口半径只比底遮罩大相同的 2px，不再拼接独立圆弧；虚线撕口居中于票根边缘并从缺口描边外侧开始；
+- 票根直接贴着纸面左缘，叶片放在奶油圆徽上；纸面只保留 1px 顶部受光和底部轻压，不再用全周白色内高光制造纸张厚度，hover 上浮 1px、按下落回 2px；
+- 窄侧栏票根从约 54px 收至 44px，180px 宽度下 `动森岛` / `ANIMAL ISLAND` 仍完整；
+- `sidebar-masthead` 夹具继续覆盖 280 / 240 / 180 × 浅/深；回归测试锁住双层遮罩的 2px 半径差、贴边票根与纸面几何。
+
+## 0.3.18（木质门牌）
+
+0.3.17 只是把字放大，整块还是像贴在侧栏上的标签。这次把品牌区做成一块真正的门牌：
+
+- 216×52 的木质门牌：竖向木纹、两枚奶油铆钉、内嵌高光与柔和投影，木色和标题绶带是同一套；
+- 叶片放进 32px 奶油圆徽，18px 奶油字标 + 9px 金色拉丁行，门牌在 80px 的 logoRow 里居中；
+- 门牌本身是 DSH 的「新会话」按钮，所以不做 3D 底边，只留投影和 hover 上浮 1px；focus ring 画在行外；
+- 窄侧栏用 `max-width: 100%` 收窄，折叠态、web 的 60px logoRow 和官方 fallback 品牌都不动；
+- `test/fixtures/sidebar-masthead/` 继续覆盖 280 / 240 / 180 × 浅/深；`test/skin.test.mjs` 锁住 80px 行高、52px 门牌、216px 宽度、内盒释放与「不得嵌套 `:has()`」。
+
+## 0.3.17（侧栏头图）
+
+侧栏顶部的品牌区原来是 14px 字标 + 7px 拉丁小字挤在 DSH 的 24px 品牌盒里，叶子只有 24px，整块读起来像贴在角落的标签。这次把它做成真正的头图：
+
+- 品牌按钮从 24px 长到 40px（正好是 Windows logoRow 的高度），字标按 19px / 8.5px 重排，行盒 22 + 1 + 11 = 34px 完整落在按钮里，不再靠 DSH 的裁剪盒；
+- 叶子从 24px 提到 32px，拉丁行字距从 0.08em 提到 0.15em，`ANIMAL ISLAND` 在 1x 下也能读；
+- 按钮内层的 24px identity / name 盒释放成 `height: auto`，同时放开 logoRow 的 `overflow`，focus ring 不再被 40px 行裁掉；折叠态、web 的 60px logoRow 和官方 fallback 品牌都不受影响；
+- 品牌按钮同时是 DSH 的「新会话」快捷入口，长高后点击区域随行高变大；这是 40px 行预算内的自然结果，没有额外加可点击装饰；
+- 新增 `test/fixtures/sidebar-masthead/`（280 / 240 / 180 三档宽度 × 浅/深色）替代旧的 `sidebar-brand-desktop`；`test/skin.test.mjs` 锁住 40px 预算、`overflow: visible`、内盒释放与「不得嵌套 `:has()`」（嵌套 `:has()` 会被浏览器整条丢弃）。
+
+## 0.3.16（圆角真正去掉）
+
+- 0.3.15 没生效：`--dsh-windows-content-radius: 0px` 写在 `<html>` 上，但 DSH 的 `[data-windows-titlebar] .frame` **自己又声明了 `16px`**，局部声明覆盖继承，所以重启后那个圆角还在；
+- 现在把变量写在 frame 元素本身（`html[data-windows-titlebar] #root > div > div`）上，直接覆盖 DSH 的声明；`.centerCol` 的 `border-radius` 继承到 0，左上角变成直角；
+- `docs/compatibility.md` 明确记录「必须写在 frame 上」，`test/skin.test.mjs` 也改为断言 frame 规则里带 `0px`，防止再写错层级。
+
+## 0.3.15（去掉 Windows 自带圆角）
+
+- 0.3.14 误判了这个角：那 16px 圆角不是主题画的，是 DSH Windows 外壳给内容列加的 `--dsh-windows-content-radius: 16px`；主题要的是去掉它，而不是保留；
+- 现在重新设为 `0px`：内容列左上角与 web 一样是直角，外壳圆角不再出现；frame 透明与 `--animal-canvas-veil` 的画布统一不变；
+- `docs/web-vs-desktop.md`、`docs/compatibility.md` 和 `test/skin.test.mjs` 同步改成「frame 透明 + 内容圆角 0」。
+
+## 0.3.14（恢复 Windows 圆角）
+
+- 撤回 0.3.12 的 `--dsh-windows-content-radius: 0px`：内容列左上角恢复 DSH 原生的 16px 圆角。0px 虽然能和 web 完全一致，但 web 没有对应的角可对齐，实际观感像被切掉；
+- 这是主题**唯一保留的 Windows chrome 例外**：frame 仍然透明（画布/透明度统一），但内容列圆角跟随 DSH 窗口 chrome；web 不受影响；
+- `docs/web-vs-desktop.md` 的「统一策略」「内容列左上角」与 `test/skin.test.mjs` 同步改成「frame 透明 + 保留 16px」，防止再次被误删。
+
+## 0.3.13（桌面标题绶带）
+
+- 修好 0.2.x 桌面端「标题绶带只剩一块棕色木板、字看不见」：当前 crumb 的 `<span class="crumbCurrent">` 自己声明了 `color: var(--dsw-alias-label-primary)`（深棕），压在棕色木板上就是 brown-on-brown；主题现在对 `nav :where(span)` 显式给奶油色（深色给米色），不再只靠 `nav` 继承；
+- 这是 0.2.x 在 Windows 上先暴露的版本差异，登记进 [web-vs-desktop.md](docs/web-vs-desktop.md)；
+- 不改任何布局/几何，只改标题文字颜色与阴影。
+
+## 0.3.12（平台样式统一）
+
+- Windows parity block 扩到几何：`html[data-windows-titlebar] { --dsh-windows-content-radius: 0px }`，内容列与全屏右栏 dock pane 的左上角和 web 一样是直角，不再保留桌面独有的 16px 圆角；
+- 主题现在只保留**一个**平台分支（frame 透明 + 圆角 0），其余颜色/间距/组件规则全部 web/desktop 共享；[web-vs-desktop.md](docs/web-vs-desktop.md) 的「统一策略」写明可统一与不可统一的边界；
+- 核实 40px 标题栏条是 Desktop 主进程的 native `titleBarOverlay`（`windowsAppearance` IPC），CSS 改不到；不再尝试用 `::before` 覆盖，避免制造“改了但没生效”的假象；
+- 回归测试锁住 frame 透明与 `--dsh-windows-content-radius: 0px`。
+
+## 0.3.11（预览保真）
+
+- 「画布预览」原来只叠一层 `--dsw-alias-bg-base`，而真实主内容是 `centerCol` + 会话根两层叠加；预览看起来比实际更绿。现在预览同步叠两层，0.15 时预览与实际都落在 `(172,215,186)`；
+- 新增 [docs/web-vs-desktop.md](docs/web-vs-desktop.md)：把 Windows 标题栏、折叠侧栏、右栏全屏、dock float、macOS 分支与历史问题逐项归类，并记录 0.3.10 外壳修复；
+- 无平台行为变化，0.3.10 的 Windows frame 透明修复保持。
+
+## 0.3.10（Windows 桌面画布）
+
+修掉桌面端「web 能调、desktop 调了没反应」：DSH 的 Windows 外壳把整窗 AppFrame 画成了不透明的 `--dsw-specific-sidebar-fill`，画布的奶油层只是叠在这块不透明底上，所以透明度再低也只看到一块奶油灰。macOS 分支给同一个 frame 的是 `background: 0 0`，Windows 漏了。
+
+### 外观设置
+
+- 皮肤在 `html[data-windows-titlebar]` 下把 AppFrame 清成透明：侧栏/右栏各自重画自己的表面，只有主内容列换成画布，滑杆在桌面端和 web 一致生效；
+- 这是 DSH 外壳的路径差异（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)），不是主题 token 没写进去 —— 用 `getComputedStyle` 在桌面端核对过：`--dsw-alias-bg-base` 已经是 `rgba(248,248,240,0.15)`，只是被外层不透明 frame 盖住；
+- 该规则登记进 `docs/compatibility.md` 的接缝表与 `test/skin.test.mjs`，防止后续重构把它删掉。
+
+## 0.3.9（外观预览）
+
+修掉「改了透明度却看不到变化」的困惑：设置页是一张不透明的纸卡，滑杆真正调整的是它背后的画布，加上弹层遮罩，面板打开时几乎看不到画布变化，于是像是失效。
+
+### 外观设置
+
+- 「动森外观」页新增实时「画布预览」：绿色波点画布 + 同一条 `--animal-canvas-veil` 奶油层，拖动滑杆即可在面板内看到变化，不用关掉设置再去分辨背景；
+- 说明文案讲清「设置卡片是固定纸面，滑杆调的是它背后的画布」，并指明预览会实时同步；
+- 深色画布也改由 `--animal-canvas-veil` 驱动（`0.40` 仍落在原来的 `0.84`，默认观感不变），滑杆在夜间主题下同样生效；
+- 修正：此前深色主题把纸面透明度写死为 `0.84`，滑杆在深色下完全无效。
+
 ## 0.3.7（外观设置）
 
 把「画布有多绿」交给用户，而不是替他二选一。新增「设置 → 插件 → 动森外观」页：三档预设 + 透明度滑杆。

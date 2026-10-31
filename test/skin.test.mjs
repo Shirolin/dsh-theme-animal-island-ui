@@ -1,12 +1,14 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
+import { JSDOM } from 'jsdom'
 import { contrastRatio } from '../lib/tokens.js'
 
 const css = await readFile(new URL('../src/client/skin.css', import.meta.url), 'utf8')
 const slots = await readFile(new URL('../src/client/slots.ts', import.meta.url), 'utf8')
 const install = await readFile(new URL('../src/client/install.ts', import.meta.url), 'utf8')
 const wave = await readFile(new URL('../src/client/assets/sidebar-wave.svg', import.meta.url), 'utf8')
+const mastheadFixture = await readFile(new URL('./fixtures/sidebar-masthead/body.html', import.meta.url), 'utf8')
 
 test('skin CSS is plugin-scoped and avoids generated DSH selectors', () => {
   assert.match(css, /html\[data-dsh-animal-island-skin\]/)
@@ -36,8 +38,41 @@ test('skin uses only the reviewed stable data hooks', () => {
     // theme's dark-island code foreground.
     'code-preview',
     'textpreview-plain',
+    // Windows desktop shell marker: the shell paints its outer frame with the
+    // opaque sidebar fill (macOS clears it); the skin clears it so the canvas
+    // behind the UI is visible. deepseek-harness discussion #9490.
+    'windows-titlebar',
   ])
   assert.deepEqual([...new Set(hooks)].filter((hook) => !allowed.has(hook)), [])
+})
+
+test('windows shell frame is transparent and its content corner is flattened', () => {
+  // DSH's Windows AppFrame paints `--dsw-specific-sidebar-fill` over the whole
+  // window and rounds the content's top-left corner; macOS/web do neither.
+  // Without this shim the veil composites over the opaque sidebar fill and the
+  // slider looks dead only on desktop, and the shell corner shows as a stray
+  // 16px curve against the themed canvas.
+  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
+  const frame = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)]
+    .map((match) => match[0])
+    .find((candidate) => candidate.includes('[data-windows-titlebar] #root > div > div'))
+  assert.ok(frame, 'the Windows shell frame workaround is missing')
+  assert.match(frame, /background:\s*transparent\s*!important/)
+  // DSH sets the token on `.frame` itself, so it must be overridden there too;
+  // setting it on <html> is shadowed and the 16px corner stays.
+  assert.match(frame, /--dsh-windows-content-radius:\s*0px/)
+})
+
+test('header ribbon colors the current crumb span directly', () => {
+  // 0.2.x's `.crumbCurrent` declares label-primary on the span, which beats the
+  // nav's inherited colour. The ribbon must set the span explicitly or the title
+  // becomes brown-on-brown (empty-looking plank) on desktop.
+  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
+  const rule = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)]
+    .map((match) => match[0])
+    .find((candidate) => candidate.includes('nav :where(span)'))
+  assert.ok(rule, 'the ribbon crumb span colour rule is missing')
+  assert.match(rule, /color:\s*#fff3d6\s*!important/)
 })
 
 test('slot installation uses public contracts without DOM scanning', () => {
@@ -49,6 +84,18 @@ test('slot installation uses public contracts without DOM scanning', () => {
   for (const key of ['sidebar.brand.mark', 'sidebar.brand.name', 'conversation.hero.brand.mark']) {
     assert.match(slots, new RegExp(key.replaceAll('.', '\\.')))
   }
+})
+
+test('ticket selectors reach through DSH slot wrappers', () => {
+  const { document } = new JSDOM(mastheadFixture, { runScripts: 'dangerously' }).window
+  const markHost = document.querySelector('button > span > span:has(.animal-island-brand__mark)')
+  const nameHost = document.querySelector('button > span > span:has(.animal-island-brand__name)')
+
+  assert.equal(document.querySelectorAll('button > span > span:has(.animal-island-brand__mark)').length, 3)
+  assert.equal(document.querySelectorAll('button > span > span:has(.animal-island-brand__name)').length, 3)
+  assert.equal(document.querySelector('button > span:has(> .animal-island-brand__mark)'), null)
+  assert.match(markHost?.innerHTML ?? '', /<div data-slot="" style="display: contents;">/)
+  assert.match(nameHost?.innerHTML ?? '', /<div data-slot="" style="display: contents;">/)
 })
 
 test('owned CSS hard-coded text and focus combinations remain readable', () => {
@@ -63,7 +110,7 @@ test('owned CSS hard-coded text and focus combinations remain readable', () => {
   }
 })
 
-test('brand lockup fits DSH 24px clip box with CJK headroom', () => {
+test('brand ferry ticket grows DSH clip box and keeps the CJK ink clear', () => {
   // Comments sit between rules, so they would otherwise land inside the
   // selector text this parse splits on.
   const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
@@ -84,18 +131,105 @@ test('brand lockup fits DSH 24px clip box with CJK headroom', () => {
   const strong = declarationsFor('.animal-island-brand__name strong')
   const small = declarationsFor('.animal-island-brand__name small')
 
-  // DSH renders this slot inside its own brand box and clips the overflow of
-  // it, so the two-line lockup has to fit that box or the glyph tops get shaved.
-  assert.equal(name.overflow, 'hidden')
-  // The ASCII line declares no line-height of its own; it inherits the grid's
-  // unitless one, which resolves against that line's own font size.
-  const smallLineHeight = small['line-height'] !== undefined
-    ? px(small['line-height'])
-    : px(name['line-height']) * px(small['font-size'])
-  const lockup = px(strong['line-height']) + px(small['margin-top']) + smallLineHeight
-  assert.ok(lockup <= 24, `brand lockup occupies ${lockup}px; DSH clips at 24px`)
+  // The ticket is taller than DSH's 24px brand box, so the logo row has to
+  // grow to hold it and release its own clip; the ticket itself is 60px high
+  // and 216px wide, centred in the row.
+  const row = rules.find((rule) => rule.includes('> button .animal-island-brand__name') && /height:\s*80px/.test(rule))
+  assert.ok(row, 'the logo row must grow to 80px for the ticket')
+  assert.match(row, /overflow:\s*visible/)
 
-  // A 14px CJK wordmark carries a ~1.45em font box, and roughly 0.28em of its
+  const brand = rules.find((rule) => rule.includes(':has(.animal-island-brand__name)') && /height:\s*60px/.test(rule))
+  assert.ok(brand, 'the brand wrapper must be the 60px ticket')
+  assert.match(brand, /width:\s*216px/)
+  assert.match(brand, /overflow:\s*visible/)
+  assert.match(brand, /border:\s*0/)
+  assert.match(brand, /border-radius:\s*9px/)
+  assert.match(brand, /background:\s*#5a3719/)
+  assert.match(brand, /padding:\s*0 !important/)
+  assert.match(brand, /-webkit-mask-image:\s*var\(--animal-ticket-notch\)/)
+  assert.match(brand, /mask-image:\s*var\(--animal-ticket-notch\)/)
+  assert.match(brand, /mask-composite:\s*intersect/)
+  assert.match(brand, /--animal-ticket-edge:\s*2px/)
+  assert.match(brand, /--animal-ticket-notch-cut:\s*7px/)
+  assert.match(
+    brand,
+    /--animal-ticket-notch-rim:\s*calc\(var\(--animal-ticket-notch-cut\) \+ var\(--animal-ticket-edge\)\)/,
+  )
+  assert.match(brand, /circle at var\(--animal-ticket-stub-width\) 0/)
+  assert.match(brand, /circle at var\(--animal-ticket-stub-width\) 100%/)
+  assert.match(brand, /transparent 0 calc\(var\(--animal-ticket-notch-cut\) - 0\.4px\)/)
+  assert.doesNotMatch(brand, /--dsw-specific-sidebar-fill/)
+  assert.equal(name.overflow, 'visible')
+
+  // The mint counterfoil must run to the ticket edge without painting its
+  // texture over the punched rim.
+  const counterfoil = rules.find((rule) => (
+    rule.includes(':has(.animal-island-brand__mark)') &&
+    /background-size:\s*8px 8px/.test(rule)
+  ))
+  assert.ok(counterfoil, 'the mark wrapper must become the mint counterfoil')
+  assert.match(counterfoil, /> span > span:has\(\.animal-island-brand__mark\)/)
+  assert.match(counterfoil, /align-self:\s*stretch/)
+  assert.match(counterfoil, /transform:\s*none !important/)
+  assert.match(counterfoil, /circle at 100% 0/)
+  assert.match(counterfoil, /circle at 100% 100%/)
+
+  // The solid button is the rim. One paper layer with a transparent 2px border
+  // covers it, then cuts a 2px-larger hole at the same origin. Both the outer
+  // rounded rect and the punch therefore follow one continuous geometry.
+  const paper = rules.find((rule) => (
+    rule.includes(':has(.animal-island-brand__name)::after') &&
+    /background-clip:\s*padding-box/.test(rule)
+  ))
+  assert.ok(paper, 'the ticket paper layer must sit above the solid rim')
+  assert.match(paper, /inset:\s*0/)
+  assert.match(paper, /border:\s*var\(--animal-ticket-edge\) solid transparent/)
+  assert.match(paper, /border-radius:\s*inherit/)
+  assert.match(paper, /background-clip:\s*padding-box/)
+  assert.match(paper, /background-origin:\s*border-box/)
+  assert.match(paper, /linear-gradient\(/)
+  // Keep the paper edge from reading as a white outline at sidebar size.
+  assert.doesNotMatch(paper, /inset 0 0 0 1px/)
+  assert.match(paper, /inset 0 1px 0 rgba\(255, 253, 246, 0\.55\)/)
+  assert.match(paper, /-webkit-mask-image:\s*var\(--animal-ticket-paper-notch\)/)
+  assert.match(paper, /mask-image:\s*var\(--animal-ticket-paper-notch\)/)
+  assert.match(paper, /mask-composite:\s*intersect/)
+  assert.doesNotMatch(css, /clip-path:\s*inset\(50% 50% 0 0\)/)
+  assert.doesNotMatch(css, /clip-path:\s*inset\(50% 0 0 50%\)/)
+
+  // The dashed seam shares the mask origin. Centring it on the stub edge keeps
+  // the dash out of the rim rather than ending it beside the punched corner.
+  const seam = rules.find((rule) => (
+    rule.includes(':has(.animal-island-brand__mark)::after') &&
+    /repeating-linear-gradient/.test(rule)
+  ))
+  assert.ok(seam, 'the tear seam must be a centred dashed rule')
+  assert.match(seam, /> span > span:has\(\.animal-island-brand__mark\)::after/)
+  assert.match(seam, /right:\s*-1px/)
+  assert.match(seam, /width:\s*2px/)
+  assert.match(
+    css,
+    /--animal-ticket-notch-rim:\s*calc\(var\(--animal-ticket-notch-cut\) \+ var\(--animal-ticket-edge\)\)/,
+  )
+
+  // DSH's own 24px boxes inside the wrapper would clip the lockup even after
+  // the button grows; they are released by the slot's own class.
+  const nameBox = rules.find((rule) => rule.includes(':has(> .animal-island-brand__name)') && /height:\s*auto/.test(rule))
+  assert.ok(nameBox, 'the 24px brand-name box must be released')
+  const labelHost = rules.find((rule) => (
+    rule.includes('> span > span:has(.animal-island-brand__name)') &&
+    /padding:\s*0 10px 0 11px/.test(rule)
+  ))
+  assert.ok(labelHost, 'the label host must stay inside the ticket paper')
+
+  // Nested :has() is invalid CSS and is dropped silently, taking the whole rule
+  // with it — the nameplate would then silently fall back to DSH's geometry.
+  assert.doesNotMatch(css, /:has\([^)]*:has\(/)
+
+  const lockup = px(strong['line-height']) + px(small['margin-top']) + px(small['line-height'])
+  assert.ok(lockup <= 60, `brand lockup occupies ${lockup}px; the ticket is 60px`)
+
+  // A 20px CJK wordmark carries a ~1.45em font box, and roughly 0.28em of its
   // ascent sits above the ideograph ink. Both have to stay below the clip line.
   const fontSize = px(strong['font-size'])
   const clearance = (px(strong['line-height']) - 1.45 * fontSize) / 2 + 0.28 * fontSize
