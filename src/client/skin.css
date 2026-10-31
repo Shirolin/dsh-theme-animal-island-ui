@@ -97,6 +97,247 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
   background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
 }
 
+/* DSH renders the boot screen before the app shell. The two data attributes are
+   written by that renderer; styling only its root, card, wordmark, status and
+   progress seal leaves failure markup and the live --dsh-boot-arc untouched. */
+html[data-dsh-animal-island-skin] [data-dsh-boot] {
+  --animal-boot-paper: #fbf5df;
+  --animal-boot-ink: #245738;
+  --animal-boot-muted: #75634d;
+  --animal-boot-border: #6f451f;
+  --animal-boot-ring: #d7cba8;
+  --animal-boot-accent: #12b8a7;
+  --animal-boot-shadow: rgba(83, 57, 29, 0.22);
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--animal-boot-muted);
+  background-color: #8fcaa5;
+  background-image:
+    radial-gradient(circle at 79% 17%, #fff2a8 0 27px, rgba(255, 239, 167, 0.36) 28px 92px, transparent 165px),
+    url("__ANIMAL_ISLAND_LEAVES__"),
+    url("__ANIMAL_ISLAND_HORIZON__"),
+    radial-gradient(circle, rgba(74, 126, 83, 0.22) 1.15px, transparent 1.35px),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.055) 0 2px, transparent 2px 9px);
+  background-position: center, center, center bottom, 0 0, 0 0;
+  background-size: 100% 100%, 620px 620px, 100% 210px, 30px 30px, auto;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+  font-family: var(--animal-font-family);
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot] > div {
+  position: relative;
+  box-sizing: border-box;
+  width: min(calc(100vw - 44px), 340px);
+  max-width: 340px;
+  overflow: visible;
+  gap: 18px;
+  margin: 22px;
+  padding: 43px 30px 38px;
+  border: 2px solid var(--animal-boot-border);
+  border-radius: 28px;
+  color: var(--animal-boot-muted);
+  background-color: var(--animal-boot-paper);
+  background-image:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.35), transparent 48%),
+    url("__ANIMAL_ISLAND_GRAIN__");
+  background-size: auto, 180px 180px;
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.72),
+    inset 0 -2px rgba(90, 55, 25, 0.08),
+    0 6px 0 var(--animal-boot-shadow),
+    0 18px 42px rgba(39, 78, 47, 0.2);
+  animation: animal-island-boot-card-in 420ms cubic-bezier(0.22, 0.82, 0.3, 1) both;
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot] > div::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: -30px;
+  left: 50%;
+  box-sizing: border-box;
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--animal-boot-border);
+  border-radius: 50%;
+  corner-shape: round;
+  background-color: var(--animal-boot-paper);
+  background-image: url("__ANIMAL_ISLAND_BOOT_LEAF__");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.7),
+    0 3px 0 var(--animal-boot-shadow);
+  transform: translateX(-50%) rotate(-3deg);
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot] > div::after {
+  content: "ANIMAL ISLAND / ISLAND TRANSIT";
+  position: absolute;
+  right: 24px;
+  bottom: 11px;
+  left: 24px;
+  padding-top: 7px;
+  border-top: 1px dashed color-mix(in srgb, var(--animal-boot-border) 34%, transparent);
+  color: color-mix(in srgb, var(--animal-boot-muted) 78%, transparent);
+  font-size: 8px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot] :is(div):has(+ [data-dsh-boot-spinner]) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 0;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot] :is(div):has(+ [data-dsh-boot-spinner])::before {
+  content: "HARNESS / DSH";
+  color: color-mix(in srgb, var(--animal-boot-muted) 82%, transparent);
+  font-size: 8px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.22em;
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot] :is(div):has(+ [data-dsh-boot-spinner])::after {
+  content: "动森岛";
+  color: var(--animal-boot-ink);
+  font-size: 27px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.13em;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.82), 0 3px rgba(58, 90, 54, 0.12);
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot-spinner] {
+  position: relative;
+  box-sizing: border-box;
+  width: 74px;
+  height: 74px;
+  margin: 6px 0 4px;
+  border: 0;
+  border-radius: 50%;
+  corner-shape: round;
+  clip-path: circle(50%);
+  background-color: transparent;
+  background-image: conic-gradient(
+    from -90deg,
+    var(--animal-boot-accent) 0 var(--dsh-boot-arc, 72deg),
+    var(--animal-boot-ring) var(--dsh-boot-arc, 72deg) 360deg
+  );
+  box-shadow: none;
+  animation: none;
+  transform: none;
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot-spinner]::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  corner-shape: round;
+  clip-path: circle(50%);
+  background-color: var(--animal-boot-paper);
+  background-image:
+    url("__ANIMAL_ISLAND_BOOT_LEAF__"),
+    radial-gradient(circle at 44% 24%, rgba(255, 255, 255, 0.11), transparent 54%);
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 40px 40px, 100% 100%;
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot-spinner]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  corner-shape: round;
+  clip-path: circle(50%);
+  background: radial-gradient(circle at 50% 3px, #ffd866 0 2.4px, rgba(255, 240, 176, 0.46) 2.8px 4.8px, transparent 5.4px);
+  animation: animal-island-boot-orbit 2.8s linear infinite;
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot-spinner] + div {
+  margin-top: -2px;
+  font-size: 0;
+  line-height: 1;
+  text-align: center;
+}
+
+html[data-dsh-animal-island-skin] [data-dsh-boot-spinner] + div::after {
+  content: "正在登陆无人岛…";
+  color: var(--animal-boot-muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] {
+  --animal-boot-paper: #352d24;
+  --animal-boot-ink: #f4e7c9;
+  --animal-boot-muted: #c9b895;
+  --animal-boot-border: #8a7057;
+  --animal-boot-ring: #665742;
+  --animal-boot-accent: #61d9cb;
+  --animal-boot-shadow: rgba(4, 5, 3, 0.55);
+  background-color: #14242a;
+  background-image:
+    radial-gradient(circle at 78% 16%, #f7e8b4 0 25px, rgba(247, 232, 180, 0.22) 26px 92px, transparent 170px),
+    url("__ANIMAL_ISLAND_NIGHT_LEAVES__"),
+    url("__ANIMAL_ISLAND_NIGHT_HORIZON__"),
+    radial-gradient(circle, rgba(255, 248, 220, 0.4) 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(160, 230, 220, 0.26) 0.8px, transparent 1.2px),
+    repeating-linear-gradient(135deg, rgba(134, 200, 179, 0.035) 0 2px, transparent 2px 9px);
+  background-position: center, center, center bottom, 0 0, 44px 62px, 0 0;
+  background-size: 100% 100%, 620px 620px, 100% 220px, 96px 96px, 148px 148px, auto;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] > div {
+  background-image:
+    linear-gradient(145deg, rgba(255, 240, 205, 0.055), transparent 52%),
+    url("__ANIMAL_ISLAND_GRAIN__");
+  box-shadow:
+    inset 0 2px rgba(255, 247, 222, 0.08),
+    inset 0 -2px rgba(0, 0, 0, 0.24),
+    0 6px 0 var(--animal-boot-shadow),
+    0 20px 54px rgba(0, 0, 0, 0.38);
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] :is(div):has(+ [data-dsh-boot-spinner])::after {
+  text-shadow: 0 1px rgba(0, 0, 0, 0.7), 0 4px rgba(0, 0, 0, 0.22);
+}
+
+@keyframes animal-island-boot-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes animal-island-boot-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 html[data-dsh-animal-island-skin] :where(button, input, textarea, select, [role='button']),
 html[data-dsh-animal-island-skin] :where(input, textarea, [contenteditable='true'], select) {
   font-family: inherit;
@@ -1500,6 +1741,12 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__note {
 
   html[data-dsh-animal-island-skin] .animal-island-hero__scenery *,
   html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) > span:has(> span + span) {
+    animation: none !important;
+  }
+
+  html[data-dsh-animal-island-skin] [data-dsh-boot] > div,
+  html[data-dsh-animal-island-skin] [data-dsh-boot-spinner]::before,
+  html[data-dsh-animal-island-skin] [data-dsh-boot-spinner]::after {
     animation: none !important;
   }
 

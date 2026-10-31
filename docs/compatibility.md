@@ -38,6 +38,8 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `[data-trigger-menu]` | composer 的 `/`｜`@` 触发面板：排除胶囊与弹出层装饰，并给面板底边加渐隐（其 `::after` 未被 DSH 占用；高度是内联 `max-height`，不去改） | DSH 自己的 pointerdown 关闭逻辑依赖它 |
 | `[data-code-block-banner]` | 代码块 banner（语言标签 + 复制按钮）的文字颜色 —— 它继承 `label-primary`，亮色下压在深色代码岛上不可读 | 代码块 banner 的标记；只改颜色不动几何，且必须连 banner 的直接子元素一起改：语言标签自己声明了 `label-primary`，元素自身声明赢过继承 |
 | `[data-code-preview]`、`[data-textpreview-plain]` | 右侧栏「文档」预览的两条平面视图（高亮代码体 / 纯文本页）：把它们的 `<pre>` 从主题代码排版规则里排除，保留 DSH 自己的内边距与文字颜色 | 预览 `CodeBody` / `TextBody` 自己渲染的属性；纯文本视图**不是** `CodeBlock` 那条路径，单独用 `data-textpreview-plain` 才命中 |
+| `[data-dsh-boot]` | 全屏启动等待页：昼夜岛屿背景、纸质渡岛票卡和字标装饰 | DSH WebBootPage 在插件加载前自己写出的根标记；只改外观，不接管启动状态。结构消失时自动退回 DSH 原样式 |
+| `[data-dsh-boot-spinner]` | 启动进度章：叶片中心、航线圈与环绕萤火点；进度弧继续使用 DSH 写在元素上的 `--dsh-boot-arc` | DSH WebBootPage 在创建进度元素时写出的标记；失败状态会移除该元素，官方错误列表不受影响 |
 | `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
 | `[data-windows-titlebar]` | 桌面端（仅 Windows）外壳标记：用它把 DSH 自己画在 AppFrame 上的不透明 sidebar-fill 清成透明，画布才透得出来 | Electron 桌面壳自己写的平台标记；macOS 给同一个 frame 的是 `background: 0 0`，Windows 分支漏了这行（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)）。侧栏/右栏各自重画自己的表面，所以只清 frame 不影响可读性 |

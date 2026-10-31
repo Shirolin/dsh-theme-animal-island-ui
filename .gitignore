@@ -12,6 +12,7 @@ coverage/
 # Local DSH and browser smoke artifacts
 .dsh/
 .chrome-smoke/
+.tmp/
 *-smoke.png
 artifacts/*
 !artifacts/README.md

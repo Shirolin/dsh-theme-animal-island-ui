@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Animal Island loading leaf">
+  <g transform="rotate(-18 32 32)">
+    <path d="M32 54c0 5-2 8-7 9" fill="none" stroke="#2f7d3c" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M32 6C19 16 10 27 10 38c0 11 10 18 22 18s22-7 22-18C54 27 45 16 32 6Z" fill="#6cc35a" stroke="#2f7d3c" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M32 12v37" stroke="#d9f2c1" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M32 25c-6-1-10-4-13-9M32 34c-7-1-12-4-15-8M32 43c-6 0-10-2-14-6" fill="none" stroke="#a6dd8c" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M32 25c6-1 10-4 13-9M32 34c7-1 12-4 15-8M32 43c6 0 10-2 14-6" fill="none" stroke="#a6dd8c" stroke-width="2.6" stroke-linecap="round"/>
+  </g>
+</svg>

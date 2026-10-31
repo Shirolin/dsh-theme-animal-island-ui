@@ -11,6 +11,7 @@ const brand = await readFile(new URL('../src/client/components/brand.tsx', impor
 const wave = await readFile(new URL('../src/client/assets/sidebar-wave.svg', import.meta.url), 'utf8')
 const nightLeaves = await readFile(new URL('../src/client/assets/night-leaves.svg', import.meta.url), 'utf8')
 const nightHorizon = await readFile(new URL('../src/client/assets/night-horizon.svg', import.meta.url), 'utf8')
+const loadingLeaf = await readFile(new URL('../src/client/assets/loading-leaf.svg', import.meta.url), 'utf8')
 const mastheadFixture = await readFile(new URL('./fixtures/sidebar-masthead/body.html', import.meta.url), 'utf8')
 
 test('skin CSS is plugin-scoped and avoids generated DSH selectors', () => {
@@ -45,6 +46,10 @@ test('skin uses only the reviewed stable data hooks', () => {
     // opaque sidebar fill (macOS clears it); the skin clears it so the canvas
     // behind the UI is visible. deepseek-harness discussion #9490.
     'windows-titlebar',
+    // DSH's pre-render boot screen. The renderer writes the root marker and the
+    // progress-seal marker itself; the skin only decorates those existing nodes.
+    'dsh-boot',
+    'dsh-boot-spinner',
   ])
   assert.deepEqual([...new Set(hooks)].filter((hook) => !allowed.has(hook)), [])
 })
@@ -372,6 +377,50 @@ test('dark canvas keeps original night leaf and horizon textures', () => {
   assert.ok(darkCanvas, 'the night canvas textures are missing')
   assert.match(darkCanvas, /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
   assert.match(darkCanvas, /100% 240px/)
+})
+
+test('boot screen becomes a day-night island departure card', () => {
+  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
+  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const boot = rules.find((rule) => (
+    rule.includes('[data-dsh-boot]') &&
+    rule.includes('__ANIMAL_ISLAND_LEAVES__')
+  ))
+  const darkBoot = rules.find((rule) => (
+    rule.includes('body[data-ds-dark-theme] [data-dsh-boot]') &&
+    rule.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__')
+  ))
+  const seal = rules.find((rule) => rule.includes('[data-dsh-boot-spinner] {'))
+  const innerSeal = rules.find((rule) => rule.includes('[data-dsh-boot-spinner]::before {'))
+  const orbit = rules.find((rule) => rule.includes('[data-dsh-boot-spinner]::after {'))
+
+  assert.ok(boot, 'the day boot backdrop is missing')
+  assert.match(boot, /__ANIMAL_ISLAND_HORIZON__/)
+  assert.ok(darkBoot, 'the night boot backdrop is missing')
+  assert.match(darkBoot, /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
+  assert.ok(seal, 'the boot progress seal is missing')
+  assert.match(seal, /animation:\s*none/)
+  assert.match(seal, /corner-shape:\s*round/)
+  assert.match(seal, /clip-path:\s*circle\(50%\)/)
+  assert.match(seal, /conic-gradient\(/)
+  assert.match(seal, /box-sizing:\s*border-box/)
+  assert.ok(innerSeal, 'the boot leaf disc is missing')
+  assert.match(innerSeal, /__ANIMAL_ISLAND_BOOT_LEAF__/)
+  assert.match(innerSeal, /inset:\s*5px/)
+  assert.match(innerSeal, /clip-path:\s*circle\(50%\)/)
+  assert.ok(orbit, 'the boot orbit bead is missing')
+  assert.match(orbit, /corner-shape:\s*round/)
+  assert.match(orbit, /clip-path:\s*circle\(50%\)/)
+  const leafSeal = rules.find((rule) => (
+    rule.includes('[data-dsh-boot] > div::before') &&
+    rule.includes('__ANIMAL_ISLAND_BOOT_LEAF__')
+  ))
+  assert.ok(leafSeal, 'the boot leaf seal is missing')
+  assert.match(leafSeal, /corner-shape:\s*round/)
+  assert.match(css, /@keyframes animal-island-boot-orbit/)
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\[data-dsh-boot-spinner\]::after\s*\{[\s\S]*animation:\s*none\s*!important/)
+  assert.match(loadingLeaf, /<path /)
+  assert.doesNotMatch(loadingLeaf, /image\/|href=.*\.png|href=.*\.jpg/)
 })
 
 test('skin uses only the reviewed ARIA role seams', () => {
