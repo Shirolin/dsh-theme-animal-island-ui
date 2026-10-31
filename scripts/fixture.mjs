@@ -28,6 +28,7 @@ import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { JSDOM } from 'jsdom'
+import { buildOwnedSkinCss } from './owned-skin-css.mjs'
 import { prepareDshRuntime } from './prepare-dsh-runtime.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -144,43 +145,7 @@ const { buildTokenOverrides } = await import(`${pathToFileURL(tokensPath).href}?
 const overrides = buildTokenOverrides()
 const tokenVars = (mode) => Object.entries(overrides).map(([token, value]) => `${token}:${value[mode]}`).join(';').replaceAll('"', '&quot;')
 
-const { transform } = await import('lightningcss')
-const asset = async (file) => `data:image/svg+xml,${encodeURIComponent(await readFile(join(root, 'src', 'client', 'assets', file), 'utf8'))}`
-const [wave, horizon, leaves, nightHorizon, nightLeaves, bootLeaf, grain, leaf] = await Promise.all([
-  asset('sidebar-wave.svg'),
-  asset('island-horizon.svg'),
-  asset('floating-leaves.svg'),
-  asset('night-horizon.svg'),
-  asset('night-leaves.svg'),
-  asset('loading-leaf.svg'),
-  asset('paper-grain.svg'),
-  asset('leaf-watermark.svg'),
-])
-const skin = transform({
-  filename: 'skin.css',
-  code: Buffer.from((await readFile(join(root, 'src', 'client', 'skin.css'), 'utf8'))
-    .replaceAll('__ANIMAL_ISLAND_WAVE__', wave)
-    .replaceAll('__ANIMAL_ISLAND_HORIZON__', horizon)
-    .replaceAll('__ANIMAL_ISLAND_LEAVES__', leaves)
-    .replaceAll('__ANIMAL_ISLAND_NIGHT_HORIZON__', nightHorizon)
-    .replaceAll('__ANIMAL_ISLAND_NIGHT_LEAVES__', nightLeaves)
-    .replaceAll('__ANIMAL_ISLAND_BOOT_LEAF__', bootLeaf)
-    .replaceAll('__ANIMAL_ISLAND_GRAIN__', grain)
-    .replaceAll('__ANIMAL_ISLAND_LEAF__', leaf)),
-  minify: false,
-  sourceMap: false,
-}).code
-
-/*
- * The plugin installs Nunito inline, ahead of the skin. A fixture that skips it
- * measures text in a fallback face, so every width-, wrap- and clip-sensitive
- * regression reads "fine" while the real app truncates. Take the faces from the
- * built bundle so the fixture sees the same metrics the browser does.
- */
-const fontCss = [...(await readFile(join(root, 'lib', 'client.js'), 'utf8'))
-  .matchAll(/@font-face\{[^}]*\}/g)]
-  .map((match) => match[0])
-  .join('\n')
+const ownedSkinCss = await buildOwnedSkinCss()
 
 const outDir = resolve(flag('out', join(root, 'artifacts', 'smoke')))
 await mkdir(outDir, { recursive: true })
@@ -194,7 +159,7 @@ for (const variant of config.variants) {
     .replaceAll('<!--{{DSH_CSS}}-->', `<style>${frontendCss}</style>`)
     .replaceAll('<!--{{THEME_BASE_CSS}}-->', `<style>${themeBaseCss}</style>`)
     .replaceAll('<!--{{PLUGIN_CSS}}-->', `<style>${pluginCss}</style>`)
-    .replaceAll('<!--{{SKIN_CSS}}-->', `<style>${fontCss}\n${skin}</style>`)
+    .replaceAll('<!--{{SKIN_CSS}}-->', `<style>${ownedSkinCss}</style>`)
     .replaceAll('{{TOKENS}}', tokenVars(mode))
     .replaceAll('{{BODY_ATTRIBUTES}}', mode === 'dark' ? ' data-ds-dark-theme=""' : '')
     .replaceAll('{{BODY_STYLE}}', variant.bodyStyle ?? '')

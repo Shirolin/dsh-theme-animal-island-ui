@@ -1,6 +1,7 @@
 import './bundle.test.mjs'
 import './tokens.test.mjs'
 import './skin.test.mjs'
+import './owned-skin-css.test.mjs'
 import './runtime.test.mjs'
 import './docs.test.mjs'
 import './tools.test.mjs'

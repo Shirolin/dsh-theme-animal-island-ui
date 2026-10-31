@@ -1,7 +1,7 @@
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import ts from 'typescript'
 import { build } from 'esbuild'
-import { transform } from 'lightningcss'
+import { buildOwnedSkinCss } from './owned-skin-css.mjs'
 
 const configFile = ts.readConfigFile('tsconfig.types.json', ts.sys.readFile)
 if (configFile.error) {
@@ -55,40 +55,7 @@ await Promise.all([
   writeFile('lib/tokens.js', tokens),
 ])
 
-const fontWeights = [400, 500, 600, 700, 800, 900]
-const fontCss = await Promise.all(fontWeights.map(async (weight) => {
-  const file = `node_modules/@fontsource/nunito/files/nunito-latin-${weight}-normal.woff2`
-  const data = (await readFile(file)).toString('base64')
-  return `@font-face{font-family:Nunito;font-style:normal;font-display:swap;font-weight:${weight};src:url(data:font/woff2;base64,${data}) format("woff2")}`
-}))
-
-const skinCss = await readFile('src/client/skin.css', 'utf8')
-const asset = async (file) => `data:image/svg+xml,${encodeURIComponent(await readFile(`src/client/assets/${file}`, 'utf8'))}`
-const [waveDataUri, horizonDataUri, leavesDataUri, nightHorizonDataUri, nightLeavesDataUri, bootLeafDataUri, grainDataUri, leafDataUri] = await Promise.all([
-  asset('sidebar-wave.svg'),
-  asset('island-horizon.svg'),
-  asset('floating-leaves.svg'),
-  asset('night-horizon.svg'),
-  asset('night-leaves.svg'),
-  asset('loading-leaf.svg'),
-  asset('paper-grain.svg'),
-  asset('leaf-watermark.svg'),
-])
-const transformedCss = transform({
-  filename: 'skin.css',
-  code: Buffer.from(skinCss
-    .replaceAll('__ANIMAL_ISLAND_WAVE__', waveDataUri)
-    .replaceAll('__ANIMAL_ISLAND_HORIZON__', horizonDataUri)
-    .replaceAll('__ANIMAL_ISLAND_LEAVES__', leavesDataUri)
-    .replaceAll('__ANIMAL_ISLAND_NIGHT_HORIZON__', nightHorizonDataUri)
-    .replaceAll('__ANIMAL_ISLAND_NIGHT_LEAVES__', nightLeavesDataUri)
-    .replaceAll('__ANIMAL_ISLAND_BOOT_LEAF__', bootLeafDataUri)
-    .replaceAll('__ANIMAL_ISLAND_GRAIN__', grainDataUri)
-    .replaceAll('__ANIMAL_ISLAND_LEAF__', leafDataUri)),
-  minify: false,
-  sourceMap: false,
-})
-const ownedSkinCss = [...fontCss, transformedCss.code.toString()].join('\n')
+const ownedSkinCss = await buildOwnedSkinCss()
 
 const result = await build({
   entryPoints: ['src/client-entry.ts'],
