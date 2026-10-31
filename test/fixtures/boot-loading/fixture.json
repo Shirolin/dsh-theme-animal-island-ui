@@ -1,0 +1,21 @@
+{
+  "title": "DSH 启动等待页 · 动森渡岛场景",
+  "variants": [
+    { "id": "light", "mode": "light", "window": "900,620" },
+    { "id": "dark", "mode": "dark", "window": "900,620" }
+  ],
+  "assertions": [
+    {
+      "message": "boot card is anchored to the public spinner hook",
+      "expression": "document.querySelector('[data-dsh-boot] > :has([data-dsh-boot-spinner])') !== null"
+    },
+    {
+      "message": "progress ring consumes the live DSH arc",
+      "expression": "getComputedStyle(document.querySelector('[data-dsh-boot-spinner]')).backgroundImage.includes('288deg')"
+    },
+    {
+      "message": "progress ring is a true circle and does not spin",
+      "expression": "(() => { const style = getComputedStyle(document.querySelector('[data-dsh-boot-spinner]')); return style.clipPath === 'circle(50%)' && style.animationName === 'none' })()"
+    }
+  ]
+}

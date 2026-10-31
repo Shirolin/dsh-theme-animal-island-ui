@@ -1,0 +1,17 @@
+{
+  "title": "DSH 启动失败页 · 官方错误列表可滚动",
+  "variants": [
+    { "id": "light", "mode": "light", "window": "900,620" },
+    { "id": "dark", "mode": "dark", "window": "900,620" }
+  ],
+  "assertions": [
+    {
+      "message": "failure page does not apply the loading card",
+      "expression": "document.querySelector('[data-dsh-boot] > :has([data-dsh-boot-spinner])') === null"
+    },
+    {
+      "message": "long diagnostics scroll the last error into view",
+      "expression": "(() => { const root = document.querySelector('[data-dsh-boot]'); const items = [...document.querySelectorAll('[class*=\"failedItem\"]')]; const last = items.at(-1); const overflows = root.scrollHeight > root.clientHeight; root.scrollTop = root.scrollHeight; const visible = root.scrollTop > 0 && last.getBoundingClientRect().bottom <= root.clientHeight; root.scrollTop = 0; return overflows && visible })()"
+    }
+  ]
+}

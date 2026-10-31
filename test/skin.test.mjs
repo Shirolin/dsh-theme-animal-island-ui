@@ -13,6 +13,8 @@ const nightLeaves = await readFile(new URL('../src/client/assets/night-leaves.sv
 const nightHorizon = await readFile(new URL('../src/client/assets/night-horizon.svg', import.meta.url), 'utf8')
 const loadingLeaf = await readFile(new URL('../src/client/assets/loading-leaf.svg', import.meta.url), 'utf8')
 const mastheadFixture = await readFile(new URL('./fixtures/sidebar-masthead/body.html', import.meta.url), 'utf8')
+const bootLoadingFixture = await readFile(new URL('./fixtures/boot-loading/body.html', import.meta.url), 'utf8')
+const bootFailureFixture = await readFile(new URL('./fixtures/boot-failure/body.html', import.meta.url), 'utf8')
 
 test('skin CSS is plugin-scoped and avoids generated DSH selectors', () => {
   assert.match(css, /html\[data-dsh-animal-island-skin\]/)
@@ -396,8 +398,17 @@ test('boot screen becomes a day-night island departure card', () => {
 
   assert.ok(boot, 'the day boot backdrop is missing')
   assert.match(boot, /__ANIMAL_ISLAND_HORIZON__/)
+  assert.match(boot, /overflow-x:\s*auto/)
+  assert.match(boot, /overflow-y:\s*auto/)
+  assert.match(boot, /place-items:\s*safe center/)
   assert.ok(darkBoot, 'the night boot backdrop is missing')
   assert.match(darkBoot, /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
+  const card = rules.find((rule) => (
+    rule.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])') &&
+    rule.includes('background-color: var(--animal-boot-paper)')
+  ))
+  assert.ok(card, 'the boot card must be anchored to the spinner hook')
+  assert.match(card, /margin:\s*0/)
   assert.ok(seal, 'the boot progress seal is missing')
   assert.match(seal, /animation:\s*none/)
   assert.match(seal, /corner-shape:\s*round/)
@@ -412,15 +423,54 @@ test('boot screen becomes a day-night island departure card', () => {
   assert.match(orbit, /corner-shape:\s*round/)
   assert.match(orbit, /clip-path:\s*circle\(50%\)/)
   const leafSeal = rules.find((rule) => (
-    rule.includes('[data-dsh-boot] > div::before') &&
+    rule.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])::before') &&
     rule.includes('__ANIMAL_ISLAND_BOOT_LEAF__')
   ))
   assert.ok(leafSeal, 'the boot leaf seal is missing')
   assert.match(leafSeal, /corner-shape:\s*round/)
+  assert.match(css, /:has\(\+ \[data-dsh-boot-spinner\]\)/)
+  assert.match(css, /\[data-dsh-boot-spinner\] \+ \*/)
+  assert.doesNotMatch(css, /^[^\n{]*\[data-dsh-boot\][^\n{]*>\s*div\b/m)
+  assert.doesNotMatch(css, /^[^\n{]*\[data-dsh-boot-spinner\]\s*\+\s*div\b/m)
   assert.match(css, /@keyframes animal-island-boot-orbit/)
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\[data-dsh-boot-spinner\]::after\s*\{[\s\S]*animation:\s*none\s*!important/)
   assert.match(loadingLeaf, /<path /)
   assert.doesNotMatch(loadingLeaf, /image\/|href=.*\.png|href=.*\.jpg/)
+})
+
+test('boot fixtures keep loading anchored and failure diagnostics scrollable', () => {
+  const mount = (fixture) => {
+    const dom = new JSDOM(fixture, { pretendToBeVisual: true })
+    const style = dom.window.document.createElement('style')
+    style.textContent = css
+    dom.window.document.head.append(style)
+    return dom.window
+  }
+
+  const loading = mount(bootLoadingFixture)
+  const loadingRoot = loading.document.querySelector('[data-dsh-boot]')
+  const card = loading.document.querySelector('[data-dsh-boot] > :has([data-dsh-boot-spinner])')
+  const wordmark = loading.document.querySelector('[data-dsh-boot] :has(+ [data-dsh-boot-spinner])')
+  const spinner = loading.document.querySelector('[data-dsh-boot-spinner]')
+  const hint = loading.document.querySelector('[data-dsh-boot-spinner] + *')
+
+  assert.ok(loadingRoot && card && wordmark && spinner && hint)
+  assert.equal(loading.getComputedStyle(loadingRoot).overflowX, 'auto')
+  assert.equal(loading.getComputedStyle(loadingRoot).overflowY, 'auto')
+  assert.equal(loading.getComputedStyle(loadingRoot).placeItems, 'safe center')
+  assert.equal(loading.getComputedStyle(spinner).animation, 'none')
+  assert.equal(loading.getComputedStyle(spinner).clipPath, 'circle(50%)')
+  assert.match(loading.getComputedStyle(spinner).backgroundImage, /conic-gradient/)
+
+  const failure = mount(bootFailureFixture)
+  const failureRoot = failure.document.querySelector('[data-dsh-boot]')
+  const failureCard = failure.document.querySelector('[data-dsh-boot] > *')
+
+  assert.ok(failureRoot && failureCard)
+  assert.equal(failureCard.matches('[data-dsh-boot] > :has([data-dsh-boot-spinner])'), false)
+  assert.equal(failure.document.querySelector('[data-dsh-boot-spinner]'), null)
+  assert.equal(failure.getComputedStyle(failureRoot).overflowY, 'auto')
+  assert.match(failure.document.body.textContent, /final diagnostic remains reachable/)
 })
 
 test('skin uses only the reviewed ARIA role seams', () => {
