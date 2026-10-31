@@ -7,6 +7,7 @@ import { contrastRatio } from '../lib/tokens.js'
 const css = await readFile(new URL('../src/client/skin.css', import.meta.url), 'utf8')
 const slots = await readFile(new URL('../src/client/slots.ts', import.meta.url), 'utf8')
 const install = await readFile(new URL('../src/client/install.ts', import.meta.url), 'utf8')
+const brand = await readFile(new URL('../src/client/components/brand.tsx', import.meta.url), 'utf8')
 const wave = await readFile(new URL('../src/client/assets/sidebar-wave.svg', import.meta.url), 'utf8')
 const mastheadFixture = await readFile(new URL('./fixtures/sidebar-masthead/body.html', import.meta.url), 'utf8')
 
@@ -98,12 +99,67 @@ test('ticket selectors reach through DSH slot wrappers', () => {
   assert.match(nameHost?.innerHTML ?? '', /<div data-slot="" style="display: contents;">/)
 })
 
+test('conversation hero renders a responsive day and night island title scene', () => {
+  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
+  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+
+  const frame = rules.find((rule) => (
+    rule.includes('div[class]:has(> span > div > .animal-island-hero__brand)') &&
+    /min-height:\s*142px/.test(rule)
+  ))
+  assert.ok(frame, 'the island title scene is missing')
+  assert.match(frame, /width:\s*min\(100%,\s*700px\)/)
+  assert.match(frame, /border:\s*0/)
+  assert.match(frame, /box-shadow:\s*none/)
+  assert.doesNotMatch(frame, /\[data-slot/)
+
+  const dayScene = rules.find((rule) => (
+    rule.includes('.animal-island-hero__scenery--day') &&
+    /opacity:\s*1/.test(rule)
+  ))
+  assert.ok(dayScene, 'the daylight scenery is missing')
+  const nightScene = rules.find((rule) => (
+    rule.includes('body[data-ds-dark-theme]') &&
+    rule.includes('.animal-island-hero__scenery--night') &&
+    /opacity:\s*1/.test(rule)
+  ))
+  assert.ok(nightScene, 'the night scenery is not enabled in dark mode')
+  assert.match(brand, /animal-island-hero__scenery--day/)
+  assert.match(brand, /animal-island-hero__scenery--night/)
+  assert.match(brand, /animal-island-hero__identity/)
+  assert.match(brand, /className="animal-island-hero__english"\s+aria-hidden="true"/)
+
+  const title = rules.find((rule) => (
+    rule.includes('> span:has(> span + span)') &&
+    /font-size:\s*41px/.test(rule)
+  ))
+  assert.ok(title, 'the game-opening title is missing')
+  assert.match(title, /font-weight:\s*900/)
+  assert.match(title, /white-space:\s*nowrap/)
+  assert.match(title, /animation:\s*animal-island-hero-title-in/)
+
+  const badge = rules.find((rule) => (
+    rule.includes('> span:has(> span + span) > span + span') &&
+    /transform:\s*translateY\(4px\)\s+rotate\(2deg\)/.test(rule)
+  ))
+  assert.ok(badge, 'the preview badge must sit beside the title')
+  assert.match(badge, /border-radius:\s*999px/)
+
+  const mobile = css.slice(css.indexOf('@media (max-width: 520px)'))
+  assert.match(mobile, /min-height:\s*124px/)
+  assert.match(mobile, /font-size:\s*34px/)
+  assert.match(css, /@media \(max-width: 360px\)[\s\S]*font-size:\s*30px/)
+  assert.match(css, /prefers-reduced-motion[\s\S]*\.animal-island-hero__scenery \*[\s\S]*animation:\s*none !important/)
+})
+
 test('owned CSS hard-coded text and focus combinations remain readable', () => {
   assert.ok(contrastRatio('#6f451f', '#fffbe7') >= 4.5)
   assert.ok(contrastRatio('#f7e7c7', '#2a2520') >= 4.5)
   // Wooden header ribbon: cream text on the painted plank in both modes.
   assert.ok(contrastRatio('#fff3d6', '#8a5a33') >= 4.5)
   assert.ok(contrastRatio('#f6e6c8', '#5a3d24') >= 4.5)
+  assert.ok(contrastRatio('#235d3d', '#a5d0aa') >= 4.5)
+  assert.ok(contrastRatio('#315b3a', '#a5d0aa') >= 4.5)
   assert.ok(contrastRatio('#9c7200', '#f0e8d8') >= 3)
   for (const value of ['#6f451f', '#fffbe7', '#2a2520', '#8a5a33', '#5a3d24', '#9c7200']) {
     assert.match(css, new RegExp(value))
