@@ -38,8 +38,8 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `[data-trigger-menu]` | composer 的 `/`｜`@` 触发面板：排除胶囊与弹出层装饰，并给面板底边加渐隐（其 `::after` 未被 DSH 占用；高度是内联 `max-height`，不去改） | DSH 自己的 pointerdown 关闭逻辑依赖它 |
 | `[data-code-block-banner]` | 代码块 banner（语言标签 + 复制按钮）的文字颜色 —— 它继承 `label-primary`，亮色下压在深色代码岛上不可读 | 代码块 banner 的标记；只改颜色不动几何，且必须连 banner 的直接子元素一起改：语言标签自己声明了 `label-primary`，元素自身声明赢过继承 |
 | `[data-code-preview]`、`[data-textpreview-plain]` | 右侧栏「文档」预览的两条平面视图（高亮代码体 / 纯文本页）：把它们的 `<pre>` 从主题代码排版规则里排除，保留 DSH 自己的内边距与文字颜色 | 预览 `CodeBody` / `TextBody` 自己渲染的属性；纯文本视图**不是** `CodeBlock` 那条路径，单独用 `data-textpreview-plain` 才命中 |
-| `[data-dsh-boot]` | 全屏启动等待页：昼夜岛屿背景、纸质渡岛票卡和字标装饰 | DSH WebBootPage 在插件加载前自己写出的根标记；只改外观，不接管启动状态。结构消失时自动退回 DSH 原样式 |
-| `[data-dsh-boot-spinner]` | 启动进度章：叶片中心、航线圈与环绕萤火点；进度弧继续使用 DSH 写在元素上的 `--dsh-boot-arc` | DSH WebBootPage 在创建进度元素时写出的标记；失败状态会移除该元素，官方错误列表不受影响 |
+| `[data-dsh-boot]` | 全屏启动等待页：昼夜岛屿背景；纸卡只在公开进度章存在时启用，失败页允许官方错误列表滚动 | DSH WebBootPage 在插件加载前自己写出的根标记；主题不接管启动状态，结构消失时自动退回 DSH 原样式 |
+| `[data-dsh-boot-spinner]` | 启动进度章：叶片中心、航线圈与环绕萤火点；纸卡、字标和提示通过该公开 hook 的 `:has()` / 相邻关系定位，不使用 tag 或 hash class；进度弧继续读取 `--dsh-boot-arc` | DSH WebBootPage 创建进度元素时写出的标记；失败状态会移除该元素，因此纸卡装饰同时失配，官方错误列表不受影响 |
 | `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
 | `[data-windows-titlebar]` | 桌面端（仅 Windows）外壳标记：用它把 DSH 自己画在 AppFrame 上的不透明 sidebar-fill 清成透明，画布才透得出来 | Electron 桌面壳自己写的平台标记；macOS 给同一个 frame 的是 `background: 0 0`，Windows 分支漏了这行（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)）。侧栏/右栏各自重画自己的表面，所以只清 frame 不影响可读性 |
@@ -49,13 +49,15 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |
 | `[aria-pressed]`、`[aria-selected]`、`[aria-checked]` | 选中态（预设卡片、列表项、外观预设） | ARIA 状态属性 |
 
-插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。唯一例外是 Windows 外壳 frame：`html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490），`test/skin.test.mjs` 静态锁住它。
+插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。唯一无 hook 的例外是 Windows 外壳 frame：`html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。另一个受限例外是启动页：纸卡用 `[data-dsh-boot] > :has([data-dsh-boot-spinner])`，字标和提示用进度章的相邻关系定位；所有关系都锚定公开 boot hook，且 spinner 消失即整体失配。两条例外都由 `test/skin.test.mjs` 锁住。
 
 ## 插件自有布局
 
 DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 的 `modelLayout` 两列网格、`modelRow` 行内 flex、自己的滚动与行高）。皮肤**不得**改写这类布局：0.3.4 删掉了为那页写的 `nav[aria-label]` 覆盖，因为同一条规则会顶掉插件自己的列宽比例，并把行拆成两列网格导致行内开关位置参差。
 
 判断口径：只覆盖 DSH 与插件都**没有**给出外观的语义元素；已经自带 CSS 的组件，最多通过 token 影响它的颜色，不改它的几何。
+
+启动等待页是 DSH 在插件加载前预渲染的临时界面，不属于插件自有布局；主题按上表的两个 boot hook 做视觉接管，并且只在进度章存在时启用纸卡几何。失败页回到 DSH 的官方卡片与错误列表，根节点保留滚动，避免长诊断被裁掉。
 
 ## 禁止依赖
 
@@ -87,17 +89,24 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
   ```sh
   pnpm run fixture document-preview-plain
   pnpm run fixture document-preview-plain --dsh "C:\Users\me\.dsh\app"   # 默认读 ~/.dsh/app 或 $DSH_APP
+  pnpm run fixture boot-loading --desktop                                  # 自动准备桌面 runtime
   ```
 
-- 临时探索用的夹具仍可放在 `.dsh/`（忽略目录），成熟后按上面的形状收进 `test/fixtures/`；
+- 临时探索用的夹具放在 `.tmp/fixtures/`（忽略目录），成熟后按上面的形状收进 `test/fixtures/`；
+- 桌面 runtime 按 `app.asar` 的 size + mtime 缓存在 `.tmp/dsh-runtime/`；非默认安装位置用
+  `--asar` 指定；
+- 启动页夹具是 `test/fixtures/boot-loading/` 与 `test/fixtures/boot-failure/`：前者覆盖昼夜进度卡，
+  后者用官方失败 DOM 和长诊断验证根节点滚动；两者都引入真实 DSH CSS，并在浏览器内断言结构、
+  computed style 与可滚动性，失败时命令非零退出；
 - 夹具会连同**插件自己内嵌的 Nunito** 一起渲染。只渲染 `src/client/skin.css` 的话文字全部走回退字体，凡是与字宽、换行、裁切有关的回归都看不出来；
 - 侧栏品牌区的夹具是 `test/fixtures/sidebar-masthead/`：按 0.2.1-rc.5 的 `[data-windows-titlebar]` 结构还原真实侧栏（`wtg9ga_*` 模块 class、logoRow、新会话、面板行），并在 280 / 240 / 180 三个宽度下同时看浅色与深色。它跑的是**桌面客户端的 runtime**，所以要显式指定：
 
   ```sh
-  node scripts/fixture.mjs sidebar-masthead --dsh "<提取出来的桌面 app 目录>"
+  pnpm run fixture sidebar-masthead --desktop
   ```
 
-  该目录至少要有 `node_modules/@deepseek-ai/dsh-web-frontend/dist/assets/*.css`、`dsh-client-ui-theme/lib/client.js` 与 `dsh-client-ui-sidebar/lib/client.js`，都可以从 `%LOCALAPPDATA%\Programs\...\resources\app.asar` 里按 asar 头部的 offset 直接切出来；不指定的话默认读 `~/.dsh/app`（0.1.5 基线），hash 前缀对不上，夹具会渲染成没有样式的样子；
+  不指定 `--desktop` / `--asar` 时默认读 `~/.dsh/app`（0.1.5 基线），hash 前缀对不上，夹具会
+  渲染成没有样式的样子；
 - 判定要交给像素，不要交给眼睛：按行统计墨迹的横向范围与高度（把一行文字切成「墨迹带」逐带量 bbox），比放大截图可靠 —— 1px 级别的削顶在截图上看不出边界，在行统计里是差一行；
 - 输出截图：`artifacts/smoke/`（忽略目录，保留作为回归证据）；
 - 渲染：headless Chrome `--headless=new --screenshot`，`--user-data-dir` 用系统临时目录，**不要**往仓库里写浏览器 profile；

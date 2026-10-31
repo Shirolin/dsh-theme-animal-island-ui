@@ -86,20 +86,17 @@ console.log(profile.skippedBundles, profile.layers.map((layer) => layer.packageN
 
 ## 对着桌面 runtime 跑夹具
 
-桌面 runtime 在 `app.asar` 里，先抽出一个夹具能用的目录：需要
-`node_modules/@deepseek-ai/dsh-web-frontend/dist/assets/*.css`，以及夹具 `pluginCss` 里列出的
-`dsh-client-ui-*/lib/client.js` 与 `dsh-client-ui-theme/lib/client.js`。
+桌面 runtime 在 `app.asar` 里，fixture runner 会按需解包并缓存：
 
 ```sh
-node scripts/fixture.mjs sidebar-masthead --dsh <抽出来的目录>
+pnpm run fixture sidebar-masthead --desktop
+# 非默认安装位置
+pnpm run fixture sidebar-masthead --asar "C:\path\to\app.asar"
 ```
 
-夹具 `body.html` 里的 hash 前缀取自当前桌面 runtime（`0.2.1-rc.5` 是 `wtg9ga_`）；桌面升级后要同步
-更新这一处，否则真实 CSS 不命中，夹具会渲染成没有样式的样子。
-
-抽 asar 时注意头部偏移 —— **`dataStart = 8 + readUInt32LE(4)`**，不是
-`8 + readUInt32LE(12)`：后者会早 8 字节，读出来的 JSON 带一段垃圾前缀、文件尾部被截掉，而且包的
-`package.json` 会直接解析失败。
+缓存位于 `.tmp/dsh-runtime/<size-mtime>/dsh`，同一桌面构建会直接复用。首次运行可能下载
+`@electron/asar`。夹具 `body.html` 里的 hash 前缀取自当前桌面 runtime（`0.2.1-rc.5` 是
+`wtg9ga_`）；桌面升级后要同步更新，否则真实 CSS 不命中，夹具会渲染成没有样式的样子。
 
 ## 截图与远程调试
 

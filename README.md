@@ -79,9 +79,12 @@ pnpm run check
 ```sh
 pnpm run fixture document-preview-plain    # 渲染 test/fixtures/<名称>，产物在 artifacts/smoke/
 pnpm run fixture document-preview-plain --dsh "C:\path\to\.dsh\app"
+pnpm run fixture boot-loading --desktop    # 自动准备桌面 runtime
 ```
 
-夹具定义在 `test/fixtures/`，runner 是 `scripts/fixture.mjs`（默认读 `~/.dsh/app`，可用 `DSH_APP` 覆盖）。
+夹具定义在 `test/fixtures/`，runner 是 `scripts/fixture.mjs`（默认读 `~/.dsh/app`，可用 `DSH_APP`
+覆盖）。桌面夹具可用 `--desktop` 自动准备 runtime，或用 `--asar` 指定 `app.asar`；`fixture.json`
+的 `assertions` 在 headless Chrome 中执行，失败时命令非零退出。
 
 ## 贡献
 

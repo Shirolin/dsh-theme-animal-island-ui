@@ -6,7 +6,8 @@
 
 - Node.js ≥ 20（`package.json` 的 `engines`），包管理用 pnpm；
 - 本机装有 DSH（默认 `~/.dsh/app`，也可用 `DSH_APP` 环境变量或 `--dsh` 参数指定）；
-- headless Chrome（用于离屏夹具截图，可选；不装也能跑门禁）。
+- 桌面夹具可自动从官方客户端的 `app.asar` 准备 runtime；
+- headless Chrome（用于离屏夹具截图与断言，可选；不装也能跑门禁）。
 
 ```sh
 pnpm install
@@ -44,10 +45,15 @@ pnpm run check:compat   # 对照锁定的 DSH 版本检查接缝与 token
 ```sh
 node scripts/fixture.mjs document-preview-plain          # 渲染 test/fixtures/<name>
 node scripts/fixture.mjs document-preview-plain --dsh "C:\path\to\.dsh\app"
+pnpm run fixture boot-loading --desktop                  # 自动准备桌面 runtime
 ```
 
-- 夹具定义在 `test/fixtures/<name>/`：`fixture.json`（要引入哪些真实 CSS、有哪些变体）+
+- `--desktop` 自动查找官方客户端；装在非默认位置时用 `--asar "C:\path\app.asar"`。runtime
+  按 `app.asar` 的 size + mtime 缓存在 `.tmp/dsh-runtime/`，重复运行直接复用；
+- 夹具定义在 `test/fixtures/<name>/`：`fixture.json`（真实 CSS、变体与浏览器断言）+
   `body.html`（DOM 片段，可用 `{{TOKENS}}`、`{{SKIN_CSS}}` 等占位符）；
+- `assertions` 中每条 `{ message, expression }` 的 `expression` 必须返回 `true`；任一失败时命令
+  非零退出；
 - 产物写在 `artifacts/smoke/`（被 git 忽略），PR 里贴出前后对照即可；
 - 新增夹具时，优先挑**最小可复现**的 DOM，不要整页复制 DSH。
 
