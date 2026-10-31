@@ -25,7 +25,7 @@ test('package ships its docs, scripts and engine metadata', () => {
   }
   assert.equal(packageJson.engines.node, '>=20')
   assert.ok(packageJson.keywords.includes('dsh'))
-  for (const script of ['build', 'typecheck', 'test', 'check:compat', 'fixture', 'release', 'check']) {
+  for (const script of ['build', 'typecheck', 'test', 'check:compat', 'check:visual', 'fixture', 'release', 'check']) {
     assert.ok(packageJson.scripts[script], `script missing: ${script}`)
   }
 })

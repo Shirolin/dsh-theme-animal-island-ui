@@ -59,6 +59,7 @@
     "typecheck": "tsc --noEmit",
     "test": "pnpm run build && node test/run.mjs",
     "check:compat": "pnpm run build && node scripts/check-compat.mjs",
+    "check:visual": "node scripts/fixture.mjs sidebar-masthead --desktop",
     "fixture": "node scripts/fixture.mjs",
     "capture:desktop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/capture-desktop.ps1",
     "desktop:debug": "scripts\\dsh-desktop-debug.cmd",

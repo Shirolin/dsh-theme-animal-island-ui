@@ -1,6 +1,36 @@
 {
   "title": "侧栏品牌区 · 渡岛船票（0.2.1-rc.5 真实侧栏 DOM）",
   "pluginCss": ["@deepseek-ai/dsh-client-ui-sidebar"],
+  "assertions": [
+    {
+      "message": "三档侧栏都渲染出对应宽度的 60px 船票",
+      "expression": "(() => { const roots = [...document.querySelectorAll('[id^=\"root-\"]')]; return roots.length === 3 && roots.every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const style = getComputedStyle(button); return style.height === '60px' && style.width === (root.id === 'root-180' ? '156px' : '216px'); }); })()"
+    },
+    {
+      "message": "logo row 与船票都放开 DSH 的裁切，按钮内边距和圆角正确",
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const row = button.parentElement; const own = getComputedStyle(button); const parent = getComputedStyle(row); return parent.height === '80px' && parent.overflow === 'visible' && own.overflow === 'visible' && own.padding === '0px' && own.borderRadius === '9px'; }))()"
+    },
+    {
+      "message": "纸面用透明 2px 边框露出连续底边，背景裁切与圆角一致",
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const own = getComputedStyle(button); const paper = getComputedStyle(button, '::after'); return paper.content === '\"\"' && paper.borderWidth === '2px' && paper.borderColor === 'rgba(0, 0, 0, 0)' && paper.borderRadius === own.borderRadius && paper.backgroundClip === 'padding-box' && paper.backgroundOrigin === 'border-box'; }))()"
+    },
+    {
+      "message": "底边和纸面缺口共用同一圆心，纸面切口比底边大 2px",
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const own = getComputedStyle(button); const paper = getComputedStyle(button, '::after'); const centers = ['clamp(44px, 24%, 54px) 0px', 'clamp(44px, 24%, 54px) 100%']; return own.maskComposite === 'intersect, intersect' && paper.maskComposite === 'intersect, intersect' && centers.every((center) => own.maskImage.split(center).length === 2 && paper.maskImage.split(center).length === 2) && own.maskImage.includes('6.6px') && own.maskImage.includes('7.1px') && paper.maskImage.includes('8.6px') && paper.maskImage.includes('9.1px'); }))()"
+    },
+    {
+      "message": "薄荷票根贴住纸面边缘，并在窄侧栏收到 44px",
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const mark = button.querySelector(':scope > span > span:has(.animal-island-brand__mark)'); if (mark === null) return false; const style = getComputedStyle(mark); return style.alignSelf === 'stretch' && style.height === '60px' && style.transform === 'none' && style.backgroundSize === '8px 8px' && style.maskImage.includes('100% 0px') && style.maskImage.includes('100% 100%') && (root.id === 'root-180' ? style.width === '44px' : Number.parseFloat(style.width) > 44); }))()"
+    },
+    {
+      "message": "虚线撕口居中压在票根边缘上",
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); const mark = button?.querySelector(':scope > span > span:has(.animal-island-brand__mark)'); if (mark === null || mark === undefined) return false; const seam = getComputedStyle(mark, '::after'); return seam.right === '-1px' && seam.width === '2px' && seam.backgroundImage.includes('repeating-linear-gradient') && seam.backgroundImage.includes('5px') && seam.backgroundImage.includes('9px'); }))()"
+    },
+    {
+      "message": "字标脱离 DSH 24px 盒后仍完整落在船票纸面内",
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const label = button.querySelector(':scope > span > span:has(.animal-island-brand__name)'); const name = button.querySelector('.animal-island-brand__name'); const strong = name?.querySelector('strong'); const small = name?.querySelector('small'); if (!label || !name || !strong || !small) return false; const labelStyle = getComputedStyle(label); const nameStyle = getComputedStyle(name); const strongStyle = getComputedStyle(strong); const smallStyle = getComputedStyle(small); const fontSize = Number.parseFloat(strongStyle.fontSize); const lineHeight = Number.parseFloat(strongStyle.lineHeight); const clearance = (lineHeight - 1.45 * fontSize) / 2 + 0.28 * fontSize; return labelStyle.padding === '0px 10px 0px 11px' && labelStyle.height === '60px' && labelStyle.overflow === 'visible' && nameStyle.overflow === 'visible' && nameStyle.lineHeight === '18px' && strongStyle.fontSize === '20px' && strongStyle.lineHeight === '24px' && smallStyle.marginTop === '1px' && smallStyle.lineHeight === '9px' && strong.scrollWidth <= strong.clientWidth && clearance >= 2; }))()"
+    }
+  ],
   "variants": [
     { "id": "light", "mode": "light", "window": "840,820" },
     { "id": "dark", "mode": "dark", "window": "840,820" }

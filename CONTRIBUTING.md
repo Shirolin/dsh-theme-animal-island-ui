@@ -46,6 +46,7 @@ pnpm run check:compat   # 对照锁定的 DSH 版本检查接缝与 token
 node scripts/fixture.mjs document-preview-plain          # 渲染 test/fixtures/<name>
 node scripts/fixture.mjs document-preview-plain --dsh "C:\path\to\.dsh\app"
 pnpm run fixture boot-loading --desktop                  # 自动准备桌面 runtime
+pnpm run check:visual                                    # 侧栏船票 fixture 的独立视觉门禁
 ```
 
 - `--desktop` 自动查找官方客户端；装在非默认位置时用 `--asar "C:\path\app.asar"`。runtime

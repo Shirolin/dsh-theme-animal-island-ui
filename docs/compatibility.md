@@ -76,9 +76,9 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
 - **服务注入**：客户端入口内部 `inject` 写 **Cordis 服务名**（`['theme', 'slots']`）。写包名会让插件永久停在 `pending (waiting for service: ...)`；
 - **主题注册**：必须走 `ctx.theme.overrideTokens(source, tokens)`，disposer 交给 `ctx.effect()`；禁止 `document.body`、`window`、`querySelector`、DSH 内部 CSS module hash 或直接覆盖 DSH 核心样式表；
 - **自有样式生命周期**：`<style data-plugin>` 与根属性成对安装/清理，重复 apply/dispose 不得残留；
-- **品牌船票**：`sidebar.brand.name` 渲染在 DSH 自己的品牌按钮里，按钮本体只有 24px 高且 `overflow: hidden`。主题用 `:has(.animal-island-brand__name)` 把按钮做成 216×60 的渡岛船票，并把 logoRow 长到 80px、放开它的 `overflow`（focus ring 要画在行外）；按钮内 24px 的 identity/name 盒释放成 `height: auto`。按钮实心底与纸面透明边框共同形成连续 2px 轮廓；纸面遮罩比底遮罩大 2px，每个缺口的两层遮罩共用票根边缘的同一圆心，因此圆角、直边与上下缺口不会错位。票根由 mark slot 的父级承载，宽度随窄侧栏从约 54px 收到 44px；Windows 的 4px 左内边距必须清零，否则票根会脱离纸面边缘。`:has()` 不能嵌套（浏览器会整条丢弃规则），所以行选择器用 `> button .animal-island-brand__name` 的直系结构；`test/skin.test.mjs` 的 `brand ferry ticket grows DSH clip box` 锁住 80px 行高、60px 船票、216px 宽度、双层遮罩的 2px 半径差、贴边票根、`overflow: visible`、`height: auto` 与「不得嵌套 `:has()`」；
+- **品牌船票**：`sidebar.brand.name` 渲染在 DSH 自己的品牌按钮里，按钮本体只有 24px 高且 `overflow: hidden`。主题用 `:has(.animal-island-brand__name)` 把按钮做成 216×60 的渡岛船票，并把 logoRow 长到 80px、放开它的 `overflow`（focus ring 要画在行外）；按钮内 24px 的 identity/name 盒释放成 `height: auto`。按钮实心底与纸面透明边框共同形成连续 2px 轮廓；纸面遮罩比底遮罩大 2px，每个缺口的两层遮罩共用票根边缘的同一圆心，因此圆角、直边与上下缺口不会错位。票根由 mark slot 的父级承载，宽度随窄侧栏从约 54px 收到 44px；Windows 的 4px 左内边距必须清零，否则票根会脱离纸面边缘。`:has()` 不能嵌套（浏览器会整条丢弃规则），所以行选择器用 `> button .animal-island-brand__name` 的直系结构；`sidebar-masthead` fixture 在真实桌面 DOM 中锁住这些 computed style 与字标边界；
 - **构建**：`lib/client.js` 必须是 DSH Module Loader 形状（`globalThis.__ModuleLoader__.load({ id, factory })`），React 由平台模块表提供，Nunito WOFF2 与原创 SVG 构建期内嵌；
-- **门禁**：`pnpm run check` = typecheck + build + `node test/run.mjs` + `check:compat`，全部必须通过；token 测试要求 light/dark key 集合一致且对比度达标，bundle 测试禁止 hash class、私有 import、DOM fallback 与 Observer。
+- **门禁**：`pnpm run check` = typecheck + build + `node test/run.mjs` + `check:compat`；视觉改动另跑 `pnpm run check:visual`。token 测试要求 light/dark key 集合一致且对比度达标，bundle 测试禁止 hash class、私有 import、DOM fallback 与 Observer。
 
 ## 离屏验收夹具
 
@@ -90,6 +90,7 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
   pnpm run fixture document-preview-plain
   pnpm run fixture document-preview-plain --dsh "C:\Users\me\.dsh\app"   # 默认读 ~/.dsh/app 或 $DSH_APP
   pnpm run fixture boot-loading --desktop                                  # 自动准备桌面 runtime
+  pnpm run check:visual                                                    # 侧栏船票真实 DOM 视觉门禁
   ```
 
 - 临时探索用的夹具放在 `.tmp/fixtures/`（忽略目录），成熟后按上面的形状收进 `test/fixtures/`；
