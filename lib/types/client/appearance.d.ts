@@ -16,21 +16,15 @@ export declare const APPEARANCE_PRESETS: {
     readonly balanced: 0.4;
     readonly island: 0.28;
 };
-export declare const APPEARANCE_MIN = 0.15;
-export declare const APPEARANCE_MAX = 0.6;
-export declare const DEFAULT_APPEARANCE: AppearanceState;
-type StorageLike = Pick<Storage, 'getItem' | 'setItem'>;
-export declare function normalizeAppearance(input: unknown): AppearanceState;
-export declare function readStorage(): StorageLike | undefined;
-export declare function readAppearance(source?: StorageLike | undefined): AppearanceState;
-export declare function writeAppearance(state: AppearanceState, target?: StorageLike | undefined): void;
-/** Paint the preference onto the root element as a CSS variable. */
-export declare function applyAppearance(state: AppearanceState, root: HTMLElement): void;
-export declare function clearAppearance(root: HTMLElement): void;
+export declare const APPEARANCE_DEFAULTS: {
+    readonly preset: "balanced";
+    readonly veil: 0.4;
+    readonly min: 0.15;
+    readonly max: 0.6;
+};
 export declare function getAppearance(): AppearanceState;
 export declare function subscribeAppearance(listener: () => void): () => void;
-/** Persist, apply, and notify. Used by the settings tab. */
+/** Persist, paint, and notify. The installed root owns the visible lifecycle. */
 export declare function setAppearance(next: AppearanceState): AppearanceState;
-/** Load the saved preference and paint it. Called once when the skin installs. */
-export declare function initAppearance(root: HTMLElement): void;
-export {};
+/** Load the saved preference, paint it, and return the matching disposer. */
+export declare function installAppearance(root: HTMLElement): () => void;

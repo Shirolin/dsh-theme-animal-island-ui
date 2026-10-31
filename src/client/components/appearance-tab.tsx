@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import {
+  APPEARANCE_DEFAULTS,
   APPEARANCE_PRESETS,
   getAppearance,
   setAppearance,
@@ -62,8 +63,8 @@ export function AppearanceTab(): React.JSX.Element {
         <span>自定义</span>
         <input
           type="range"
-          min={0.15}
-          max={0.6}
+          min={APPEARANCE_DEFAULTS.min}
+          max={APPEARANCE_DEFAULTS.max}
           step={0.01}
           value={state.veil}
           onChange={(event) => setAppearance({ preset: 'custom', veil: Number(event.target.value) })}
@@ -74,9 +75,12 @@ export function AppearanceTab(): React.JSX.Element {
       <button
         type="button"
         className="animal-island-appearance__reset"
-        onClick={() => setAppearance({ preset: 'balanced', veil: APPEARANCE_PRESETS.balanced })}
+        onClick={() => setAppearance({
+          preset: APPEARANCE_DEFAULTS.preset,
+          veil: APPEARANCE_DEFAULTS.veil,
+        })}
       >
-        恢复默认（均衡 0.40）
+        恢复默认（{PRESET_LABELS[APPEARANCE_DEFAULTS.preset]} {APPEARANCE_DEFAULTS.veil.toFixed(2)}）
       </button>
 
       <p className="animal-island-appearance__note">

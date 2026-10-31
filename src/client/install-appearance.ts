@@ -1,6 +1,6 @@
 import type { ClientContextLike } from './context.ts'
 import { AppearanceTab } from './components/appearance-tab.tsx'
-import { clearAppearance, initAppearance } from './appearance.ts'
+import { installAppearance as installAppearanceLifecycle } from './appearance.ts'
 
 export const APPEARANCE_TAB_ID = 'animal-island-appearance'
 
@@ -22,8 +22,7 @@ function tabLabel(): string {
 export function installAppearance(ctx: ClientContextLike): void {
   if (typeof document === 'undefined' || !document.documentElement) return
   const root = document.documentElement
-  initAppearance(root)
-  ctx.effect(() => () => clearAppearance(root), 'animal-island-ui:appearance')
+  ctx.effect(() => installAppearanceLifecycle(root), 'animal-island-ui:appearance')
 
   const slots = ctx.slots
   if (!slots || typeof slots.inject !== 'function' || typeof slots.register !== 'function') return

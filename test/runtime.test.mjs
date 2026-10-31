@@ -116,11 +116,13 @@ test('client factory registers and releases coordinated theme, style, and public
     assert.ok(slots.registrations.some((entry) => entry.key === 'settings.plugins.tab'))
     // The saved appearance preference is painted on the root as a CSS variable.
     assert.equal(document.documentElement.style.getPropertyValue('--animal-canvas-veil'), '0.4')
+    assert.equal(document.documentElement.getAttribute('data-animal-appearance'), 'balanced')
 
     disposeEffects()
     assert.equal(disposedTheme, 1)
     assert.equal(document.documentElement.hasAttribute('data-dsh-animal-island-skin'), false)
     assert.equal(document.documentElement.style.getPropertyValue('--animal-canvas-veil'), '')
+    assert.equal(document.documentElement.hasAttribute('data-animal-appearance'), false)
     assert.equal(document.head.querySelectorAll('style[data-plugin="dsh-theme-animal-island-ui"]').length, 0)
     assert.deepEqual(slots.registrations, [])
   })
