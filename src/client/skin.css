@@ -11,6 +11,7 @@ html[data-dsh-animal-island-skin] {
   --animal-mint-deep: #0b6d64;
   --animal-border: #dcd8d1;
   --animal-border-strong: #c4b89e;
+  --animal-control-border: #8f765e;
   --animal-slider-track: #e9dfc9;
   --animal-shadow-button: #bdaea0;
   --animal-shadow-input: #d4c9b4;
@@ -122,6 +123,22 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
     auto;
   background-repeat: repeat, no-repeat, no-repeat, repeat, repeat, repeat;
   background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
+}
+
+/* The split open-target control uses DSH's faint border-l4 for both its outer
+   boundary and the clickable split. In light mode that border nearly disappears
+   against the island canvas, so strengthen only this functional boundary. */
+html[data-dsh-animal-island-skin]
+  body:not([data-ds-dark-theme])
+  [data-open-target] {
+  border-color: var(--animal-control-border) !important;
+}
+
+html[data-dsh-animal-island-skin]
+  body:not([data-ds-dark-theme])
+  [data-open-target]
+  > button[aria-haspopup="menu"] {
+  border-left-color: var(--animal-control-border) !important;
 }
 
 /* DSH renders the boot screen before the app shell. The two data attributes are
@@ -843,6 +860,14 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :not(pre) > code:not(
   border-color: #59493a;
   background: #362e25;
   color: #ead9bd;
+}
+
+/* Keep the sticky conversation header separate from scrolling content without
+   turning the full-width divider into a competing control border. */
+html[data-dsh-animal-island-skin]
+  body:not([data-ds-dark-theme])
+  header:has([data-conversation-header-corner]) {
+  border-bottom-color: #b9aa90 !important;
 }
 
 /* Header ribbon, built inside the nav box because DSH clips it

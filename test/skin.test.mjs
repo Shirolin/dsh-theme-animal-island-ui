@@ -44,6 +44,9 @@ test('skin uses only the reviewed stable data hooks', () => {
     // theme's dark-island code foreground.
     'code-preview',
     'textpreview-plain',
+    // Open-target split button: DSH exposes this marker for its file-explorer
+    // and dropdown actions; light mode needs a perceivable boundary between them.
+    'open-target',
     // Windows desktop shell marker: the shell paints its outer frame with the
     // opaque sidebar fill (macOS clears it); the skin clears it so the canvas
     // behind the UI is visible. deepseek-harness discussion #9490.
@@ -57,6 +60,24 @@ test('skin uses only the reviewed stable data hooks', () => {
     [...new Set(hooks)].filter((hook) => !allowed.has(hook)),
     [],
   )
+})
+
+test('light open-target boundaries stay perceivable', () => {
+  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const boundary = rules.find(
+    (rule) => rule.includes('body:not([data-ds-dark-theme])') && rule.includes('[data-open-target]') && /border-color:\s*var\(--animal-control-border\)/.test(rule),
+  )
+  const divider = rules.find(
+    (rule) =>
+      rule.includes('body:not([data-ds-dark-theme])') &&
+      rule.includes('[data-open-target]') &&
+      rule.includes('button[aria-haspopup="menu"]') &&
+      /border-left-color:\s*var\(--animal-control-border\)/.test(rule),
+  )
+
+  assert.ok(boundary, 'the light open-target boundary override is missing')
+  assert.ok(divider, 'the light open-target divider override is missing')
+  assert.ok(contrastRatio('#8f765e', '#d2e7d5') >= 3)
 })
 
 test('composer 3D send styling leaves text-bearing triggers flat', () => {
@@ -127,6 +148,20 @@ test('header ribbon colors the current crumb span directly', () => {
   const rule = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0]).find((candidate) => candidate.includes('nav :where(span)'))
   assert.ok(rule, 'the ribbon crumb span colour rule is missing')
   assert.match(rule, /color:\s*#fff3d6\s*!important/)
+})
+
+test('light conversation header keeps a quiet but visible divider', () => {
+  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const rule = rules.find(
+    (candidate) =>
+      candidate.includes('body:not([data-ds-dark-theme])') &&
+      candidate.includes('header:has([data-conversation-header-corner])') &&
+      /border-bottom-color:\s*#b9aa90\s*!important/.test(candidate),
+  )
+
+  assert.ok(rule, 'the light conversation header divider override is missing')
+  assert.doesNotMatch(rule, /border-(?:width|bottom-width):/)
+  assert.ok(contrastRatio('#b9aa90', '#d2e7d5') >= 1.5)
 })
 
 test('slot installation uses public contracts without DOM scanning', () => {

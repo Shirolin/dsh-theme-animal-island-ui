@@ -2,7 +2,7 @@
 
 `Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创资源与 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
 
-当前发布 **0.3.20**。侧栏品牌已换成 **216×60 的渡岛船票**（奶油纸面 + 薄荷票根 + 虚线撕口）；其余已发布内容包含气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态，「设置 → 插件 → 动森外观」的透明度调节（含与真实画布同层数的预览），以及 Windows 桌面端外壳透明化与圆角归零。Windows 只保留一个 parity 分支。
+当前发布 **0.3.22**。侧栏品牌已换成 **216×60 的渡岛船票**（奶油纸面 + 薄荷票根 + 虚线撕口）；其余已发布内容包含气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态，「设置 → 插件 → 动森外观」的透明度调节（含与真实画布同层数的预览），以及 Windows 桌面端外壳透明化与圆角归零。Windows 只保留一个 parity 分支。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 
@@ -105,15 +105,15 @@ pnpm run release 0.3.6     # 打包 + 回写 SHA；版本号必须是新的
 `prepack` 会自动重建 `lib`。当前规范产物为：
 
 ```text
-artifacts/release-v0.3.20/dsh-theme-animal-island-ui-0.3.20.tgz
-SHA-256: D826DF239E26B5E1A856C7DE2AE892E31363B8D80B4A798AACAC0D683C7483DD
+artifacts/release-v0.3.22/dsh-theme-animal-island-ui-0.3.22.tgz
+SHA-256: F034709622BDBF0AE04739E5A62638E16C092233DA46042E90633A3291BF236D
 ```
 
 把 `.tgz` 装进目标 `web` profile 并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）：
 
 ```sh
 cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v0.3.20/dsh-theme-animal-island-ui-0.3.20.tgz
+pnpm add file:<仓库>/artifacts/release-v0.3.22/dsh-theme-animal-island-ui-0.3.22.tgz
 ```
 
 之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。

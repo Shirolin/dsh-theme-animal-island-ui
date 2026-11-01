@@ -3,18 +3,18 @@
 当前唯一规范产物：
 
 ```text
-release-v0.3.20/dsh-theme-animal-island-ui-0.3.20.tgz
-SHA-256: D826DF239E26B5E1A856C7DE2AE892E31363B8D80B4A798AACAC0D683C7483DD
+release-v0.3.22/dsh-theme-animal-island-ui-0.3.22.tgz
+SHA-256: F034709622BDBF0AE04739E5A62638E16C092233DA46042E90633A3291BF236D
 ```
 
-规范产物由 `pnpm pack --pack-destination artifacts/release-v0.3.20` 生成，`prepack` 会先清空并重建 `lib`。重新出包后请同步更新上面的 SHA；若该版本已经分发过，请改版本号而不是原地重打。
+规范产物由 `pnpm pack --pack-destination artifacts/release-v0.3.22` 生成，`prepack` 会先清空并重建 `lib`。重新出包后请同步更新上面的 SHA；若该版本已经分发过，请改版本号而不是原地重打。
 
 ## 目录说明
 
 | 目录 | 内容 | 是否可用于验收 |
 | --- | --- | --- |
-| `release-v0.3.20/` | 当前规范产物 | 是 |
-| `release-v0.3.18/` | 上一版，profile 回滚用 | 仅回滚 |
+| `release-v0.3.22/` | 当前规范产物 | 是 |
+| `release-v0.3.21/` | 上一版，profile 回滚用 | 仅回滚 |
 | `release-v0.1.x` – `release-v0.3.2`、`release/`、`release-final/`、`final/`、`dsh-theme-animal-island-ui-0.1.0.tgz` | 历史归档，含早期重复的 0.1.0 包 | 否 |
 | `smoke/` | 离屏夹具截图（回归证据，随 `*-smoke.png` 一起被 git 忽略） | 参考 |
 | `consumer-check/` | 消费端类型检查夹具（`node_modules` 已清理，可重新 `pnpm install`） | 工具 |
