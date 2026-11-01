@@ -21,7 +21,7 @@
   .frame { width: 280px; height: 660px; overflow: hidden; border-radius: 12px; box-shadow: 0 10px 24px rgba(40, 60, 40, .18); }
   .frame.narrow { width: 240px; }
   .frame.tight { width: 180px; }
-  .shellStrip { box-sizing: border-box; display: flex; align-items: center; gap: 18px; height: 36px; padding: 0 12px; background: #e7f2e3; color: #6f451f; font-size: 14px; font-weight: 700; }
+  .shellStrip { box-sizing: border-box; display: flex; align-items: center; gap: 18px; height: 36px; padding: 0 12px; background: var(--dsw-specific-sidebar-fill); color: var(--dsw-alias-label-primary); font-size: 14px; font-weight: 700; }
   .shellStrip .tab { padding: 0 2px; }
   .shellStrip .tab.on { border-bottom: 2px solid #6f451f; }
   .stripIcon { width: 16px; height: 16px; border: 1.6px solid currentColor; border-radius: 2px; position: relative; }
@@ -78,7 +78,7 @@ function sidebar(width) {
     + '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M8 5.2v5.6M5.2 8h5.6"/></svg>'
     + '<span class="' + H + 'newSessionLabel ' + H + 'wide">新会话</span>'
     + '</span></span></button>'
-    + '<nav class="' + H + 'panelList">'
+    + '<nav class="' + H + 'panelList" aria-label="功能面板">'
     + panelRow('插件', PANEL_ICON) + panelRow('自动化任务', CLOCK_ICON) + panelRow('更多', GRID_ICON)
     + '</nav>'
     + '<div class="' + H + 'regionArea">'

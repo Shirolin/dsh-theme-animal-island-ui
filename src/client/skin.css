@@ -125,6 +125,37 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
   background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
 }
 
+/* The native Windows caption and sidebar both read
+   --dsw-specific-sidebar-fill. In dark mode that collapses the caption into
+   the sidebar, so give the caption a third night-sky surface and restore the
+   sidebar through its direct semantic nav. This changes only those two
+   backgrounds; the light caption is handled below and sidebar geometry stays
+   untouched. */
+html[data-windows-titlebar] body[data-ds-dark-theme] {
+  --dsw-specific-sidebar-fill: #1f3034 !important;
+}
+
+html[data-windows-titlebar] body[data-ds-dark-theme] div:has(> nav[aria-label]) {
+  background-color: #303444 !important;
+}
+
+/* In light mode the Windows overlay also reads sidebar-fill. A translucent
+   cream leaves the canvas visible on the left but composites the native
+   controls area to cream, so make the caption token the canvas mint and restore
+   the app's cream token inside #root. The sidebar root is explicit for the
+   fixture/older shell shapes that do not include the #root wrapper. */
+html[data-windows-titlebar] body:not([data-ds-dark-theme]) {
+  --dsw-specific-sidebar-fill: #e7efe5 !important;
+}
+
+html[data-windows-titlebar] body:not([data-ds-dark-theme]) #root {
+  --dsw-specific-sidebar-fill: rgba(250, 248, 243, 0.82) !important;
+}
+
+html[data-windows-titlebar] body:not([data-ds-dark-theme]) div:has(> nav[aria-label]) {
+  background-color: rgba(250, 248, 243, 0.82) !important;
+}
+
 /* The split open-target control uses DSH's faint border-l4 for both its outer
    boundary and the clickable split. In light mode that border nearly disappears
    against the island canvas, so strengthen only this functional boundary. */

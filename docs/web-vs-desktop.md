@@ -17,7 +17,7 @@
 能统一的部分尽量统一；不能统一的只有 DSH/Electron 自己拥有的 chrome：
 
 - **可统一**：整窗外壳 surface、主内容面、内容列左上角圆角、侧栏品牌盒预算、所有插件自有组件；
-- **不可统一**：native `titleBarOverlay` 标题栏条、Windows 折叠侧栏的 rail 行为、DSH 的 40px caption 高度、dock/rightbar 的几何计算。
+- **不可直接覆盖**：native `titleBarOverlay` 本体；它的颜色只能通过 `windowsAppearance` 读取的 sidebar-fill 间接上报。Windows 折叠侧栏的 rail 行为、DSH 的 40px caption 高度、dock/rightbar 的几何计算同样属于 DSH/Electron。
 
 这才是「方便调试」的边界：调试主题时只需要看共享 CSS；只有怀疑 chrome 时才看桌面分支。
 
@@ -26,14 +26,14 @@
 | 面 | DSH 的 Windows 行为（0.2.1-rc.5） | 主题状态 | 备注 |
 | --- | --- | --- | --- |
 | 整窗外壳 AppFrame | `[data-windows-titlebar] .frame` 用**不透明**的 `--dsw-specific-sidebar-fill` 铺满整窗；macOS 给同一个 frame 的是 `background: 0 0`，浏览器没有这层 | **已修（0.3.10）**：`html[data-windows-titlebar] #root > div > div { background: transparent !important }` | 官方讨论 [#9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)；回归测试见 [skin.test.mjs](../test/skin.test.mjs) |
-| 标题栏条（40px） | 由 Desktop 主进程的 **native `titleBarOverlay`** 绘制（`height:40`，颜色由 renderer 的 `windowsAppearance` IPC 更新），不是 frame 的 CSS 背景 | **无法由皮肤统一**；CSS 改不到原生 overlay | 实测 0.28 时条带约 `(231,239,229)`，侧栏约 `(247,246,240)`，主内容约 `(193,224,201)`；要统一只能改 DSH 的 `windowsAppearance` 上报逻辑 |
+| 标题栏条（40px） | 由 Desktop 主进程的 **native `titleBarOverlay`** 绘制（`height:40`，颜色由 renderer 的 `windowsAppearance` IPC 读取 sidebar-fill 后更新），不是 frame 的 CSS 背景 | **亮暗都保持三层**：亮色把上报色设为薄荷 `#e7efe5`，再在 `#root` 内恢复奶油 sidebar token；暗色把上报色设为 `#1f3034`，侧栏用 `div:has(> nav[aria-label])` 恢复 `#303444`；不改侧栏几何 | 亮色标题栏/窗口按钮区实测约 `(231,239,229)`，侧栏约 `(247,246,240)`，主内容约 `(193,224,201)`；暗色 caption `#1f3034` / 侧栏 `#303444` / 画布夜棕色。原生 overlay 本体仍不能直接写 CSS |
 | 侧栏 logoRow / 品牌 | `logoRow` 高 40px；`brandIdentity` 下移 1px；`brandMark` 右移 1px；`brandName` 字重 400；未折叠时 `brand` 左内边距 4px | **已覆盖**：logoRow 长到 80px，品牌是 216×60 的渡岛船票；主题清零 Windows 的 4px 左内边距，让票根贴住纸面；夹具见 [desktop.md](desktop.md) | 若 DSH 再次改品牌盒高度或 padding，先跑 `sidebar-masthead` 夹具，不要凭截图调数值 |
 | 折叠侧栏 | Windows 直接去掉 56px rail：`logoRow` 高 0、`panelList/regionArea/footArea` 隐藏、`toggle` 与 `newSession` 固定在标题栏左侧 12px/48px | 主题没有依赖 rail 的规则，品牌 slot 由 DSH 隐藏 | 折叠态的 28px 固定按钮只继承主题的字体过渡/focus 环，不会被 3D 按钮规则命中 |
 | 标题绶带文字 | 0.2.x 的当前 crumb 是 `<span class="crumbCurrent">`，自己声明 `color: var(--dsw-alias-label-primary)`；主题的 nav 继承色赢不过它 | **已修（0.3.13）**：`nav :where(span)` 显式奶油色，深色给米色 | 这是版本差异在 Windows 上先暴露；web 旧版 crumb 没有显式 color |
 | 内容列左上角 | `--dsh-windows-content-radius: 16px`，只有内容列左上角是圆角，其余列与分隔线保持直角 | **已统一（0.3.16）**：在 **frame 元素**上设 `--dsh-windows-content-radius: 0px`，去掉外壳自带圆角，与 web 的直角一致 | 变量必须写在 frame 上：DSH 的 `[data-windows-titlebar] .frame` 自己声明了 `16px`，写在 `<html>` 上会被覆盖（0.3.12–0.3.15 就是这样失效的） |
 | 右侧面板全屏 | `max-width: calc(100vw - var(--dsh-windows-sidebar-width))`，dock pane 左上角用同一 16px 圆角 | 圆角已由上面的 0px 统一；`max-width` 是 DSH 几何 | 打开全屏右栏时需再验一次，当前低风险 |
 | Dock 浮动面板 | `--dsh-dockkit-float-top` 在 Windows 上要加 caption 高度 | 主题的菜单/弹层不是 dockkit float | 不需要处理 |
-| 窗口按钮区 | 原生 caption 按钮在标题栏右侧，叠在 `titleBarOverlay` 上 | 主题改不到；overlay 由 Desktop host 上报 | 不要试图用 CSS 盖/改这一层 |
+| 窗口按钮区 | 原生 caption 按钮在标题栏右侧，叠在 `titleBarOverlay` 上 | **背景已间接统一**：亮色 `#e7efe5`、暗色 `#1f3034`；hover/close 状态仍由 Windows 绘制 | 不要试图用 CSS 盖/改这一层；只通过 sidebar-fill 上报色影响背景 |
 
 ## macOS 差异（仅登记，不在 Windows 范围）
 
@@ -59,6 +59,6 @@
 
 ## 待定
 
-1. **标题栏条无法由皮肤统一**：它是 native `titleBarOverlay`，颜色由 `windowsAppearance` IPC 上报。主题能统一的只有 frame / 内容面 / 圆角；如果要把 caption 也改成画布色，需要上游 DSH 改上报逻辑，或在桌面 host 侧另开一个“主题色”入口。
+1. **标题栏条只能间接供色**：native `titleBarOverlay` 的颜色仍由 `windowsAppearance` IPC 上报；当前亮/暗三层通过 sidebar-fill + `#root`/语义侧栏底色实现，不依赖原生 caption CSS。若 DSH 未来提供独立 caption token，应优先迁移到该入口，并移除这组兼容分支。
 2. **右侧栏/全屏右栏的底色**：透明 frame 后，右栏未自绘表面的缝隙会直接露画布。要不要给它补一层 veil（需要找一个公开 surface token，不能打 hash class）。
 3. **macOS 支持范围**：如果要把 macOS 纳入验收，需要单独立项，而不是在 Windows 规则里顺手补。

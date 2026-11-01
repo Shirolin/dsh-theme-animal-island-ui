@@ -80,7 +80,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - 侧栏叶片 hover 轻摆 `rotate(-6deg) scale(1.06)`；选区为半透明薄荷；以上都在 `prefers-reduced-motion` 下关闭；
 - 画布：波点 + 45° 斜纹 + 底部草/水双波纹 + 低透明度漂浮叶子/花/星；深色换成「夜岛」深青天空 + 星点 + 右上月晕 + 夜叶/萤火虫与深青山影；
 - 启动等待页：延伸到全屏的昼夜岛屿背景 + 渡岛船票纸卡；顶部叶片票章、`动森岛` 字标、中心叶片进度章和环绕萤火点共同显示「正在登陆无人岛」。进度环只消费 DSH 写出的 `--dsh-boot-arc`，不覆盖加载状态；纸卡只在公开进度章存在时启用，失败时自动退回官方卡片，并让错误列表在主题背景上安全居中、可横向与纵向滚动；
-- 画布透明度：主内容的奶油面由 `--animal-canvas-veil`（默认 .4）驱动；「设置 → 插件 → 动森外观」提供纸白 .52 / 均衡 .40 / 海岛 .28 三档 + .15–.60 滑杆，面板内用同一变量渲染「画布预览」（绿色波点画布 + 同透明度奶油层），设置弹层本身保持固定纸面，选择存本机 `localStorage`；深色纸面同样跟随该变量（.40 落在原 .84，默认观感不变）；`prefers-contrast: more` 强制 .52；Windows 桌面外壳的 AppFrame 默认用不透明 sidebar-fill 盖住画布，皮肤在 `html[data-windows-titlebar]` 下把 frame 清成透明，并在 **frame 元素**上把外壳自带的 16px 内容圆角设为 0px，与 web 一样是直角（变量必须写在 frame 上，写在 `<html>` 上会被 DSH 的 `.frame` 声明覆盖；见 [web-vs-desktop.md](web-vs-desktop.md) 与 #9490）；40px 标题栏条是 native titleBarOverlay，皮肤不试图覆盖；
+- 画布透明度：主内容的奶油面由 `--animal-canvas-veil`（默认 .4）驱动；「设置 → 插件 → 动森外观」提供纸白 .52 / 均衡 .40 / 海岛 .28 三档 + .15–.60 滑杆，面板内用同一变量渲染「画布预览」（绿色波点画布 + 同透明度奶油层），设置弹层本身保持固定纸面，选择存本机 `localStorage`；深色纸面同样跟随该变量（.40 落在原 .84，默认观感不变）；`prefers-contrast: more` 强制 .52；Windows 桌面外壳的 AppFrame 默认用不透明 sidebar-fill 盖住画布，皮肤在 `html[data-windows-titlebar]` 下把 frame 清成透明，并在 **frame 元素**上把外壳自带的 16px 内容圆角设为 0px，与 web 一样是直角（变量必须写在 frame 上，写在 `<html>` 上会被 DSH 的 `.frame` 声明覆盖；见 [web-vs-desktop.md](web-vs-desktop.md) 与 #9490）；40px 标题栏条是 native titleBarOverlay，皮肤不能直接写 CSS，但亮色通过上报色 `#e7efe5`、暗色通过 `#1f3034`，配合 `#root`/侧栏底色保留“标题栏 / 侧栏 / 画布”三层关系；
 - Sidebar：18px 圆角、2px 白边、暖色 soft shadow；
 - Header ribbon：木质告示牌 —— 暖木正面（`::after`，竖向木纹 + 两枚铆钉）+ 深木燕尾与折角三角（`::before`：燕尾走 `clip-path`，折角用两枚渐变三角）；奶油字 `#fff3d6`（深色 `#f6e6c8`）；三层全部收在 `nav` 盒内，因为 DSH 的 `.crumbs` 是 `overflow: hidden`；
 - 文本按钮：pill、2px 暖边、4px 立体底边；

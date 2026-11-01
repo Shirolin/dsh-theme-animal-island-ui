@@ -3,6 +3,10 @@
   "pluginCss": ["@deepseek-ai/dsh-client-ui-sidebar"],
   "assertions": [
     {
+      "message": "标题栏、侧栏和画布保持三个独立表面",
+      "expression": "(() => { const strip = document.querySelector('.shellStrip'); const root = document.querySelector('.wtg9ga_root'); if (!strip || !root) return false; const dark = document.body.hasAttribute('data-ds-dark-theme'); return getComputedStyle(strip).backgroundColor === (dark ? 'rgb(31, 48, 52)' : 'rgb(231, 239, 229)') && getComputedStyle(root).backgroundColor === (dark ? 'rgb(48, 52, 68)' : 'rgba(250, 248, 243, 0.82)'); })()"
+    },
+    {
       "message": "三档侧栏都渲染出对应宽度的 60px 船票",
       "expression": "(() => { const roots = [...document.querySelectorAll('[id^=\"root-\"]')]; return roots.length === 3 && roots.every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const style = getComputedStyle(button); return style.height === '60px' && style.width === (root.id === 'root-180' ? '156px' : '216px'); }); })()"
     },

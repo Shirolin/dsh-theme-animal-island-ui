@@ -175,6 +175,54 @@ test('windows shell frame is transparent and its content corner is flattened', (
   assert.match(frame, /--dsh-windows-content-radius:\s*0px/)
 })
 
+test('windows dark caption keeps a third surface above the sidebar', () => {
+  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const caption = rules.find(
+    (rule) =>
+      rule.includes('html[data-windows-titlebar]') &&
+      rule.includes('body[data-ds-dark-theme]') &&
+      /--dsw-specific-sidebar-fill:\s*#1f3034\s*!important/.test(rule),
+  )
+  const sidebar = rules.find(
+    (rule) =>
+      rule.includes('html[data-windows-titlebar]') &&
+      rule.includes('body[data-ds-dark-theme]') &&
+      rule.includes('div:has(> nav[aria-label])') &&
+      /background-color:\s*#303444\s*!important/.test(rule),
+  )
+
+  assert.ok(caption, 'the dark Windows caption token is missing')
+  assert.ok(sidebar, 'the dark Windows sidebar surface is missing')
+})
+
+test('windows light caption uses the canvas mint while the app keeps its cream surfaces', () => {
+  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const caption = rules.find(
+    (rule) =>
+      rule.includes('html[data-windows-titlebar]') &&
+      rule.includes('body:not([data-ds-dark-theme])') &&
+      /--dsw-specific-sidebar-fill:\s*#e7efe5\s*!important/.test(rule),
+  )
+  const appRoot = rules.find(
+    (rule) =>
+      rule.includes('html[data-windows-titlebar]') &&
+      rule.includes('body:not([data-ds-dark-theme])') &&
+      rule.includes('#root') &&
+      /--dsw-specific-sidebar-fill:\s*rgba\(250, 248, 243, 0\.82\)\s*!important/.test(rule),
+  )
+  const sidebar = rules.find(
+    (rule) =>
+      rule.includes('html[data-windows-titlebar]') &&
+      rule.includes('body:not([data-ds-dark-theme])') &&
+      rule.includes('div:has(> nav[aria-label])') &&
+      /background-color:\s*rgba\(250, 248, 243, 0\.82\)\s*!important/.test(rule),
+  )
+
+  assert.ok(caption, 'the light Windows caption token is missing')
+  assert.ok(appRoot, 'the app root does not restore the cream sidebar token')
+  assert.ok(sidebar, 'the light Windows sidebar surface is missing')
+})
+
 test('header ribbon colors the current crumb span directly', () => {
   // 0.2.x's `.crumbCurrent` declares label-primary on the span, which beats the
   // nav's inherited colour. The ribbon must set the span explicitly or the title

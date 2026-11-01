@@ -45,6 +45,7 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
 | `[data-windows-titlebar]` | 桌面端（仅 Windows）外壳标记：用它把 DSH 自己画在 AppFrame 上的不透明 sidebar-fill 清成透明，画布才透得出来 | Electron 桌面壳自己写的平台标记；macOS 给同一个 frame 的是 `background: 0 0`，Windows 分支漏了这行（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)）。侧栏/右栏各自重画自己的表面，所以只清 frame 不影响可读性 |
+| `#root` + `div:has(> nav[aria-label])` | Windows 标题栏的三层表面：亮色让 caption 读取薄荷色，再把 `#root` 内恢复为奶油 token；暗色 caption 用夜青色，侧栏根节点恢复深蓝底色 | `#root` 是 DSH 的根 slot 容器，侧栏根节点包含直接子元素 `nav[aria-label]`；只改 token/背景色，不选中 `nav`、不改列宽/内边距/排列。桌面夹具同时锁定 caption、侧栏与画布三种底色 |
 | `--dsh-windows-content-radius` | Windows 内容列/全屏右栏 dock pane 的左上角圆角；皮肤在 **frame 元素**上设为 `0px`，去掉外壳自带的 16px 圆角 | layout 插件公开的 Windows 几何变量，仅改圆角，不改列宽。**必须写在 frame 上**：DSH 的 `[data-windows-titlebar] .frame` 自己声明了 `16px`，写在 `<html>` 上会被它覆盖 |
 | `--dsw-menu-surface-fill` | 新版 DSH 菜单材质的底色兼容别名：映射到不透明的 `--dsw-specific-menu`，避免 Composer 焦点环与内容透过浮层 | 该变量只在目标桌面 runtime 中消费，仓库 `0.1.5-rc.3` 基线会自然忽略；不进入 ThemeRuntime token 载荷，只改颜色，不改几何与交互 |
 | `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
@@ -52,7 +53,7 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |
 | `[aria-pressed]`、`[aria-selected]`、`[aria-checked]` | 选中态（预设卡片、列表项、外观预设、插件开关） | ARIA 状态属性 |
 
-插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。唯一无 hook 的例外是 Windows 外壳 frame：`html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。另一个受限例外是启动页：纸卡用 `[data-dsh-boot] > :has([data-dsh-boot-spinner])`，字标和提示用进度章的相邻关系定位；所有关系都锚定公开 boot hook，且 spinner 消失即整体失配。两条例外都由 `test/skin.test.mjs` 锁住。
+插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。Windows 外壳 frame 的例外是 `html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。启动页的受限例外用 `[data-dsh-boot] > :has([data-dsh-boot-spinner])` 锚定纸卡，字标和提示用进度章的相邻关系定位；spinner 消失即整体失配。Windows 标题栏让 `body` 的 sidebar-fill 成为 caption 色，并在 `#root` 恢复应用内奶油 token；暗色另用 `div:has(> nav[aria-label])` 找到侧栏根节点恢复深蓝，只改背景色，不改侧栏布局。以上关系都由 `test/skin.test.mjs` 与桌面夹具锁住。
 
 ## 插件自有布局
 
