@@ -9,6 +9,10 @@
     {
       "message": "long diagnostics scroll the last error into view",
       "expression": "(() => { const root = document.querySelector('[data-dsh-boot]'); const items = [...document.querySelectorAll('[class*=\"failedItem\"]')]; const last = items.at(-1); const overflows = root.scrollHeight > root.clientHeight; root.scrollTop = root.scrollHeight; const visible = root.scrollTop > 0 && last.getBoundingClientRect().bottom <= root.clientHeight; root.scrollTop = 0; return overflows && visible })()"
+    },
+    {
+      "message": "failure diagnostics sit on the paper scrim",
+      "expression": "(() => { const card = document.querySelector('[data-dsh-boot] > *'); const style = getComputedStyle(card); const expected = document.body.hasAttribute('data-ds-dark-theme') ? 'rgba(41, 35, 28, 0.9)' : 'rgba(250, 248, 243, 0.9)'; return style.backgroundColor === expected && style.borderRadius === '24px' })()"
     }
   ]
 }

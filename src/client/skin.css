@@ -4,13 +4,14 @@
 html[data-dsh-animal-island-skin] {
   --animal-ink: #6f451f;
   --animal-body: #654a2f;
-  --animal-muted: #75634d;
+  --animal-muted: #725f48;
   --animal-cream: #faf8f3;
   --animal-cream-deep: #f7f3df;
   --animal-mint: #19c8b9;
-  --animal-mint-deep: #0b7f75;
+  --animal-mint-deep: #0b6d64;
   --animal-border: #dcd8d1;
   --animal-border-strong: #c4b89e;
+  --animal-slider-track: #e9dfc9;
   --animal-shadow-button: #bdaea0;
   --animal-shadow-input: #d4c9b4;
   --animal-shadow-soft: rgba(61, 52, 40, 0.1);
@@ -88,6 +89,7 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
   --animal-mint-deep: #7be2d5;
   --animal-border: #59493a;
   --animal-border-strong: #8a7057;
+  --animal-slider-track: #5a4b3d;
   --animal-shadow-button: #1f1a15;
   --animal-shadow-input: #18130f;
   --animal-shadow-soft: rgba(8, 6, 4, 0.28);
@@ -128,11 +130,12 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
 html[data-dsh-animal-island-skin] [data-dsh-boot] {
   --animal-boot-paper: #fbf5df;
   --animal-boot-ink: #245738;
-  --animal-boot-muted: #75634d;
+  --animal-boot-muted: #725f48;
   --animal-boot-border: #6f451f;
   --animal-boot-ring: #d7cba8;
   --animal-boot-accent: #12b8a7;
   --animal-boot-shadow: rgba(83, 57, 29, 0.22);
+  --animal-boot-scrim: rgba(250, 248, 243, 0.9);
   position: relative;
   isolation: isolate;
   box-sizing: border-box;
@@ -331,6 +334,7 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] {
   --animal-boot-ring: #665742;
   --animal-boot-accent: #61d9cb;
   --animal-boot-shadow: rgba(4, 5, 3, 0.55);
+  --animal-boot-scrim: rgba(41, 35, 28, 0.9);
   background-color: #14242a;
   background-image:
     radial-gradient(circle at 78% 16%, #f7e8b4 0 25px, rgba(247, 232, 180, 0.22) 26px 92px, transparent 170px), url("__ANIMAL_ISLAND_NIGHT_LEAVES__"),
@@ -367,6 +371,23 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] :has(
   text-shadow:
     0 1px rgba(0, 0, 0, 0.7),
     0 4px rgba(0, 0, 0, 0.22);
+}
+
+/* The official failure list keeps its own DOM and scrolling. A light paper
+   scrim separates long diagnostics from the illustrated island without turning
+   the failure page into a second loading card. */
+html[data-dsh-animal-island-skin] [data-dsh-boot]:not(:has([data-dsh-boot-spinner])) > * {
+  position: relative;
+  box-sizing: border-box;
+  width: min(calc(100vw - 44px), 980px);
+  margin: 24px 0;
+  padding: clamp(20px, 4vw, 36px);
+  border: 1.5px solid var(--animal-boot-border);
+  border-radius: 24px;
+  background-color: var(--animal-boot-scrim);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 8px 24px rgba(39, 78, 47, 0.18);
 }
 
 @keyframes animal-island-boot-card-in {
@@ -559,7 +580,7 @@ html[data-dsh-animal-island-skin]
 
 /* The shell is the field now, so the keyboard focus ring moves onto it. */
 html[data-dsh-animal-island-skin] :where([role="dialog"], [role="menu"]) span:has(> input:focus-visible) {
-  outline: 3px solid #9c7200;
+  outline: 3px solid var(--animal-mint-deep);
   outline-offset: 2px;
 }
 
@@ -584,7 +605,7 @@ html[data-dsh-animal-island-skin] :where(input, textarea, select, [contenteditab
 }
 
 html[data-dsh-animal-island-skin] :where(button, input, textarea, select, [contenteditable="true"], [role="button"]):focus-visible {
-  outline: 3px solid #9c7200 !important;
+  outline: 3px solid var(--animal-mint-deep) !important;
   outline-offset: 2px;
   border-color: var(--animal-mint-deep) !important;
 }
@@ -644,24 +665,27 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-composer-card]:
   background: #2a2520;
 }
 
-/* Typing lifts the bubble: the mint ring is a state, not a size change. */
+/* Typing lifts the bubble: deep mint owns focus, while the pale gap keeps the
+   ring legible against both the cream card and the green canvas. */
 html[data-dsh-animal-island-skin] [data-composer-card]:focus-within {
-  border-color: var(--animal-mint) !important;
+  border-color: var(--animal-mint-deep) !important;
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.7),
-    0 0 0 3px rgba(25, 200, 185, 0.2),
+    0 0 0 2px #fffbe7,
+    0 0 0 5px var(--animal-mint-deep),
     0 10px 22px var(--animal-shadow-card) !important;
 }
 
 html[data-dsh-animal-island-skin] [data-composer-card]:focus-within::before {
-  border-right-color: var(--animal-mint);
-  border-bottom-color: var(--animal-mint);
+  border-right-color: var(--animal-mint-deep);
+  border-bottom-color: var(--animal-mint-deep);
 }
 
 html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-composer-card]:focus-within {
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.12),
-    0 0 0 3px rgba(97, 217, 203, 0.22),
+    0 0 0 2px #2a2520,
+    0 0 0 5px var(--animal-mint-deep),
     0 10px 22px var(--animal-shadow-card) !important;
 }
 
@@ -1035,7 +1059,7 @@ html[data-dsh-animal-island-skin] :is(button, a):has(.animal-island-brand__name)
 }
 
 html[data-dsh-animal-island-skin] :is(button, a):has(.animal-island-brand__name):focus-visible {
-  outline: 3px solid #19c8b9;
+  outline: 3px solid var(--animal-mint-deep);
   outline-offset: 3px;
 }
 
@@ -1677,9 +1701,9 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__preview-tag {
   right: 10px;
   padding: 1px 8px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   color: var(--animal-muted);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -1786,9 +1810,67 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__slider {
 }
 
 html[data-dsh-animal-island-skin] .animal-island-appearance__slider input[type="range"] {
+  box-sizing: border-box;
   flex: 1;
   min-width: 120px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   accent-color: var(--animal-mint);
+  appearance: none;
+  cursor: pointer;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__slider input[type="range"]::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  height: 10px;
+  border: 2px solid var(--animal-border-strong);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--animal-mint) 0 var(--animal-slider-progress, 0%), var(--animal-slider-track) var(--animal-slider-progress, 0%) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__slider input[type="range"]::-webkit-slider-thumb {
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border: 2px solid var(--animal-border-strong);
+  border-radius: 50%;
+  background: var(--animal-mint);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 2px 0 rgba(90, 55, 25, 0.22);
+  appearance: none;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__slider input[type="range"]::-moz-range-track {
+  box-sizing: border-box;
+  height: 10px;
+  border: 2px solid var(--animal-border-strong);
+  border-radius: 999px;
+  background: var(--animal-slider-track);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__slider input[type="range"]::-moz-range-progress {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--animal-mint);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__slider input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--animal-border-strong);
+  border-radius: 50%;
+  background: var(--animal-mint);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 2px 0 rgba(90, 55, 25, 0.22);
 }
 
 html[data-dsh-animal-island-skin] .animal-island-appearance__slider output {

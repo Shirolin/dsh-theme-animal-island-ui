@@ -173,7 +173,7 @@ test('light mode follows the canonical Animal Island palette with readable seman
   assert.equal(payload['--dsw-alias-bg-layer-2'].light, '#f7f3df')
   assert.equal(payload['--dsw-alias-bg-layer-3'].light, '#f0e8d8')
   assert.equal(payload['--dsw-alias-brand-primary'].light, '#19c8b9')
-  assert.equal(payload['--dsw-alias-state-business-primary'].light, '#0b7f75')
+  assert.equal(payload['--dsw-alias-state-business-primary'].light, '#0b6d64')
   assert.equal(payload['--dsw-alias-label-primary'].light, '#6f451f')
   assert.equal(payload['--dsw-alias-label-secondary'].light, '#654a2f')
   assert.equal(payload['--dsw-alias-button-primary-fill'].light, '#f8f8f0')
@@ -205,6 +205,24 @@ test('normal text, business accents, and states remain readable on their real su
       for (const surface of ['--dsw-specific-sidebar-fill', '--dsw-specific-sidebar-nav-item-hover', '--dsw-specific-sidebar-nav-item-active']) {
         assertContrast(payload[name][mode], payload[surface][mode], `${mode} ${name} on ${surface}`)
       }
+    }
+  }
+})
+
+test('light-mode accents and metadata remain readable on the rendered canvas', () => {
+  const payload = buildTokenOverrides()
+  const renderedCanvas = '#d2e7d5'
+
+  for (const name of ['--dsw-alias-link', '--dsw-alias-state-business-primary', '--dsw-alias-label-tertiary']) {
+    assertContrast(payload[name].light, renderedCanvas, `light ${name} on rendered canvas`)
+  }
+})
+
+test('light-mode semantic text remains readable on layered cards', () => {
+  const payload = buildTokenOverrides()
+  for (const surface of ['--dsw-alias-bg-layer-2', '--dsw-alias-bg-layer-3']) {
+    for (const name of ['--dsw-alias-state-business-primary', '--dsw-alias-state-success-primary', '--dsw-alias-state-warn-primary']) {
+      assertContrast(payload[name].light, payload[surface].light, `light ${name} on ${surface}`)
     }
   }
 })

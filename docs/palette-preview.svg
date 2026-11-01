@@ -72,13 +72,13 @@
     <text x="140" y="224" class="ui nav" fill="#6f451f">小森助手</text>
     <text x="140" y="251" class="ui body" fill="#654a2f">公开 Slot 保留 DSH 的会话、设置和工作区行为，皮肤只接管视觉表现。</text>
     <rect x="140" y="266" width="112" height="24" rx="12" fill="#e6f9f6"/>
-    <text x="196" y="282" text-anchor="middle" class="ui small" fill="#0b7f75">岛屿已连接</text>
+    <text x="196" y="282" text-anchor="middle" class="ui small" fill="#0b6d64">岛屿已连接</text>
 
     <rect x="66" y="328" width="1014" height="168" rx="20" fill="#2b2118" stroke="#3d3028" stroke-width="2" filter="url(#shadow)"/>
     <circle cx="94" cy="356" r="6" fill="#fc736d"/><circle cx="114" cy="356" r="6" fill="#f7cd67"/><circle cx="134" cy="356" r="6" fill="#8ac68a"/>
     <text x="92" y="407" style="font-family:Consolas,monospace;font-size:15px;font-weight:600" fill="#e8d5bc">const skin = createAnimalIslandSkin()</text>
     <text x="92" y="439" style="font-family:Consolas,monospace;font-size:15px;font-weight:600" fill="#d4a0e0">await skin.apply({ slots, theme })</text>
-    <text x="92" y="471" style="font-family:Consolas,monospace;font-size:13px" fill="#9a8a76">// no hashed classes · no DOM observers</text>
+    <text x="92" y="471" style="font-family:Consolas,monospace;font-size:13px" fill="#a69580">// no hashed classes · no DOM observers</text>
 
     <path d="M104 626 l16 24 l18-24 Z" fill="#fffbe7" stroke="#c4b89e" stroke-width="2.5" stroke-linejoin="round"/>
     <rect x="66" y="526" width="790" height="104" rx="28" fill="#fffbe7" stroke="#c4b89e" stroke-width="2.5" filter="url(#shadow)"/>

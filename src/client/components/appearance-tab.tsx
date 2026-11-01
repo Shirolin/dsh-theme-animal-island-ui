@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react'
+import { useSyncExternalStore, type CSSProperties } from 'react'
 import { APPEARANCE_DEFAULTS, APPEARANCE_PRESETS, getAppearance, setAppearance, subscribeAppearance, type AppearancePreset } from '../appearance.ts'
 
 type NamedPreset = Exclude<AppearancePreset, 'custom'>
@@ -13,6 +13,10 @@ const PRESET_ORDER: NamedPreset[] = ['paper', 'balanced', 'island']
 
 export function AppearanceTab(): React.JSX.Element {
   const state = useSyncExternalStore(subscribeAppearance, getAppearance, getAppearance)
+  const sliderProgress = ((state.veil - APPEARANCE_DEFAULTS.min) / (APPEARANCE_DEFAULTS.max - APPEARANCE_DEFAULTS.min)) * 100
+  const sliderStyle = {
+    '--animal-slider-progress': `${sliderProgress}%`,
+  } as CSSProperties
 
   return (
     <section className="animal-island-appearance">
@@ -53,6 +57,7 @@ export function AppearanceTab(): React.JSX.Element {
           max={APPEARANCE_DEFAULTS.max}
           step={0.01}
           value={state.veil}
+          style={sliderStyle}
           onChange={(event) => setAppearance({ preset: 'custom', veil: Number(event.target.value) })}
         />
         <output>{state.veil.toFixed(2)}</output>

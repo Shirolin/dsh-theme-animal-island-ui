@@ -98,8 +98,8 @@ test('composer focus ring colors the speech-bubble tail', () => {
     .find((candidate) => candidate.includes('[data-composer-card]:focus-within::before'))
 
   assert.ok(rule, 'the focused composer tail rule is missing')
-  assert.match(rule, /border-right-color:\s*var\(--animal-mint\)/)
-  assert.match(rule, /border-bottom-color:\s*var\(--animal-mint\)/)
+  assert.match(rule, /border-right-color:\s*var\(--animal-mint-deep\)/)
+  assert.match(rule, /border-bottom-color:\s*var\(--animal-mint-deep\)/)
 })
 
 test('windows shell frame is transparent and its content corner is flattened', () => {
@@ -199,10 +199,13 @@ test('owned CSS hard-coded text and focus combinations remain readable', () => {
   assert.ok(contrastRatio('#f6e6c8', '#5a3d24') >= 4.5)
   assert.ok(contrastRatio('#235d3d', '#a5d0aa') >= 4.5)
   assert.ok(contrastRatio('#315b3a', '#a5d0aa') >= 4.5)
-  assert.ok(contrastRatio('#9c7200', '#f0e8d8') >= 3)
-  for (const value of ['#6f451f', '#fffbe7', '#2a2520', '#8a5a33', '#5a3d24', '#9c7200']) {
+  for (const background of ['#fffbe7', '#d2e7d5', '#e5c99b', '#f0e8d8']) {
+    assert.ok(contrastRatio('#0b6d64', background) >= 3, `deep mint focus on ${background}`)
+  }
+  for (const value of ['#6f451f', '#fffbe7', '#2a2520', '#8a5a33', '#5a3d24', '#0b6d64']) {
     assert.match(css, new RegExp(value))
   }
+  assert.doesNotMatch(css, /#9c7200/i)
 })
 
 test('composed dialog fields are skinned once, on the shell', () => {
@@ -214,6 +217,37 @@ test('composed dialog fields are skinned once, on the shell', () => {
   for (const declaration of ['border: 0', 'background: transparent', 'box-shadow: none']) {
     assert.ok(inner.includes(declaration), declaration)
   }
+})
+
+test('focus rings use the readable deep mint across shell and composer', () => {
+  const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const globalFocus = rules.find((rule) => rule.includes(':focus-visible {') && rule.includes('outline: 3px solid var(--animal-mint-deep)'))
+  const composerFocus = rules.find((rule) => rule.includes('[data-composer-card]:focus-within {'))
+
+  assert.ok(globalFocus, 'global keyboard focus must use the deep mint token')
+  assert.ok(composerFocus, 'composer focus state is missing')
+  assert.match(composerFocus, /border-color:\s*var\(--animal-mint-deep\)/)
+  assert.match(composerFocus, /0 0 0 2px #fffbe7/)
+  assert.match(composerFocus, /0 0 0 5px var\(--animal-mint-deep\)/)
+})
+
+test('appearance slider paints a warm track and mint progress in both engines', () => {
+  const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const input = rules.find((rule) => rule.includes('.animal-island-appearance__slider input[type="range"] {'))
+  const webkitTrack = rules.find((rule) => rule.includes('::-webkit-slider-runnable-track'))
+  const webkitThumb = rules.find((rule) => rule.includes('::-webkit-slider-thumb'))
+  const firefoxTrack = rules.find((rule) => rule.includes('::-moz-range-track'))
+  const firefoxProgress = rules.find((rule) => rule.includes('::-moz-range-progress'))
+
+  assert.ok(input && webkitTrack && webkitThumb && firefoxTrack && firefoxProgress)
+  assert.match(input, /appearance:\s*none/)
+  assert.match(webkitTrack, /var\(--animal-slider-track\)/)
+  assert.match(webkitTrack, /--animal-slider-progress/)
+  assert.match(webkitThumb, /border:\s*2px solid var\(--animal-border-strong\)/)
+  assert.match(firefoxTrack, /var\(--animal-slider-track\)/)
+  assert.match(firefoxProgress, /background:\s*var\(--animal-mint\)/)
+  assert.match(css, /--animal-slider-track:\s*#e9dfc9/)
+  assert.match(css, /--animal-slider-track:\s*#5a4b3d/)
 })
 
 test('wave artwork is an original local SVG rather than a reference asset', () => {
@@ -317,6 +351,8 @@ test('boot fixtures keep loading anchored and failure diagnostics scrollable', (
   assert.equal(failureCard.matches('[data-dsh-boot] > :has([data-dsh-boot-spinner])'), false)
   assert.equal(failure.document.querySelector('[data-dsh-boot-spinner]'), null)
   assert.equal(failure.getComputedStyle(failureRoot).overflowY, 'auto')
+  assert.equal(failure.getComputedStyle(failureCard).backgroundColor, 'var(--animal-boot-scrim)')
+  assert.equal(failure.getComputedStyle(failureCard).borderRadius, '24px')
   assert.match(failure.document.body.textContent, /final diagnostic remains reachable/)
 })
 
