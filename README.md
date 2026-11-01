@@ -60,13 +60,15 @@ official Sidebar + public Brand/Hero slots
 
 ```sh
 pnpm install
+pnpm run format
+pnpm run lint
 pnpm run typecheck
 pnpm run build
 pnpm test
 pnpm run check:compat
 ```
 
-统一门禁：
+`format` 与 `lint` 使用 Biome，独立执行；统一门禁仍只包含类型、构建、测试和兼容性检查：
 
 ```sh
 pnpm run check

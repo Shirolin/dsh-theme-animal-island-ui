@@ -26,12 +26,8 @@ const packageJson = JSON.parse(await readFile(packagePath, 'utf8'))
 const declarationPath = join(packageRoot, 'lib/types/client/index.d.ts')
 const declarations = await readFile(declarationPath, 'utf8')
 const declarationSource = ts.createSourceFile(declarationPath, declarations, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
-const themeRuntime = declarationSource.statements.find(
-  (statement) => ts.isClassDeclaration(statement) && statement.name?.text === 'ThemeRuntime',
-)
-const overrideTokens = themeRuntime?.members.find(
-  (member) => ts.isMethodDeclaration(member) && member.name.getText(declarationSource) === 'overrideTokens',
-)
+const themeRuntime = declarationSource.statements.find((statement) => ts.isClassDeclaration(statement) && statement.name?.text === 'ThemeRuntime')
+const overrideTokens = themeRuntime?.members.find((member) => ts.isMethodDeclaration(member) && member.name.getText(declarationSource) === 'overrideTokens')
 const overrideReturnType = overrideTokens?.type?.getText(declarationSource)
 
 const projectPackage = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
@@ -108,19 +104,19 @@ const report = {
 }
 
 if (
-  !report.requiredSeam.ThemeRuntime
-  || !report.requiredSeam.overrideTokens
-  || !report.requiredSeam.overrideTokensReturnsDisposer
-  || !report.requiredSeam.serviceInject
-  || !report.requiredSeam.providerOrder
-  || !Object.values(publicSlots).every(Boolean)
-  || !Object.values(publicDataHooks).every(Boolean)
-  || !report.plugin.usesOverrideTokens
-  || !report.plugin.hasOwnedStyle
-  || report.plugin.hasDomFallback
-  || report.plugin.hasMutationObserver
-  || report.plugin.hasPrivateDshImport
-  || extensionOnly.length > 0
+  !report.requiredSeam.ThemeRuntime ||
+  !report.requiredSeam.overrideTokens ||
+  !report.requiredSeam.overrideTokensReturnsDisposer ||
+  !report.requiredSeam.serviceInject ||
+  !report.requiredSeam.providerOrder ||
+  !Object.values(publicSlots).every(Boolean) ||
+  !Object.values(publicDataHooks).every(Boolean) ||
+  !report.plugin.usesOverrideTokens ||
+  !report.plugin.hasOwnedStyle ||
+  report.plugin.hasDomFallback ||
+  report.plugin.hasMutationObserver ||
+  report.plugin.hasPrivateDshImport ||
+  extensionOnly.length > 0
 ) {
   report.status = 'fail'
 }

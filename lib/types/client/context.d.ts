@@ -34,5 +34,5 @@ export interface SlotRegistryLike {
 export interface ClientContextLike {
     theme?: ThemeRuntimeLike;
     slots?: SlotRegistryLike;
-    effect(effect: () => void | (() => void), name?: string): unknown;
+    effect(effect: () => (() => void) | undefined, name?: string): unknown;
 }

@@ -27,7 +27,13 @@ test('repository documents exist and their relative links resolve', async () => 
     const text = await readFile(path, 'utf8')
     for (const [, target] of text.matchAll(/\]\((?!https?:|mailto:|#)([^)#\s]+)/g)) {
       const linked = resolve(dirname(path), target)
-      assert.ok(await stat(linked).then(() => true, () => false), `${document}: broken link -> ${target}`)
+      assert.ok(
+        await stat(linked).then(
+          () => true,
+          () => false,
+        ),
+        `${document}: broken link -> ${target}`,
+      )
     }
   }
 })

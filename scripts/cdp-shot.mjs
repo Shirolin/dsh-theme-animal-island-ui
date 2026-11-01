@@ -43,8 +43,7 @@ async function fetchTargets(port, timeout) {
 function pickTarget(targets, needle) {
   const pages = targets.filter((target) => target.type === 'page' && target.webSocketDebuggerUrl)
   if (pages.length === 0) throw new Error('no page targets with webSocketDebuggerUrl')
-  const matches = (target) =>
-    !needle || `${target.title || ''} ${target.url || ''}`.toLowerCase().includes(needle.toLowerCase())
+  const matches = (target) => !needle || `${target.title || ''} ${target.url || ''}`.toLowerCase().includes(needle.toLowerCase())
   const preferred = pages.filter((target) => matches(target) && !String(target.url).startsWith('devtools://'))
   return preferred[0] ?? pages.find((target) => !String(target.url).startsWith('devtools://')) ?? pages[0]
 }
@@ -56,14 +55,22 @@ function connect(url, timeout) {
       socket.close()
       reject(new Error(`websocket open timed out after ${timeout}ms`))
     }, timeout)
-    socket.addEventListener('open', () => {
-      clearTimeout(timer)
-      resolve(socket)
-    }, { once: true })
-    socket.addEventListener('error', () => {
-      clearTimeout(timer)
-      reject(new Error('websocket connection failed'))
-    }, { once: true })
+    socket.addEventListener(
+      'open',
+      () => {
+        clearTimeout(timer)
+        resolve(socket)
+      },
+      { once: true },
+    )
+    socket.addEventListener(
+      'error',
+      () => {
+        clearTimeout(timer)
+        reject(new Error('websocket connection failed'))
+      },
+      { once: true },
+    )
   })
 }
 
@@ -84,11 +91,12 @@ function makeClient(socket) {
     if (message.error) entry.reject(new Error(`${message.error.message} (${message.error.code})`))
     else entry.resolve(message.result)
   })
-  return (method, params = {}) => new Promise((resolve, reject) => {
-    const id = nextId++
-    pending.set(id, { resolve, reject })
-    socket.send(JSON.stringify({ id, method, params }))
-  })
+  return (method, params = {}) =>
+    new Promise((resolve, reject) => {
+      const id = nextId++
+      pending.set(id, { resolve, reject })
+      socket.send(JSON.stringify({ id, method, params }))
+    })
 }
 
 async function main() {
@@ -110,22 +118,34 @@ async function main() {
     const out = resolve(args.out)
     mkdirSync(dirname(out), { recursive: true })
     writeFileSync(out, Buffer.from(shot.data, 'base64'))
-    console.log(JSON.stringify({
-      ok: true,
-      out,
-      target: { title: target.title, url: target.url },
-      bytes: Buffer.byteLength(shot.data, 'base64'),
-    }, null, 2))
+    console.log(
+      JSON.stringify(
+        {
+          ok: true,
+          out,
+          target: { title: target.title, url: target.url },
+          bytes: Buffer.byteLength(shot.data, 'base64'),
+        },
+        null,
+        2,
+      ),
+    )
   } finally {
     socket.close()
   }
 }
 
 main().catch((error) => {
-  console.error(JSON.stringify({
-    ok: false,
-    error: error.message,
-    hint: 'start DeepSeek Harness with --remote-debugging-port=9222 (scripts/dsh-desktop-debug.cmd), then retry',
-  }, null, 2))
+  console.error(
+    JSON.stringify(
+      {
+        ok: false,
+        error: error.message,
+        hint: 'start DeepSeek Harness with --remote-debugging-port=9222 (scripts/dsh-desktop-debug.cmd), then retry',
+      },
+      null,
+      2,
+    ),
+  )
   process.exit(1)
 })

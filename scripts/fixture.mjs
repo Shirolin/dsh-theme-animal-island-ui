@@ -52,9 +52,10 @@ if (explicitDsh !== undefined && (useDesktop || explicitAsar !== undefined)) {
   process.exit(1)
 }
 
-const dsh = useDesktop || explicitAsar !== undefined
-  ? prepareDshRuntime({ asarPath: explicitAsar })
-  : resolve(explicitDsh ?? process.env.DSH_APP ?? join(homedir(), '.dsh', 'app'))
+const dsh =
+  useDesktop || explicitAsar !== undefined
+    ? prepareDshRuntime({ asarPath: explicitAsar })
+    : resolve(explicitDsh ?? process.env.DSH_APP ?? join(homedir(), '.dsh', 'app'))
 if (!existsSync(join(dsh, 'node_modules', '@deepseek-ai', 'dsh-web-frontend'))) {
   console.error(`no DSH install at ${dsh}\n  pass --dsh <app dir> or set DSH_APP`)
   process.exit(1)
@@ -64,13 +65,13 @@ const fixtureDir = join(root, 'test', 'fixtures', name)
 const config = JSON.parse(await readFile(join(fixtureDir, 'fixture.json'), 'utf8'))
 const body = await readFile(join(fixtureDir, 'body.html'), 'utf8')
 const assertions = config.assertions ?? []
-if (!Array.isArray(assertions) || assertions.some((assertion) => (
-  typeof assertion?.message !== 'string' ||
-  typeof assertion?.expression !== 'string'
-))) {
+if (!Array.isArray(assertions) || assertions.some((assertion) => typeof assertion?.message !== 'string' || typeof assertion?.expression !== 'string')) {
   throw new Error(`${name}: assertions must contain { message, expression } objects`)
 }
-const assertionScript = assertions.length === 0 ? '' : `<script>
+const assertionScript =
+  assertions.length === 0
+    ? ''
+    : `<script>
 (() => {
   const results = ${JSON.stringify(assertions).replaceAll('</script>', '<\\/script>')}.map((assertion) => {
     try {
@@ -116,10 +117,7 @@ async function readDshCss() {
 
 /** Inline CSS modules a client bundle injects as `const css = "…"` strings. */
 async function readBundleCss(packageName) {
-  for (const candidate of [
-    join(dsh, 'node_modules', packageName, 'lib', 'client.js'),
-    join(dsh, 'node_modules', packageName, 'client', 'client.js'),
-  ]) {
+  for (const candidate of [join(dsh, 'node_modules', packageName, 'lib', 'client.js'), join(dsh, 'node_modules', packageName, 'client', 'client.js')]) {
     if (!existsSync(candidate)) continue
     const text = await readFile(candidate, 'utf8')
     const blocks = [...text.matchAll(/var \w+_css_default = "((?:[^"\\]|\\.)*)";/g), ...text.matchAll(/const css(?:\$\d+)? = "((?:[^"\\]|\\.)*)";/g)]
@@ -129,8 +127,11 @@ async function readBundleCss(packageName) {
 }
 
 const frontendCss = (await readDshCss()).join('\n')
-const themeBaseCss = [...(await readFile(join(dsh, 'node_modules', '@deepseek-ai', 'dsh-client-ui-theme', 'lib', 'client.js'), 'utf8'))
-  .matchAll(/var \w+_css_default = "((?:[^"\\]|\\.)*)";/g)]
+const themeBaseCss = [
+  ...(await readFile(join(dsh, 'node_modules', '@deepseek-ai', 'dsh-client-ui-theme', 'lib', 'client.js'), 'utf8')).matchAll(
+    /var \w+_css_default = "((?:[^"\\]|\\.)*)";/g,
+  ),
+]
   .map((match) => match[1].replaceAll('\\"', '"'))
   .join('\n')
   .replaceAll('\\\\', '\\')
@@ -143,7 +144,11 @@ if (!existsSync(tokensPath)) {
 }
 const { buildTokenOverrides } = await import(`${pathToFileURL(tokensPath).href}?t=${Date.now()}`)
 const overrides = buildTokenOverrides()
-const tokenVars = (mode) => Object.entries(overrides).map(([token, value]) => `${token}:${value[mode]}`).join(';').replaceAll('"', '&quot;')
+const tokenVars = (mode) =>
+  Object.entries(overrides)
+    .map(([token, value]) => `${token}:${value[mode]}`)
+    .join(';')
+    .replaceAll('"', '&quot;')
 
 const ownedSkinCss = await buildOwnedSkinCss()
 
@@ -181,12 +186,7 @@ for (const variant of config.variants) {
     let results = []
 
     if (assertions.length > 0) {
-      const dom = execFileSync(chrome, [
-        ...chromeArgs,
-        '--virtual-time-budget=1000',
-        '--dump-dom',
-        pageUrl,
-      ], {
+      const dom = execFileSync(chrome, [...chromeArgs, '--virtual-time-budget=1000', '--dump-dom', pageUrl], {
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'inherit'],
       })
@@ -195,16 +195,12 @@ for (const variant of config.variants) {
       results = JSON.parse(meta.content)
     }
 
-    execFileSync(chrome, [
-      ...chromeArgs,
-      `--screenshot=${shot}`,
-      pageUrl,
-    ], { stdio: 'inherit' })
+    execFileSync(chrome, [...chromeArgs, `--screenshot=${shot}`, pageUrl], { stdio: 'inherit' })
 
     const failures = results.filter((result) => !result.ok)
     console.log(
       `${basename(shot)} <- test/fixtures/${name}/${variant.id}` +
-      (results.length === 0 ? '' : ` (${results.length - failures.length}/${results.length} assertions)`),
+        (results.length === 0 ? '' : ` (${results.length - failures.length}/${results.length} assertions)`),
     )
     if (failures.length > 0) {
       for (const failure of failures) {

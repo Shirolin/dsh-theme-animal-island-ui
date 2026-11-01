@@ -5,9 +5,7 @@ import { installAppearance as installAppearanceLifecycle } from './appearance.ts
 export const APPEARANCE_TAB_ID = 'animal-island-appearance'
 
 function tabLabel(): string {
-  return typeof navigator !== 'undefined' && navigator.language.toLowerCase().startsWith('zh')
-    ? '动森外观'
-    : 'Island appearance'
+  return typeof navigator !== 'undefined' && navigator.language.toLowerCase().startsWith('zh') ? '动森外观' : 'Island appearance'
 }
 
 /**
@@ -28,10 +26,10 @@ export function installAppearance(ctx: ClientContextLike): void {
   if (!slots || typeof slots.inject !== 'function' || typeof slots.register !== 'function') return
 
   ctx.effect(
-    () => slots.inject('settings.plugins.tab', () => slots.register(
-      { name: 'settings.plugins.tab', id: APPEARANCE_TAB_ID, order: 40, label: tabLabel },
-      AppearanceTab,
-    )),
+    () =>
+      slots.inject('settings.plugins.tab', () =>
+        slots.register({ name: 'settings.plugins.tab', id: APPEARANCE_TAB_ID, order: 40, label: tabLabel }, AppearanceTab),
+      ),
     'animal-island-ui:appearance-tab',
   )
 }

@@ -17,11 +17,16 @@ export interface SlotRegistrationOptions {
   label?: string | (() => string)
   /** Keyed-slot key (`settings.plugin.item` keys on the settings namespace). */
   key?: string
-  children?: Readonly<Record<string, {
-    kind: 'single' | 'list' | 'keyed' | 'chain'
-    scope: 'root' | 'session' | 'session-maybe'
-    inject?: object
-  }>>
+  children?: Readonly<
+    Record<
+      string,
+      {
+        kind: 'single' | 'list' | 'keyed' | 'chain'
+        scope: 'root' | 'session' | 'session-maybe'
+        inject?: object
+      }
+    >
+  >
   inject?: (...args: never[]) => object
 }
 
@@ -31,10 +36,7 @@ export interface SlotSpecLike {
 }
 
 export interface SlotRegistryLike {
-  inject(
-    key: string,
-    callback: () => (() => void) | Iterable<() => void>,
-  ): () => void
+  inject(key: string, callback: () => (() => void) | Iterable<() => void>): () => void
   register<P extends object>(options: SlotRegistrationOptions, component: ComponentType<P>): () => void
   spec(key: string): SlotSpecLike | undefined
 }
@@ -42,5 +44,5 @@ export interface SlotRegistryLike {
 export interface ClientContextLike {
   theme?: ThemeRuntimeLike
   slots?: SlotRegistryLike
-  effect(effect: () => void | (() => void), name?: string): unknown
+  effect(effect: () => (() => void) | undefined, name?: string): unknown
 }

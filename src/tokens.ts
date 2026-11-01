@@ -1,7 +1,11 @@
 import type { Mode, Palette, TokenMap, TokenPairs } from './types.ts'
 import { ANIMAL_ISLAND_PALETTES } from './palette.ts'
 
-interface Rgb { r: number; g: number; b: number }
+interface Rgb {
+  r: number
+  g: number
+  b: number
+}
 
 function rgb(value: string): Rgb {
   const hex = value.trim().replace(/^#/, '')
@@ -14,7 +18,13 @@ function rgb(value: string): Rgb {
 }
 
 function hex({ r, g, b }: Rgb): string {
-  return `#${[r, g, b].map((part) => Math.round(Math.max(0, Math.min(255, part))).toString(16).padStart(2, '0')).join('')}`
+  return `#${[r, g, b]
+    .map((part) =>
+      Math.round(Math.max(0, Math.min(255, part)))
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('')}`
 }
 
 function mix(a: string, b: string, amount: number): string {
@@ -211,7 +221,9 @@ export function buildTokens(palette: Palette, mode: Mode): TokenMap {
     '--dsw-shadow-lv1': dark ? '0 2px 4px 0 #160f0a59' : '0 2px 4px 0 #3d34280f',
     '--dsw-shadow-lv1-blur': dark ? '0 4px 12px 0 #160f0a40' : '0 4px 12px 0 #3d342808',
     '--dsw-shadow-lv2': dark ? '0 4px 12px 0 #160f0a40, 0 2px 8px 0 #160f0a4d' : '0 4px 12px 0 #3d342808, 0 2px 8px 0 #3d34280d',
-    '--dsw-shadow-lv3': dark ? '0 0 1px 0 #160f0a80, 0 0 4px 0 #160f0a4d, 0 12px 32px 0 #160f0a66' : '0 0 1px 0 #3d342833, 0 0 4px 0 #3d34280d, 0 12px 32px 0 #3d34281f',
+    '--dsw-shadow-lv3': dark
+      ? '0 0 1px 0 #160f0a80, 0 0 4px 0 #160f0a4d, 0 12px 32px 0 #160f0a66'
+      : '0 0 1px 0 #3d342833, 0 0 4px 0 #3d34280d, 0 12px 32px 0 #3d34281f',
     '--dsw-elevation-stroke-color': dark ? '#cbb99466' : '#82715766',
     '--dsw-elevation-stroke': '0 0 0 .5px var(--dsw-elevation-stroke-color)',
     '--dsw-elevation-panel': 'var(--dsw-elevation-stroke), 0 4px 12px 0 #3d342814, 0 0 20px 0 #3d34280d',
@@ -242,9 +254,14 @@ export function buildTokenOverrides(): TokenPairs {
   const names = new Set([...Object.keys(light), ...Object.keys(dark)])
   const pairs: TokenPairs = {}
   for (const name of names) {
+    const lightValue = light[name] ?? dark[name]
+    const darkValue = dark[name] ?? light[name]
+    if (lightValue === undefined || darkValue === undefined) {
+      throw new Error(`Missing token value: ${name}`)
+    }
     pairs[name] = {
-      light: light[name] ?? dark[name]!,
-      dark: dark[name] ?? light[name]!,
+      light: lightValue,
+      dark: darkValue,
     }
   }
   return pairs

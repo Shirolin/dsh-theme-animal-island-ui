@@ -18,10 +18,15 @@ pnpm run check          # typecheck + build + 测试 + 兼容性检查
 
 ```sh
 pnpm run typecheck      # tsc --noEmit
+pnpm run format         # Biome：格式化源码、脚本、测试与 JSON/CSS
+pnpm run lint           # Biome：静态检查
 pnpm run build          # 生成 lib/（含 lib/client.js 与类型声明）
 pnpm test               # build + node test/run.mjs
 pnpm run check:compat   # 对照锁定的 DSH 版本检查接缝与 token
 ```
+
+`format` 与 `lint` 是独立命令，不并入默认的 `pnpm run check`。提交前至少运行一次
+`pnpm run format` 和 `pnpm run lint`。
 
 ## 改动的边界
 

@@ -31,8 +31,5 @@
       "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const label = button.querySelector(':scope > span > span:has(.animal-island-brand__name)'); const name = button.querySelector('.animal-island-brand__name'); const strong = name?.querySelector('strong'); const small = name?.querySelector('small'); if (!label || !name || !strong || !small) return false; const labelStyle = getComputedStyle(label); const nameStyle = getComputedStyle(name); const strongStyle = getComputedStyle(strong); const smallStyle = getComputedStyle(small); const fontSize = Number.parseFloat(strongStyle.fontSize); const lineHeight = Number.parseFloat(strongStyle.lineHeight); const clearance = (lineHeight - 1.45 * fontSize) / 2 + 0.28 * fontSize; return labelStyle.padding === '0px 10px 0px 11px' && labelStyle.height === '60px' && labelStyle.overflow === 'visible' && nameStyle.overflow === 'visible' && nameStyle.lineHeight === '18px' && strongStyle.fontSize === '20px' && strongStyle.lineHeight === '24px' && smallStyle.marginTop === '1px' && smallStyle.lineHeight === '9px' && strong.scrollWidth <= strong.clientWidth && clearance >= 2; }))()"
     }
   ],
-  "variants": [
-    { "id": "light", "mode": "light", "window": "840,820" },
-    { "id": "dark", "mode": "dark", "window": "840,820" }
-  ]
+  "variants": [{ "id": "light", "mode": "light", "window": "840,820" }, { "id": "dark", "mode": "dark", "window": "840,820" }]
 }

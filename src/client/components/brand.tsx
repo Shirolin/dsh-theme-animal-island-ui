@@ -7,13 +7,7 @@ interface IslandMarkProps {
 
 export function IslandMark({ size, className }: IslandMarkProps): React.JSX.Element {
   return (
-    <svg
-      aria-hidden="true"
-      className={`animal-island-brand__mark ${className ?? ''}`.trim()}
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-    >
+    <svg aria-hidden="true" className={`animal-island-brand__mark ${className ?? ''}`.trim()} width={size} height={size} viewBox="0 0 64 64">
       {/* Original tilted island leaf: the one shape that reads "Animal Island"
           even at 16–24px. Outline, central vein and side veins are kept thick so
           the silhouette survives the small sidebar mark. */}
@@ -27,20 +21,8 @@ export function IslandMark({ size, className }: IslandMarkProps): React.JSX.Elem
           strokeLinejoin="round"
         />
         <path d="M32 12v37" stroke="#d9f2c1" strokeWidth="3.4" strokeLinecap="round" />
-        <path
-          d="M32 25c-6-1-10-4-13-9M32 34c-7-1-12-4-15-8M32 43c-6 0-10-2-14-6"
-          fill="none"
-          stroke="#a6dd8c"
-          strokeWidth="2.6"
-          strokeLinecap="round"
-        />
-        <path
-          d="M32 25c6-1 10-4 13-9M32 34c7-1 12-4 15-8M32 43c6 0 10-2 14-6"
-          fill="none"
-          stroke="#a6dd8c"
-          strokeWidth="2.6"
-          strokeLinecap="round"
-        />
+        <path d="M32 25c-6-1-10-4-13-9M32 34c-7-1-12-4-15-8M32 43c-6 0-10-2-14-6" fill="none" stroke="#a6dd8c" strokeWidth="2.6" strokeLinecap="round" />
+        <path d="M32 25c6-1 10-4 13-9M32 34c7-1 12-4 15-8M32 43c6 0 10-2 14-6" fill="none" stroke="#a6dd8c" strokeWidth="2.6" strokeLinecap="round" />
       </g>
     </svg>
   )
@@ -171,10 +153,14 @@ function HeroScenery(): React.JSX.Element {
         </g>
 
         <g className="animal-island-hero__scene-fireflies" fill="#f6d878">
-          <circle cx="104" cy="113" r="2.2" /><circle cx="104" cy="113" r="7" opacity=".11" />
-          <circle cx="165" cy="132" r="1.8" /><circle cx="165" cy="132" r="5.5" opacity=".1" />
-          <circle cx="611" cy="112" r="2" /><circle cx="611" cy="112" r="6" opacity=".11" />
-          <circle cx="646" cy="137" r="1.7" /><circle cx="646" cy="137" r="5" opacity=".1" />
+          <circle cx="104" cy="113" r="2.2" />
+          <circle cx="104" cy="113" r="7" opacity=".11" />
+          <circle cx="165" cy="132" r="1.8" />
+          <circle cx="165" cy="132" r="5.5" opacity=".1" />
+          <circle cx="611" cy="112" r="2" />
+          <circle cx="611" cy="112" r="6" opacity=".11" />
+          <circle cx="646" cy="137" r="1.7" />
+          <circle cx="646" cy="137" r="5" opacity=".1" />
         </g>
 
         <path d="M0 126c69-12 111 0 171-10 57-10 92-24 150-17 61 8 99-7 154 0 63 8 97 19 146 14 35-4 61-4 79 2v39H0Z" fill="url(#animal-hero-night-hill)" />
@@ -205,7 +191,9 @@ export function HeroBrandMark({ size, className }: HeroBrandMarkOwnerProps): Rea
         <IslandMark size={size} className={className} />
         <span className="animal-island-hero__wordmark">动森岛</span>
         <span className="animal-island-hero__divider" aria-hidden="true" />
-        <span className="animal-island-hero__english" aria-hidden="true">ANIMAL ISLAND</span>
+        <span className="animal-island-hero__english" aria-hidden="true">
+          ANIMAL ISLAND
+        </span>
       </span>
     </span>
   )

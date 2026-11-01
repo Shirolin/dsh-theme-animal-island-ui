@@ -1,9 +1,6 @@
 {
   "title": "DSH 启动等待页 · 动森渡岛场景",
-  "variants": [
-    { "id": "light", "mode": "light", "window": "900,620" },
-    { "id": "dark", "mode": "dark", "window": "900,620" }
-  ],
+  "variants": [{ "id": "light", "mode": "light", "window": "900,620" }, { "id": "dark", "mode": "dark", "window": "900,620" }],
   "assertions": [
     {
       "message": "boot card is anchored to the public spinner hook",

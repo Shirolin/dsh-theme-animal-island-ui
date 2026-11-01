@@ -22,18 +22,15 @@ async function assetDataUri(file) {
 }
 
 async function fontFaces() {
-  return (await Promise.all(fontWeights.map(async (weight) => {
-    const file = join(
-      root,
-      'node_modules',
-      '@fontsource',
-      'nunito',
-      'files',
-      `nunito-latin-${weight}-normal.woff2`,
+  return (
+    await Promise.all(
+      fontWeights.map(async (weight) => {
+        const file = join(root, 'node_modules', '@fontsource', 'nunito', 'files', `nunito-latin-${weight}-normal.woff2`)
+        const data = (await readFile(file)).toString('base64')
+        return `@font-face{font-family:Nunito;font-style:normal;font-display:swap;font-weight:${weight};src:url(data:font/woff2;base64,${data}) format("woff2")}`
+      }),
     )
-    const data = (await readFile(file)).toString('base64')
-    return `@font-face{font-family:Nunito;font-style:normal;font-display:swap;font-weight:${weight};src:url(data:font/woff2;base64,${data}) format("woff2")}`
-  }))).join('\n')
+  ).join('\n')
 }
 
 /** Build the exact owned CSS embedded in the client and used by visual fixtures. */

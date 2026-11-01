@@ -53,12 +53,15 @@ test('skin uses only the reviewed stable data hooks', () => {
     'dsh-boot',
     'dsh-boot-spinner',
   ])
-  assert.deepEqual([...new Set(hooks)].filter((hook) => !allowed.has(hook)), [])
+  assert.deepEqual(
+    [...new Set(hooks)].filter((hook) => !allowed.has(hook)),
+    [],
+  )
 })
 
 test('composer 3D send styling leaves text-bearing triggers flat', () => {
   const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0].replaceAll(/\s+/g, ' ').trim())
   const sendRules = rules.filter((rule) => rule.includes('[data-composer-card] button[aria-label]'))
 
   assert.ok(sendRules.length >= 5, 'the composer send-key rules are missing')
@@ -121,9 +124,7 @@ test('header ribbon colors the current crumb span directly', () => {
   // nav's inherited colour. The ribbon must set the span explicitly or the title
   // becomes brown-on-brown (empty-looking plank) on desktop.
   const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  const rule = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)]
-    .map((match) => match[0])
-    .find((candidate) => candidate.includes('nav :where(span)'))
+  const rule = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0]).find((candidate) => candidate.includes('nav :where(span)'))
   assert.ok(rule, 'the ribbon crumb span colour rule is missing')
   assert.match(rule, /color:\s*#fff3d6\s*!important/)
 })
@@ -155,45 +156,31 @@ test('conversation hero renders a responsive day and night island title scene', 
   const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
   const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
 
-  const frame = rules.find((rule) => (
-    rule.includes('div[class]:has(> span > div > .animal-island-hero__brand)') &&
-    /min-height:\s*142px/.test(rule)
-  ))
+  const frame = rules.find((rule) => rule.includes('div[class]:has(> span > div > .animal-island-hero__brand)') && /min-height:\s*142px/.test(rule))
   assert.ok(frame, 'the island title scene is missing')
   assert.match(frame, /width:\s*min\(100%,\s*700px\)/)
   assert.match(frame, /border:\s*0/)
   assert.match(frame, /box-shadow:\s*none/)
   assert.doesNotMatch(frame, /\[data-slot/)
 
-  const dayScene = rules.find((rule) => (
-    rule.includes('.animal-island-hero__scenery--day') &&
-    /opacity:\s*1/.test(rule)
-  ))
+  const dayScene = rules.find((rule) => rule.includes('.animal-island-hero__scenery--day') && /opacity:\s*1/.test(rule))
   assert.ok(dayScene, 'the daylight scenery is missing')
-  const nightScene = rules.find((rule) => (
-    rule.includes('body[data-ds-dark-theme]') &&
-    rule.includes('.animal-island-hero__scenery--night') &&
-    /opacity:\s*1/.test(rule)
-  ))
+  const nightScene = rules.find(
+    (rule) => rule.includes('body[data-ds-dark-theme]') && rule.includes('.animal-island-hero__scenery--night') && /opacity:\s*1/.test(rule),
+  )
   assert.ok(nightScene, 'the night scenery is not enabled in dark mode')
   assert.match(brand, /animal-island-hero__scenery--day/)
   assert.match(brand, /animal-island-hero__scenery--night/)
   assert.match(brand, /animal-island-hero__identity/)
   assert.match(brand, /className="animal-island-hero__english"\s+aria-hidden="true"/)
 
-  const title = rules.find((rule) => (
-    rule.includes('> span:has(> span + span)') &&
-    /font-size:\s*41px/.test(rule)
-  ))
+  const title = rules.find((rule) => rule.includes('> span:has(> span + span)') && /font-size:\s*41px/.test(rule))
   assert.ok(title, 'the game-opening title is missing')
   assert.match(title, /font-weight:\s*900/)
   assert.match(title, /white-space:\s*nowrap/)
   assert.match(title, /animation:\s*animal-island-hero-title-in/)
 
-  const badge = rules.find((rule) => (
-    rule.includes('> span:has(> span + span) > span + span') &&
-    /transform:\s*translateY\(4px\)\s+rotate\(2deg\)/.test(rule)
-  ))
+  const badge = rules.find((rule) => rule.includes('> span:has(> span + span) > span + span') && /transform:\s*translateY\(4px\)\s+rotate\(2deg\)/.test(rule))
   assert.ok(badge, 'the preview badge must sit beside the title')
   assert.match(badge, /border-radius:\s*999px/)
 
@@ -243,10 +230,7 @@ test('dark canvas keeps original night leaf and horizon textures', () => {
 
   const darkCanvas = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)]
     .map((match) => match[0])
-    .find((rule) => (
-      rule.includes('body[data-ds-dark-theme]') &&
-      rule.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__')
-    ))
+    .find((rule) => rule.includes('body[data-ds-dark-theme]') && rule.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__'))
   assert.ok(darkCanvas, 'the night canvas textures are missing')
   assert.match(darkCanvas, /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
   assert.match(darkCanvas, /100% 240px/)
@@ -255,14 +239,8 @@ test('dark canvas keeps original night leaf and horizon textures', () => {
 test('boot screen becomes a day-night island departure card', () => {
   const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
   const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const boot = rules.find((rule) => (
-    rule.includes('[data-dsh-boot]') &&
-    rule.includes('__ANIMAL_ISLAND_LEAVES__')
-  ))
-  const darkBoot = rules.find((rule) => (
-    rule.includes('body[data-ds-dark-theme] [data-dsh-boot]') &&
-    rule.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__')
-  ))
+  const boot = rules.find((rule) => rule.includes('[data-dsh-boot]') && rule.includes('__ANIMAL_ISLAND_LEAVES__'))
+  const darkBoot = rules.find((rule) => rule.includes('body[data-ds-dark-theme] [data-dsh-boot]') && rule.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__'))
   const seal = rules.find((rule) => rule.includes('[data-dsh-boot-spinner] {'))
   const innerSeal = rules.find((rule) => rule.includes('[data-dsh-boot-spinner]::before {'))
   const orbit = rules.find((rule) => rule.includes('[data-dsh-boot-spinner]::after {'))
@@ -274,10 +252,9 @@ test('boot screen becomes a day-night island departure card', () => {
   assert.match(boot, /place-items:\s*safe center/)
   assert.ok(darkBoot, 'the night boot backdrop is missing')
   assert.match(darkBoot, /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
-  const card = rules.find((rule) => (
-    rule.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])') &&
-    rule.includes('background-color: var(--animal-boot-paper)')
-  ))
+  const card = rules.find(
+    (rule) => rule.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])') && rule.includes('background-color: var(--animal-boot-paper)'),
+  )
   assert.ok(card, 'the boot card must be anchored to the spinner hook')
   assert.match(card, /margin:\s*0/)
   assert.ok(seal, 'the boot progress seal is missing')
@@ -293,10 +270,9 @@ test('boot screen becomes a day-night island departure card', () => {
   assert.ok(orbit, 'the boot orbit bead is missing')
   assert.match(orbit, /corner-shape:\s*round/)
   assert.match(orbit, /clip-path:\s*circle\(50%\)/)
-  const leafSeal = rules.find((rule) => (
-    rule.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])::before') &&
-    rule.includes('__ANIMAL_ISLAND_BOOT_LEAF__')
-  ))
+  const leafSeal = rules.find(
+    (rule) => rule.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])::before') && rule.includes('__ANIMAL_ISLAND_BOOT_LEAF__'),
+  )
   assert.ok(leafSeal, 'the boot leaf seal is missing')
   assert.match(leafSeal, /corner-shape:\s*round/)
   assert.match(css, /:has\(\+ \[data-dsh-boot-spinner\]\)/)
@@ -345,22 +321,12 @@ test('boot fixtures keep loading anchored and failure diagnostics scrollable', (
 })
 
 test('skin uses only the reviewed ARIA role seams', () => {
-  const roles = new Set([...css.matchAll(/role='([^']+)'/g)].map((match) => match[1]))
-  const allowed = new Set([
-    'button',
-    'checkbox',
-    'dialog',
-    'group',
-    'listbox',
-    'menu',
-    'menuitem',
-    'menuitemradio',
-    'option',
-    'radio',
-    'switch',
-    'treeitem',
-  ])
-  assert.deepEqual([...roles].filter((role) => !allowed.has(role)), [])
+  const roles = new Set([...css.matchAll(/role=["']([^"']+)["']/g)].map((match) => match[1]))
+  const allowed = new Set(['button', 'checkbox', 'dialog', 'group', 'listbox', 'menu', 'menuitem', 'menuitemradio', 'option', 'radio', 'switch', 'treeitem'])
+  assert.deepEqual(
+    [...roles].filter((role) => !allowed.has(role)),
+    [],
+  )
 })
 
 test("selected-row wood grain survives DSH's selected shorthand", () => {
@@ -369,7 +335,7 @@ test("selected-row wood grain survives DSH's selected shorthand", () => {
   // selector. The plank's colour, grain and bevel therefore have to be
   // `!important` or the grain silently disappears on the real rows.
   const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const rule = rules.find((candidate) => /\[role='treeitem'\]\[aria-selected='true'\]/.test(candidate))
+  const rule = rules.find((candidate) => /\[role=["']treeitem["']\]\[aria-selected=["']true["']\]/.test(candidate))
   assert.ok(rule, 'the selected-row wood-plank rule is missing')
   for (const declaration of ['background-color:', 'background-image:', 'box-shadow:']) {
     const line = rule.slice(rule.indexOf(declaration)).split(';')[0]

@@ -1,12 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
-import {
-  ANIMAL_ISLAND_PALETTES,
-  buildTokenOverrides,
-  buildTokens,
-  contrastRatio,
-} from '../lib/tokens.js'
+import { ANIMAL_ISLAND_PALETTES, buildTokenOverrides, buildTokens, contrastRatio } from '../lib/tokens.js'
 
 const EXPECTED_TOKENS = `
 --ds-font-family-code
@@ -128,7 +123,10 @@ const EXPECTED_TOKENS = `
 --shiki-token-punctuation
 --shiki-token-string
 --shiki-token-string-expression
-`.trim().split(/\s+/).sort()
+`
+  .trim()
+  .split(/\s+/)
+  .sort()
 
 function assertContrast(foreground, background, label, minimum = 4.5) {
   const ratio = contrastRatio(foreground, background)
@@ -149,11 +147,11 @@ test('token payload has complete light and dark pairs', () => {
     for (const mode of ['light', 'dark']) {
       const value = payload[name][mode]
       if (
-        name === '--ds-font-family-code'
-        || name === '--dsw-font-family'
-        || name.startsWith('--dsw-shadow-')
-        || name.startsWith('--dsw-elevation-')
-        || name.startsWith('--dsw-linear-')
+        name === '--ds-font-family-code' ||
+        name === '--dsw-font-family' ||
+        name.startsWith('--dsw-shadow-') ||
+        name.startsWith('--dsw-elevation-') ||
+        name.startsWith('--dsw-linear-')
       ) {
         assert.equal(typeof value, 'string')
         assert.ok(value.length > 0)
@@ -162,7 +160,10 @@ test('token payload has complete light and dark pairs', () => {
       }
     }
   }
-  assert.deepEqual(Object.keys(payload).filter((name) => !payload[name].light || !payload[name].dark), [])
+  assert.deepEqual(
+    Object.keys(payload).filter((name) => !payload[name].light || !payload[name].dark),
+    [],
+  )
 })
 
 test('light mode follows the canonical Animal Island palette with readable semantic derivatives', () => {
@@ -198,18 +199,10 @@ test('normal text, business accents, and states remain readable on their real su
       assertContrast(payload[name][mode], payload['--dsw-alias-bg-base'][mode], `${mode} ${name}`)
     }
 
-    assertContrast(
-      payload['--dsw-alias-label-primary-foreground'][mode],
-      payload['--dsw-alias-button-primary-fill'][mode],
-      `${mode} primary button foreground`,
-    )
+    assertContrast(payload['--dsw-alias-label-primary-foreground'][mode], payload['--dsw-alias-button-primary-fill'][mode], `${mode} primary button foreground`)
 
     for (const name of ['--dsw-alias-label-primary', '--dsw-alias-label-secondary']) {
-      for (const surface of [
-        '--dsw-specific-sidebar-fill',
-        '--dsw-specific-sidebar-nav-item-hover',
-        '--dsw-specific-sidebar-nav-item-active',
-      ]) {
+      for (const surface of ['--dsw-specific-sidebar-fill', '--dsw-specific-sidebar-nav-item-hover', '--dsw-specific-sidebar-nav-item-active']) {
         assertContrast(payload[name][mode], payload[surface][mode], `${mode} ${name} on ${surface}`)
       }
     }

@@ -25,10 +25,13 @@ export function installOwnedSkin(ctx: ClientContextLike): void {
     throw error
   }
 
-  ctx.effect(() => () => {
-    style.remove()
-    if (root.getAttribute(ROOT_ATTRIBUTE) !== ROOT_VALUE) return
-    if (previousValue === null) root.removeAttribute(ROOT_ATTRIBUTE)
-    else root.setAttribute(ROOT_ATTRIBUTE, previousValue)
-  }, 'animal-island-ui:owned-skin')
+  ctx.effect(
+    () => () => {
+      style.remove()
+      if (root.getAttribute(ROOT_ATTRIBUTE) !== ROOT_VALUE) return
+      if (previousValue === null) root.removeAttribute(ROOT_ATTRIBUTE)
+      else root.setAttribute(ROOT_ATTRIBUTE, previousValue)
+    },
+    'animal-island-ui:owned-skin',
+  )
 }

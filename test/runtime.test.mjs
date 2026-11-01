@@ -53,7 +53,7 @@ function createSlots() {
   const registrations = []
   return {
     registrations,
-    inject(key, callback) {
+    inject(_key, callback) {
       const result = callback()
       const disposers = typeof result === 'function' ? [result] : result === undefined ? [] : [...result]
       let active = true
@@ -91,7 +91,9 @@ test('client factory registers and releases coordinated theme, style, and public
         assert.equal(tokens['--dsw-alias-brand-primary'].light, '#19c8b9')
         assert.equal(tokens['--dsw-alias-button-primary-fill'].light, '#f8f8f0')
         assert.equal(tokens['--shiki-background'].light, '#2b2118')
-        return () => { disposedTheme += 1 }
+        return () => {
+          disposedTheme += 1
+        }
       },
     }
     const { context, disposeEffects } = createContext(theme)
@@ -106,10 +108,12 @@ test('client factory registers and releases coordinated theme, style, and public
     const style = document.head.querySelector('style[data-plugin="dsh-theme-animal-island-ui"]')
     assert.match(style.textContent, /data-dsh-animal-island-skin/)
     assert.match(style.textContent, /--animal-mint:\s*#19c8b9/)
-    assert.deepEqual(
-      slots.registrations.map((entry) => entry.key).sort(),
-      ['conversation.hero.brand.mark', 'settings.plugins.tab', 'sidebar.brand.mark', 'sidebar.brand.name'],
-    )
+    assert.deepEqual(slots.registrations.map((entry) => entry.key).sort(), [
+      'conversation.hero.brand.mark',
+      'settings.plugins.tab',
+      'sidebar.brand.mark',
+      'sidebar.brand.name',
+    ])
     // Brand slots keep their fixed priority; the appearance tab is an ordinary
     // list-slot entry and carries no priority.
     assert.ok(slots.registrations.filter((entry) => entry.key !== 'settings.plugins.tab').every((entry) => entry.priority === -100))
@@ -146,8 +150,16 @@ test('registration failures do not install skin resources or effects', () => {
     console.warn = (...args) => warnings.push(args)
     try {
       for (const theme of [
-        { overrideTokens() { throw new Error('registration failed') } },
-        { overrideTokens() { return undefined } },
+        {
+          overrideTokens() {
+            throw new Error('registration failed')
+          },
+        },
+        {
+          overrideTokens() {
+            return undefined
+          },
+        },
       ]) {
         const { context, disposeEffects } = createContext(theme)
         assert.doesNotThrow(() => plugin.apply(context))
@@ -166,7 +178,9 @@ test('owned skin apply/dispose is idempotent across repeated HMR cycles', () => 
     const plugin = factory()
     for (let cycle = 0; cycle < 20; cycle += 1) {
       const { context, disposeEffects } = createContext({
-        overrideTokens() { return () => undefined },
+        overrideTokens() {
+          return () => undefined
+        },
       })
       context.slots = createSlots()
       plugin.apply(context)

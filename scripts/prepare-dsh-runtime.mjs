@@ -20,13 +20,7 @@ export function findDshAsar(explicitPath) {
   const candidates = [
     explicitPath,
     process.env.DSH_DESKTOP_ASAR,
-    process.env.LOCALAPPDATA && join(
-      process.env.LOCALAPPDATA,
-      'Programs',
-      'DeepSeek Harness',
-      'resources',
-      'app.asar',
-    ),
+    process.env.LOCALAPPDATA && join(process.env.LOCALAPPDATA, 'Programs', 'DeepSeek Harness', 'resources', 'app.asar'),
     'C:/Software/DeepSeek Harness/resources/app.asar',
     '/Applications/DeepSeek Harness.app/Contents/Resources/app.asar',
     join(homedir(), '.local', 'share', 'deepseek-harness', 'resources', 'app.asar'),
@@ -37,9 +31,7 @@ export function findDshAsar(explicitPath) {
     if (existsSync(path)) return path
   }
 
-  throw new Error(
-    'DeepSeek Harness app.asar was not found; pass --asar <path> or set DSH_DESKTOP_ASAR',
-  )
+  throw new Error('DeepSeek Harness app.asar was not found; pass --asar <path> or set DSH_DESKTOP_ASAR')
 }
 
 function isDshRuntime(dsh) {
@@ -65,10 +57,7 @@ function runNpx(args) {
   execFileSync('npx', args, { stdio: 'inherit' })
 }
 
-export function prepareDshRuntime({
-  asarPath,
-  cacheRoot = join(root, '.tmp', 'dsh-runtime'),
-} = {}) {
+export function prepareDshRuntime({ asarPath, cacheRoot = join(root, '.tmp', 'dsh-runtime') } = {}) {
   const asar = findDshAsar(asarPath)
   const stat = statSync(asar)
   const buildKey = `${stat.size}-${Math.trunc(stat.mtimeMs)}`
@@ -107,10 +96,12 @@ function main() {
     const index = args.indexOf(`--${name}`)
     return index === -1 ? undefined : args[index + 1]
   }
-  console.log(prepareDshRuntime({
-    asarPath: flag('asar'),
-    cacheRoot: flag('cache'),
-  }))
+  console.log(
+    prepareDshRuntime({
+      asarPath: flag('asar'),
+      cacheRoot: flag('cache'),
+    }),
+  )
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

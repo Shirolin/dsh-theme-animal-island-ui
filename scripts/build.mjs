@@ -13,11 +13,13 @@ const parsed = ts.parseJsonConfigFileContent(configFile.config, ts.sys, process.
 const program = ts.createProgram(parsed.fileNames, parsed.options)
 const diagnostics = ts.getPreEmitDiagnostics(program)
 if (diagnostics.length > 0) {
-  console.error(ts.formatDiagnosticsWithColorAndContext(diagnostics, {
-    getCanonicalFileName: (file) => file,
-    getCurrentDirectory: ts.sys.getCurrentDirectory,
-    getNewLine: () => '\n',
-  }))
+  console.error(
+    ts.formatDiagnosticsWithColorAndContext(diagnostics, {
+      getCanonicalFileName: (file) => file,
+      getCurrentDirectory: ts.sys.getCurrentDirectory,
+      getNewLine: () => '\n',
+    }),
+  )
   process.exit(1)
 }
 
@@ -43,17 +45,9 @@ async function transpile(file) {
   return result.outputText.replace(/(["'])([^"']+)\.ts\1/g, '$1$2.js$1')
 }
 
-const [index, palette, tokens] = await Promise.all([
-  transpile('src/index.ts'),
-  transpile('src/palette.ts'),
-  transpile('src/tokens.ts'),
-])
+const [index, palette, tokens] = await Promise.all([transpile('src/index.ts'), transpile('src/palette.ts'), transpile('src/tokens.ts')])
 
-await Promise.all([
-  writeFile('lib/index.js', index),
-  writeFile('lib/palette.js', palette),
-  writeFile('lib/tokens.js', tokens),
-])
+await Promise.all([writeFile('lib/index.js', index), writeFile('lib/palette.js', palette), writeFile('lib/tokens.js', tokens)])
 
 const ownedSkinCss = await buildOwnedSkinCss()
 
@@ -70,20 +64,22 @@ const result = await build({
   sourcemap: false,
   legalComments: 'none',
   logLevel: 'silent',
-  plugins: [{
-    name: 'animal-island-owned-assets',
-    setup(context) {
-      context.onResolve({ filter: /^virtual:animal-island-skin-css$/ }, () => ({
-        path: 'animal-island-skin-css',
-        namespace: 'animal-island-skin',
-      }))
-      context.onLoad({ filter: /.*/, namespace: 'animal-island-skin' }, () => ({
-        contents: `export const SKIN_CSS = ${JSON.stringify(ownedSkinCss)}`,
-        loader: 'ts',
-        resolveDir: process.cwd(),
-      }))
+  plugins: [
+    {
+      name: 'animal-island-owned-assets',
+      setup(context) {
+        context.onResolve({ filter: /^virtual:animal-island-skin-css$/ }, () => ({
+          path: 'animal-island-skin-css',
+          namespace: 'animal-island-skin',
+        }))
+        context.onLoad({ filter: /.*/, namespace: 'animal-island-skin' }, () => ({
+          contents: `export const SKIN_CSS = ${JSON.stringify(ownedSkinCss)}`,
+          loader: 'ts',
+          resolveDir: process.cwd(),
+        }))
+      },
     },
-  }],
+  ],
 })
 
 const clientModule = result.outputFiles.find((file) => file.path.endsWith('.js'))

@@ -46,7 +46,10 @@ execSync(`pnpm pack --pack-destination "${destination}"`, { cwd: root, stdio: 'i
 
 const tarball = join(root, destination, `${packageJson.name}-${version}.tgz`)
 const { size } = await stat(tarball)
-const sha = createHash('sha256').update(await readFile(tarball)).digest('hex').toUpperCase()
+const sha = createHash('sha256')
+  .update(await readFile(tarball))
+  .digest('hex')
+  .toUpperCase()
 console.log(`tarball: ${destination}/${packageJson.name}-${version}.tgz (${size} bytes)`)
 console.log(`sha256 : ${sha}`)
 
@@ -67,15 +70,12 @@ const rewrites = [
   // carry the version separately, and an older document may disagree with
   // itself. Historical archives are named without a `release-v…/` prefix, so
   // pairing the two keeps them out of this rewrite.
-  [
-    new RegExp(`release-v${semver}/(${artifactName}-)${semver}\\.tgz`, 'g'),
-    `release-v${version}/$1${version}.tgz`,
-  ],
+  [new RegExp(`release-v${semver}/(${artifactName}-)${semver}\\.tgz`, 'g'), `release-v${version}/$1${version}.tgz`],
   [new RegExp(`artifacts/release-v${semver}`, 'g'), `artifacts/release-v${version}`],
   // The "current artifact" table row follows the release. The "previous
   // release" row is deliberately left alone: only the author knows which
   // directory is being archived as the rollback target.
-  [/`release-v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?\/` \| 当前规范产物/g, '`release-v' + version + '/` | 当前规范产物'],
+  [/`release-v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?\/` \| 当前规范产物/g, `\`release-v${version}/\` | 当前规范产物`],
   [/SHA-256: [0-9A-F]{64}/g, `SHA-256: ${sha}`],
 ]
 

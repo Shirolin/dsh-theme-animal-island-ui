@@ -1,12 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import {
-  APPEARANCE_DEFAULTS,
-  APPEARANCE_PRESETS,
-  getAppearance,
-  setAppearance,
-  subscribeAppearance,
-  type AppearancePreset,
-} from '../appearance.ts'
+import { APPEARANCE_DEFAULTS, APPEARANCE_PRESETS, getAppearance, setAppearance, subscribeAppearance, type AppearancePreset } from '../appearance.ts'
 
 type NamedPreset = Exclude<AppearancePreset, 'custom'>
 
@@ -24,18 +17,12 @@ export function AppearanceTab(): React.JSX.Element {
   return (
     <section className="animal-island-appearance">
       <h3>动森外观</h3>
-      <p>
-        画布上那层奶油「纸面」的透明度。越低越绿、越像游戏；越高越纸白、越好读。
-      </p>
+      <p>画布上那层奶油「纸面」的透明度。越低越绿、越像游戏；越高越纸白、越好读。</p>
 
       {/* Settings itself is an opaque paper card, so the canvas behind it is hidden
           while this tab is open. This swatch mirrors the real canvas (same green
           dotted ground, same cream veil) so the slider shows its effect instantly. */}
-      <div
-        className="animal-island-appearance__preview"
-        role="img"
-        aria-label={`纸面透明度预览，当前 ${state.veil.toFixed(2)}`}
-      >
+      <div className="animal-island-appearance__preview" role="img" aria-label={`纸面透明度预览，当前 ${state.veil.toFixed(2)}`}>
         <div className="animal-island-appearance__preview-sheet">
           <strong>动森岛</strong>
           <span>今天的岛也是绿油油的。</span>
@@ -43,13 +30,12 @@ export function AppearanceTab(): React.JSX.Element {
         <small className="animal-island-appearance__preview-tag">画布预览</small>
       </div>
 
-      <div className="animal-island-appearance__presets" role="radiogroup" aria-label="外观预设">
+      <fieldset className="animal-island-appearance__presets" aria-label="外观预设">
         {PRESET_ORDER.map((preset) => (
           <button
             key={preset}
             type="button"
-            role="radio"
-            aria-checked={state.preset === preset}
+            aria-pressed={state.preset === preset}
             className="animal-island-appearance__preset"
             onClick={() => setAppearance({ preset, veil: APPEARANCE_PRESETS[preset] })}
           >
@@ -57,7 +43,7 @@ export function AppearanceTab(): React.JSX.Element {
             <small>{APPEARANCE_PRESETS[preset].toFixed(2)}</small>
           </button>
         ))}
-      </div>
+      </fieldset>
 
       <label className="animal-island-appearance__slider">
         <span>自定义</span>
@@ -75,10 +61,12 @@ export function AppearanceTab(): React.JSX.Element {
       <button
         type="button"
         className="animal-island-appearance__reset"
-        onClick={() => setAppearance({
-          preset: APPEARANCE_DEFAULTS.preset,
-          veil: APPEARANCE_DEFAULTS.veil,
-        })}
+        onClick={() =>
+          setAppearance({
+            preset: APPEARANCE_DEFAULTS.preset,
+            veil: APPEARANCE_DEFAULTS.veil,
+          })
+        }
       >
         恢复默认（{PRESET_LABELS[APPEARANCE_DEFAULTS.preset]} {APPEARANCE_DEFAULTS.veil.toFixed(2)}）
       </button>
