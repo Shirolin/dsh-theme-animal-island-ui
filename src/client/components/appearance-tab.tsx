@@ -1,5 +1,5 @@
 import { useSyncExternalStore, type CSSProperties } from 'react'
-import { APPEARANCE_DEFAULTS, APPEARANCE_PRESETS, getAppearance, setAppearance, subscribeAppearance, type AppearancePreset } from '../appearance.ts'
+import { APPEARANCE_DEFAULTS, APPEARANCE_PRESETS, type AppearancePreset, type AppearanceStore } from '../appearance.ts'
 
 type NamedPreset = Exclude<AppearancePreset, 'custom'>
 
@@ -11,8 +11,13 @@ const PRESET_LABELS: Record<NamedPreset, string> = {
 
 const PRESET_ORDER: NamedPreset[] = ['paper', 'balanced', 'island']
 
-export function AppearanceTab(): React.JSX.Element {
-  const state = useSyncExternalStore(subscribeAppearance, getAppearance, getAppearance)
+export interface AppearanceTabProps {
+  appearance: AppearanceStore
+}
+
+export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Element {
+  const { getSnapshot, set, subscribe } = appearance
+  const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
   const sliderProgress = ((state.veil - APPEARANCE_DEFAULTS.min) / (APPEARANCE_DEFAULTS.max - APPEARANCE_DEFAULTS.min)) * 100
   const sliderStyle = {
     '--animal-slider-progress': `${sliderProgress}%`,
@@ -41,7 +46,7 @@ export function AppearanceTab(): React.JSX.Element {
             type="button"
             aria-pressed={state.preset === preset}
             className="animal-island-appearance__preset"
-            onClick={() => setAppearance({ preset, veil: APPEARANCE_PRESETS[preset] })}
+            onClick={() => set({ preset, veil: APPEARANCE_PRESETS[preset] })}
           >
             {PRESET_LABELS[preset]}
             <small>{APPEARANCE_PRESETS[preset].toFixed(2)}</small>
@@ -58,7 +63,7 @@ export function AppearanceTab(): React.JSX.Element {
           step={0.01}
           value={state.veil}
           style={sliderStyle}
-          onChange={(event) => setAppearance({ preset: 'custom', veil: Number(event.target.value) })}
+          onChange={(event) => set({ preset: 'custom', veil: Number(event.target.value) })}
         />
         <output>{state.veil.toFixed(2)}</output>
       </label>
@@ -67,7 +72,7 @@ export function AppearanceTab(): React.JSX.Element {
         type="button"
         className="animal-island-appearance__reset"
         onClick={() =>
-          setAppearance({
+          set({
             preset: APPEARANCE_DEFAULTS.preset,
             veil: APPEARANCE_DEFAULTS.veil,
           })

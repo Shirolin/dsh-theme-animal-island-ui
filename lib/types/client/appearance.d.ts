@@ -11,6 +11,12 @@ export interface AppearanceState {
     preset: AppearancePreset;
     veil: number;
 }
+export interface AppearanceStore {
+    getSnapshot(): AppearanceState;
+    subscribe(listener: () => void): () => void;
+    set(next: AppearanceState): AppearanceState;
+    dispose(): void;
+}
 export declare const APPEARANCE_PRESETS: {
     readonly paper: 0.52;
     readonly balanced: 0.4;
@@ -22,9 +28,5 @@ export declare const APPEARANCE_DEFAULTS: {
     readonly min: 0.15;
     readonly max: 0.6;
 };
-export declare function getAppearance(): AppearanceState;
-export declare function subscribeAppearance(listener: () => void): () => void;
-/** Persist, paint, and notify. The installed root owns the visible lifecycle. */
-export declare function setAppearance(next: AppearanceState): AppearanceState;
-/** Load the saved preference, paint it, and return the matching disposer. */
-export declare function installAppearance(root: HTMLElement): () => void;
+/** Create the appearance store owned by one installed skin root. */
+export declare function createAppearanceStore(root: HTMLElement): AppearanceStore;

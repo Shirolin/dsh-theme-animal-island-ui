@@ -1,7 +1,6 @@
 import { buildTokenOverrides } from '../tokens.ts'
 import type { TokenPairs } from '../types.ts'
 import type { ClientContextLike } from './context.ts'
-import { installAppearance } from './install-appearance.ts'
 import { installOwnedSkin } from './install.ts'
 import { installPublicSlots } from './slots.ts'
 
@@ -41,9 +40,9 @@ function applyThemeLayer(ctx: ClientContextLike): boolean {
 /** Apply the coordinated token, owned-style, appearance, and public-slot skin layers. */
 export function apply(ctx: ClientContextLike): void {
   if (!applyThemeLayer(ctx)) return
-  installOwnedSkin(ctx)
-  installAppearance(ctx)
-  installPublicSlots(ctx)
+  const installedSkin = installOwnedSkin(ctx)
+  if (installedSkin === undefined) return
+  installPublicSlots(ctx, installedSkin)
 }
 
 export { buildTokenOverrides }

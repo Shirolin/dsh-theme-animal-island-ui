@@ -29,7 +29,8 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 
 ## 已审阅的属性与变量接缝
 
-除 Slot/token 之外，皮肤只允许使用下表列出的语义标签、角色与 DSH 自己的属性。任何新增都必须在 `test/skin.test.mjs` 的 `allowed` 集合里登记，并在此处说明理由。
+除 Slot/token 之外，皮肤只允许使用下表列出的语义标签、角色与 DSH 自己的属性。完整清单、用途、
+DSH 证据与探测方式只在 `scripts/seam-contract.mjs` 维护；本文保留稳定的使用规则，门禁负责逐项核对。
 
 | 接缝 | 用途 | 为什么稳定 |
 | --- | --- | --- |
@@ -48,10 +49,11 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `#root` + `div:has(> nav[aria-label])` | Windows 标题栏的三层表面：亮色让 caption 读取薄荷色，再把 `#root` 内恢复为奶油 token；暗色 caption 用夜青色，侧栏根节点恢复深蓝底色 | `#root` 是 DSH 的根 slot 容器，侧栏根节点包含直接子元素 `nav[aria-label]`；只改 token/背景色，不选中 `nav`、不改列宽/内边距/排列。桌面夹具同时锁定 caption、侧栏与画布三种底色 |
 | `--dsh-windows-content-radius` | Windows 内容列/全屏右栏 dock pane 的左上角圆角；皮肤在 **frame 元素**上设为 `0px`，去掉外壳自带的 16px 圆角 | layout 插件公开的 Windows 几何变量，仅改圆角，不改列宽。**必须写在 frame 上**：DSH 的 `[data-windows-titlebar] .frame` 自己声明了 `16px`，写在 `<html>` 上会被它覆盖 |
 | `--dsw-menu-surface-fill` | 新版 DSH 菜单材质的底色兼容别名：映射到不透明的 `--dsw-specific-menu`，避免 Composer 焦点环与内容透过浮层 | 该变量只在目标桌面 runtime 中消费，仓库 `0.1.5-rc.3` 基线会自然忽略；不进入 ThemeRuntime token 载荷，只改颜色，不改几何与交互 |
-| `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
+| `role="button" / checkbox / dialog / group / listbox / menu / menuitem / menuitemradio / option / radio / switch / treeitem` | DSH 控件、弹层与树行的语义锚点；只按角色或角色状态增强，不依赖组件 class | 标准 ARIA 角色，跨组件实现稳定 |
 | `[role='treeitem'][aria-selected='true']` | 选中的会话 / 搜索结果行：木牌底 + 木纹 + 压边 | 工作区树行的 ARIA 选中状态，跨版本稳定 |
 | `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |
-| `[aria-pressed]`、`[aria-selected]`、`[aria-checked]` | 选中态（预设卡片、列表项、外观预设、插件开关） | ARIA 状态属性 |
+| `[aria-pressed]`、`[aria-selected]`、`[aria-checked]`、`[aria-expanded]` | 选中、展开与开关状态（预设卡片、列表项、外观预设、插件开关） | ARIA 状态属性 |
+| `[aria-haspopup]`、`[aria-label]` | 定位菜单触发器与区分带文字控件 | 标准 ARIA 属性；只读语义，不依赖 DOM 位置 |
 
 插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。Windows 外壳 frame 的例外是 `html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。启动页的受限例外用 `[data-dsh-boot] > :has([data-dsh-boot-spinner])` 锚定纸卡，字标和提示用进度章的相邻关系定位；spinner 消失即整体失配。Windows 标题栏让 `body` 的 sidebar-fill 成为 caption 色，并在 `#root` 恢复应用内奶油 token；暗色另用 `div:has(> nav[aria-label])` 找到侧栏根节点恢复深蓝，只改背景色，不改侧栏布局。以上关系都由 `test/skin.test.mjs` 与桌面夹具锁住。
 
@@ -140,15 +142,8 @@ DSH_THEME_PACKAGE="C:\path\to\@deepseek-ai\dsh-client-ui-theme" pnpm run check:c
 
 输出明确区分 `repository-devDependency` 和 `requested-package`，避免用旧仓库依赖冒充目标 DSH 检查。
 
-检查内容：
-
-- ThemeRuntime 和 disposer 返回类型；
-- `['theme', 'slots']` 服务顺序；
-- provider package 顺序；
-- Sidebar/Brand/Hero Slot 的 kind/scope；
-- 全部已发送 token 是否被目标 DSH 识别；
-- owned style 协议；
-- DOM fallback、Observer 和私有 DSH import。
+检查项由 `scripts/seam-contract.mjs` 驱动，结果中的 `requiredSeam`、`ariaCoverage`、`tokenCoverage`
+和 `plugin` 是诊断入口；本文不再复制字段清单。
 
 ## 降级矩阵
 

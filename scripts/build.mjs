@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, rm, writeFile } from 'node:fs/promises'
 import ts from 'typescript'
 import { build } from 'esbuild'
 import { buildOwnedSkinCss } from './owned-skin-css.mjs'
@@ -31,23 +31,21 @@ if (emit.emitSkipped) {
   process.exit(1)
 }
 
-async function transpile(file) {
-  const source = await readFile(file, 'utf8')
-  const result = ts.transpileModule(source, {
-    compilerOptions: {
-      target: ts.ScriptTarget.ES2022,
-      module: ts.ModuleKind.ESNext,
-      isolatedModules: true,
-      removeComments: false,
-    },
-    fileName: file,
-  })
-  return result.outputText.replace(/(["'])([^"']+)\.ts\1/g, '$1$2.js$1')
-}
-
-const [index, palette, tokens] = await Promise.all([transpile('src/index.ts'), transpile('src/palette.ts'), transpile('src/tokens.ts')])
-
-await Promise.all([writeFile('lib/index.js', index), writeFile('lib/palette.js', palette), writeFile('lib/tokens.js', tokens)])
+await build({
+  entryPoints: {
+    index: 'src/index.ts',
+    palette: 'src/palette.ts',
+    tokens: 'src/tokens.ts',
+  },
+  outdir: 'lib',
+  bundle: true,
+  format: 'esm',
+  platform: 'neutral',
+  target: 'es2022',
+  sourcemap: false,
+  legalComments: 'none',
+  logLevel: 'silent',
+})
 
 const ownedSkinCss = await buildOwnedSkinCss()
 
@@ -97,4 +95,4 @@ ${clientModule.text}
 `
 await writeFile('lib/client.js', clientBundle)
 
-console.log('Built host/token modules, declarations, and the esbuild client skin bundle.')
+console.log('Built declarations, esbuild host modules, and the esbuild client skin bundle.')

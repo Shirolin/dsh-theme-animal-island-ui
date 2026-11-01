@@ -1,18 +1,15 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
+import { PROVIDER_ORDER } from '../scripts/seam-contract.mjs'
 
 const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
 
 test('package exposes DSH client, provider ordering, peers, and prepack', () => {
   assert.equal(packageJson.version, '0.3.22')
+  assert.equal(packageJson.main, 'lib/index.js')
   assert.equal(packageJson.dsh.client.platform, 'web')
-  assert.deepEqual(packageJson.dsh.client.inject, [
-    '@deepseek-ai/dsh-client-ui-theme',
-    '@deepseek-ai/dsh-client-ui-renderer',
-    '@deepseek-ai/dsh-client-ui-sidebar',
-    '@deepseek-ai/dsh-client-ui-conversation',
-  ])
+  assert.deepEqual(packageJson.dsh.client.inject, PROVIDER_ORDER)
   assert.equal(packageJson.exports['./client'].default, './lib/client.js')
   assert.equal(packageJson.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(packageJson.scripts.prepack, 'pnpm run build')
@@ -59,4 +56,23 @@ test('built client does not embed DSH ThemeRuntime or Sidebar implementations', 
   const bundle = await readFile(new URL('../lib/client.js', import.meta.url), 'utf8')
   assert.doesNotMatch(bundle, /class ThemeRuntime|function ThemeRuntime/)
   assert.doesNotMatch(bundle, /class SidebarRoot|function SidebarRoot/)
+})
+
+test('host runtime modules are self-contained ESM', async () => {
+  for (const file of ['index.js', 'palette.js', 'tokens.js']) {
+    const source = await readFile(new URL(`../lib/${file}`, import.meta.url), 'utf8')
+    assert.match(source, /\bexport\b/, `${file} is not an ESM module`)
+    assert.doesNotMatch(source, /from\s+['"][^'"]+\.ts['"]/, `${file} retains a TypeScript import specifier`)
+  }
+})
+
+test('host runtime modules expose the published export interface', async () => {
+  const suffix = `?exports=${Date.now()}`
+  const index = await import(new URL(`../lib/index.js${suffix}`, import.meta.url))
+  const palette = await import(new URL(`../lib/palette.js${suffix}`, import.meta.url))
+  const tokens = await import(new URL(`../lib/tokens.js${suffix}`, import.meta.url))
+
+  assert.deepEqual(Object.keys(index).sort(), ['apply'])
+  assert.deepEqual(Object.keys(palette).sort(), ['ANIMAL_ISLAND_DARK', 'ANIMAL_ISLAND_LIGHT', 'ANIMAL_ISLAND_PALETTES'])
+  assert.deepEqual(Object.keys(tokens).sort(), ['ANIMAL_ISLAND_PALETTES', 'buildTokenOverrides', 'buildTokens', 'contrastRatio'])
 })

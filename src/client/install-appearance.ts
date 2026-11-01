@@ -1,6 +1,6 @@
-import type { ClientContextLike } from './context.ts'
+import type { SlotRegistryLike } from './context.ts'
 import { AppearanceTab } from './components/appearance-tab.tsx'
-import { installAppearance as installAppearanceLifecycle } from './appearance.ts'
+import type { InstalledSkin } from './install.ts'
 
 export const APPEARANCE_TAB_ID = 'animal-island-appearance'
 
@@ -9,7 +9,7 @@ function tabLabel(): string {
 }
 
 /**
- * Install the per-client appearance preference and its Settings → Plugins tab.
+ * Register the per-client appearance preference and its Settings → Plugins tab.
  *
  * The tab is a public list slot (`settings.plugins.tab`) declared by the Plugins
  * settings section, so `slots.inject` defers registration until that section is
@@ -17,19 +17,17 @@ function tabLabel(): string {
  * keeps the CSS default. Preferences live in localStorage because this is a
  * per-device visual choice, not a Host-owned setting.
  */
-export function installAppearance(ctx: ClientContextLike): void {
-  if (typeof document === 'undefined' || !document.documentElement) return
-  const root = document.documentElement
-  ctx.effect(() => installAppearanceLifecycle(root), 'animal-island-ui:appearance')
-
-  const slots = ctx.slots
-  if (!slots || typeof slots.inject !== 'function' || typeof slots.register !== 'function') return
-
-  ctx.effect(
-    () =>
-      slots.inject('settings.plugins.tab', () =>
-        slots.register({ name: 'settings.plugins.tab', id: APPEARANCE_TAB_ID, order: 40, label: tabLabel }, AppearanceTab),
-      ),
-    'animal-island-ui:appearance-tab',
+export function registerAppearanceTab(slots: SlotRegistryLike, installedSkin: InstalledSkin): () => void {
+  return slots.inject('settings.plugins.tab', () =>
+    slots.register(
+      {
+        name: 'settings.plugins.tab',
+        id: APPEARANCE_TAB_ID,
+        order: 40,
+        label: tabLabel,
+        inject: () => ({ appearance: installedSkin.appearance }),
+      },
+      AppearanceTab,
+    ),
   )
 }

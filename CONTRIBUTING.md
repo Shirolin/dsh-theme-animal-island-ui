@@ -38,8 +38,8 @@ pnpm run check:compat   # 对照锁定的 DSH 版本检查接缝与 token
 2. 不改写插件自带布局（设置页的网格、行内 flex、滚动、行高）—— 最多用 token 影响颜色；
 3. 不用「事后清零几何」压制自己的规则，改成让规则一开始就不匹配（`:not()` 挂在**主语**上，不要挂在选择器中段）。
 
-新增任何 `data-*` / ARIA 接缝，必须同时在 `test/skin.test.mjs` 的白名单里登记，并在
-`docs/compatibility.md` 的表里写明理由 —— 测试会拒绝未登记的 hook。
+新增任何 `data-*` / ARIA 接缝，必须先在 `scripts/seam-contract.mjs` 登记用途、DSH 证据和探测方式；
+CSS 策略测试、兼容性检查与文档覆盖测试都从这份契约读取，不要在文档里再维护一份事实副本。
 
 ## 验证方式
 

@@ -1,5 +1,6 @@
 import './bundle.test.mjs'
 import './tokens.test.mjs'
+import './css-rules.test.mjs'
 import './skin.test.mjs'
 import './owned-skin-css.test.mjs'
 import './runtime.test.mjs'

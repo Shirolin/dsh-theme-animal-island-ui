@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { JSDOM, VirtualConsole } from 'jsdom'
+import { PUBLIC_SERVICES, PUBLIC_SLOTS } from '../scripts/seam-contract.mjs'
 
 const nodeRequire = createRequire(import.meta.url)
 let loadedEntry
@@ -65,7 +66,17 @@ function createSlots() {
       return dispose
     },
     register(spec, component) {
-      const entry = { key: spec.name, priority: spec.priority, component }
+      const entry = { key: spec.name, id: spec.id, priority: spec.priority, component, inject: spec.inject }
+      if (
+        registrations.some(
+          (candidate) =>
+            candidate.key === spec.name &&
+            (spec.id === undefined ? candidate.id === undefined : candidate.id === spec.id) &&
+            (candidate.priority ?? 0) === (spec.priority ?? 0),
+        )
+      ) {
+        throw new Error(`slot "${spec.name}" already has a registration at this cell and priority`)
+      }
       registrations.push(entry)
       return () => {
         const index = registrations.indexOf(entry)
@@ -100,7 +111,7 @@ test('client factory registers and releases coordinated theme, style, and public
     context.slots = slots
     const plugin = factory()
 
-    assert.deepEqual(plugin.inject, ['theme', 'slots'])
+    assert.deepEqual(plugin.inject, PUBLIC_SERVICES)
     plugin.apply(context)
 
     assert.equal(document.documentElement.getAttribute('data-dsh-animal-island-skin'), 'active')
@@ -108,19 +119,19 @@ test('client factory registers and releases coordinated theme, style, and public
     const style = document.head.querySelector('style[data-plugin="dsh-theme-animal-island-ui"]')
     assert.match(style.textContent, /data-dsh-animal-island-skin/)
     assert.match(style.textContent, /--animal-mint:\s*#19c8b9/)
-    assert.deepEqual(slots.registrations.map((entry) => entry.key).sort(), [
-      'conversation.hero.brand.mark',
-      'settings.plugins.tab',
-      'sidebar.brand.mark',
-      'sidebar.brand.name',
-    ])
-    // Brand slots keep their fixed priority; the appearance tab is an ordinary
-    // list-slot entry and carries no priority.
-    assert.ok(slots.registrations.filter((entry) => entry.key !== 'settings.plugins.tab').every((entry) => entry.priority === -100))
-    assert.ok(slots.registrations.some((entry) => entry.key === 'settings.plugins.tab'))
-    // The saved appearance preference is painted on the root as a CSS variable.
-    assert.equal(document.documentElement.style.getPropertyValue('--animal-canvas-veil'), '0.4')
-    assert.equal(document.documentElement.getAttribute('data-animal-appearance'), 'balanced')
+    assert.deepEqual(slots.registrations.map((entry) => entry.key).sort(), PUBLIC_SLOTS.map((slot) => slot.name).sort())
+    for (const entry of slots.registrations) {
+      const slot = PUBLIC_SLOTS.find((candidate) => candidate.name === entry.key)
+      assert.ok(slot, `unexpected slot registration: ${entry.key}`)
+      assert.equal(entry.priority, slot.priority ?? undefined)
+    }
+    const appearance = slots.registrations.find((entry) => entry.key === 'settings.plugins.tab').inject().appearance
+    appearance.set({ preset: 'island', veil: 0.28 })
+    assert.equal(document.documentElement.style.getPropertyValue('--animal-canvas-veil'), '0.28')
+    assert.equal(document.documentElement.getAttribute('data-animal-appearance'), 'island')
+
+    // The Settings entry receives the installed store and paints the same root.
+    assert.equal(appearance.getSnapshot().preset, 'island')
 
     disposeEffects()
     assert.equal(disposedTheme, 1)
@@ -189,6 +200,52 @@ test('owned skin apply/dispose is idempotent across repeated HMR cycles', () => 
       assert.equal(document.head.querySelectorAll('style[data-plugin="dsh-theme-animal-island-ui"]').length, 0)
       assert.equal(document.documentElement.hasAttribute('data-dsh-animal-island-skin'), false)
     }
+  })
+})
+
+test('overlapping installs share one root lifecycle and restore the previous root after the final dispose', () => {
+  withDocument((document) => {
+    const root = document.documentElement
+    root.setAttribute('data-dsh-animal-island-skin', 'previous')
+    root.style.setProperty('--animal-canvas-veil', '0.33')
+    root.setAttribute('data-animal-appearance', 'custom')
+
+    const plugin = factory()
+    const first = createContext({
+      overrideTokens() {
+        return () => undefined
+      },
+    })
+    const second = createContext({
+      overrideTokens() {
+        return () => undefined
+      },
+    })
+    const slots = createSlots()
+    first.context.slots = slots
+    second.context.slots = slots
+
+    plugin.apply(first.context)
+    plugin.apply(second.context)
+    assert.equal(document.head.querySelectorAll('style[data-plugin="dsh-theme-animal-island-ui"]').length, 1)
+    assert.equal(root.getAttribute('data-dsh-animal-island-skin'), 'active')
+    assert.equal(root.style.getPropertyValue('--animal-canvas-veil'), '0.4')
+    assert.equal(root.getAttribute('data-animal-appearance'), 'balanced')
+    assert.deepEqual(slots.registrations.map((entry) => entry.key).sort(), PUBLIC_SLOTS.map((slot) => slot.name).sort())
+
+    first.disposeEffects()
+    assert.equal(document.head.querySelectorAll('style[data-plugin="dsh-theme-animal-island-ui"]').length, 1)
+    assert.equal(root.getAttribute('data-dsh-animal-island-skin'), 'active')
+    assert.equal(root.style.getPropertyValue('--animal-canvas-veil'), '0.4')
+    assert.equal(root.getAttribute('data-animal-appearance'), 'balanced')
+    assert.deepEqual(slots.registrations.map((entry) => entry.key).sort(), PUBLIC_SLOTS.map((slot) => slot.name).sort())
+
+    second.disposeEffects()
+    assert.equal(document.head.querySelectorAll('style[data-plugin="dsh-theme-animal-island-ui"]').length, 0)
+    assert.equal(root.getAttribute('data-dsh-animal-island-skin'), 'previous')
+    assert.equal(root.style.getPropertyValue('--animal-canvas-veil'), '0.33')
+    assert.equal(root.getAttribute('data-animal-appearance'), 'custom')
+    assert.deepEqual(slots.registrations, [])
   })
 })
 

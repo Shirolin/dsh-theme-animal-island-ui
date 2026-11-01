@@ -12,6 +12,7 @@ import { existsSync, mkdirSync, renameSync, rmSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isDshRuntime } from './dsh-runtime.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const asarPackage = '@electron/asar@4.3.1'
@@ -32,14 +33,6 @@ export function findDshAsar(explicitPath) {
   }
 
   throw new Error('DeepSeek Harness app.asar was not found; pass --asar <path> or set DSH_DESKTOP_ASAR')
-}
-
-function isDshRuntime(dsh) {
-  return [
-    'node_modules/@deepseek-ai/dsh-web-frontend/dist/assets',
-    'node_modules/@deepseek-ai/dsh-client-ui-theme/lib/client.js',
-    'node_modules/@deepseek-ai/dsh-client-ui-sidebar/lib/client.js',
-  ].every((path) => existsSync(join(dsh, path)))
 }
 
 function runNpx(args) {

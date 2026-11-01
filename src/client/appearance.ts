@@ -14,6 +14,13 @@ export interface AppearanceState {
   veil: number
 }
 
+export interface AppearanceStore {
+  getSnapshot(): AppearanceState
+  subscribe(listener: () => void): () => void
+  set(next: AppearanceState): AppearanceState
+  dispose(): void
+}
+
 export const APPEARANCE_PRESETS = {
   paper: 0.52,
   balanced: 0.4,
@@ -84,44 +91,52 @@ function clearAppearance(root: HTMLElement): void {
   root.removeAttribute('data-animal-appearance')
 }
 
-let current: AppearanceState = DEFAULT_STATE
-let activeRoot: HTMLElement | undefined
-const listeners = new Set<() => void>()
-
-export function getAppearance(): AppearanceState {
-  return current
-}
-
-export function subscribeAppearance(listener: () => void): () => void {
-  listeners.add(listener)
-  return () => {
-    listeners.delete(listener)
-  }
-}
-
-/** Persist, paint, and notify. The installed root owns the visible lifecycle. */
-export function setAppearance(next: AppearanceState): AppearanceState {
-  current = normalizeAppearance(next)
-  writeAppearance(current)
-  if (activeRoot) paintAppearance(current, activeRoot)
-  for (const listener of listeners) listener()
-  return current
-}
-
-/** Load the saved preference, paint it, and return the matching disposer. */
-export function installAppearance(root: HTMLElement): () => void {
-  activeRoot = root
-  current = readAppearance()
-  paintAppearance(current, root)
+/** Create the appearance store owned by one installed skin root. */
+export function createAppearanceStore(root: HTMLElement): AppearanceStore {
+  const previousVeil = root.style.getPropertyValue('--animal-canvas-veil')
+  const previousVeilPriority = root.style.getPropertyPriority('--animal-canvas-veil')
+  const previousPreset = root.getAttribute('data-animal-appearance')
+  let current = readAppearance()
   let active = true
-  return () => {
-    if (!active) return
-    active = false
-    if (activeRoot === root) {
+  const listeners = new Set<() => void>()
+
+  try {
+    paintAppearance(current, root)
+  } catch (error) {
+    clearAppearance(root)
+    if (previousVeil !== '') root.style.setProperty('--animal-canvas-veil', previousVeil, previousVeilPriority)
+    if (previousPreset !== null) root.setAttribute('data-animal-appearance', previousPreset)
+    throw error
+  }
+
+  return {
+    getSnapshot() {
+      return current
+    },
+    subscribe(listener) {
+      if (!active) return () => undefined
+      listeners.add(listener)
+      return () => {
+        listeners.delete(listener)
+      }
+    },
+    set(next) {
+      if (!active) return current
+      current = normalizeAppearance(next)
+      writeAppearance(current)
+      paintAppearance(current, root)
+      for (const listener of [...listeners]) listener()
+      return current
+    },
+    dispose() {
+      if (!active) return
+      active = false
+      listeners.clear()
       clearAppearance(root)
-      activeRoot = undefined
+      if (previousVeil !== '') root.style.setProperty('--animal-canvas-veil', previousVeil, previousVeilPriority)
+      if (previousPreset === null) root.removeAttribute('data-animal-appearance')
+      else root.setAttribute('data-animal-appearance', previousPreset)
       current = DEFAULT_STATE
-    }
-    listeners.clear()
+    },
   }
 }

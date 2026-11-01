@@ -21,13 +21,14 @@
  *
  * Output: artifacts/smoke/<name>-<variant>-smoke.png (git-ignored).
  */
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { JSDOM } from 'jsdom'
+import { isDshRuntime, readDshBundleCss, readDshFrontendCss, readDshThemeBaseCss } from './dsh-runtime.mjs'
 import { buildOwnedSkinCss } from './owned-skin-css.mjs'
 import { prepareDshRuntime } from './prepare-dsh-runtime.mjs'
 
@@ -56,7 +57,7 @@ const dsh =
   useDesktop || explicitAsar !== undefined
     ? prepareDshRuntime({ asarPath: explicitAsar })
     : resolve(explicitDsh ?? process.env.DSH_APP ?? join(homedir(), '.dsh', 'app'))
-if (!existsSync(join(dsh, 'node_modules', '@deepseek-ai', 'dsh-web-frontend'))) {
+if (!isDshRuntime(dsh)) {
   console.error(`no DSH install at ${dsh}\n  pass --dsh <app dir> or set DSH_APP`)
   process.exit(1)
 }
@@ -108,34 +109,9 @@ if (chrome === undefined) {
   process.exit(1)
 }
 
-/** Real frontend stylesheets the app ships. */
-async function readDshCss() {
-  const assets = join(dsh, 'node_modules', '@deepseek-ai', 'dsh-web-frontend', 'dist', 'assets')
-  const files = (await readdir(assets)).filter((file) => file.endsWith('.css'))
-  return Promise.all(files.map((file) => readFile(join(assets, file), 'utf8')))
-}
-
-/** Inline CSS modules a client bundle injects as `const css = "…"` strings. */
-async function readBundleCss(packageName) {
-  for (const candidate of [join(dsh, 'node_modules', packageName, 'lib', 'client.js'), join(dsh, 'node_modules', packageName, 'client', 'client.js')]) {
-    if (!existsSync(candidate)) continue
-    const text = await readFile(candidate, 'utf8')
-    const blocks = [...text.matchAll(/var \w+_css_default = "((?:[^"\\]|\\.)*)";/g), ...text.matchAll(/const css(?:\$\d+)? = "((?:[^"\\]|\\.)*)";/g)]
-    return blocks.map((match) => match[1].replaceAll('\\"', '"').replaceAll('\\\\', '\\')).join('\n')
-  }
-  throw new Error(`plugin CSS not found: ${packageName}`)
-}
-
-const frontendCss = (await readDshCss()).join('\n')
-const themeBaseCss = [
-  ...(await readFile(join(dsh, 'node_modules', '@deepseek-ai', 'dsh-client-ui-theme', 'lib', 'client.js'), 'utf8')).matchAll(
-    /var \w+_css_default = "((?:[^"\\]|\\.)*)";/g,
-  ),
-]
-  .map((match) => match[1].replaceAll('\\"', '"'))
-  .join('\n')
-  .replaceAll('\\\\', '\\')
-const pluginCss = (await Promise.all((config.pluginCss ?? []).map(readBundleCss))).join('\n')
+const frontendCss = await readDshFrontendCss(dsh)
+const themeBaseCss = await readDshThemeBaseCss(dsh)
+const pluginCss = (await Promise.all((config.pluginCss ?? []).map((packageName) => readDshBundleCss(dsh, packageName)))).join('\n')
 
 const tokensPath = join(root, 'lib', 'tokens.js')
 if (!existsSync(tokensPath)) {

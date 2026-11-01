@@ -3,8 +3,12 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { JSDOM } from 'jsdom'
 import { contrastRatio } from '../lib/tokens.js'
+import { ALLOWED_DATA_HOOKS, PUBLIC_SLOTS, REVIEWED_ARIA_ATTRIBUTES, REVIEWED_ARIA_ROLES } from '../scripts/seam-contract.mjs'
+import { queryCssRules } from './css-rules.mjs'
 
 const css = await readFile(new URL('../src/client/skin.css', import.meta.url), 'utf8')
+const ruleQuery = queryCssRules(css)
+const selectors = ruleQuery.all.map((rule) => rule.selector).join('\n')
 const slots = await readFile(new URL('../src/client/slots.ts', import.meta.url), 'utf8')
 const install = await readFile(new URL('../src/client/install.ts', import.meta.url), 'utf8')
 const brand = await readFile(new URL('../src/client/components/brand.tsx', import.meta.url), 'utf8')
@@ -17,49 +21,17 @@ const bootLoadingFixture = await readFile(new URL('./fixtures/boot-loading/body.
 const bootFailureFixture = await readFile(new URL('./fixtures/boot-failure/body.html', import.meta.url), 'utf8')
 
 test('skin CSS is plugin-scoped and avoids generated DSH selectors', () => {
-  assert.match(css, /html\[data-dsh-animal-island-skin\]/)
-  assert.match(css, /\.animal-island-brand__mark/)
-  assert.doesNotMatch(css, /(?<![A-Za-z0-9_-])\.[A-Za-z][A-Za-z0-9-]*_[A-Za-z0-9]{5,}(?![A-Za-z0-9_-])/)
-  assert.doesNotMatch(css, /\[data-slot[=\]]/)
-  assert.doesNotMatch(css, /data-cordis-panel/)
-  assert.doesNotMatch(css, /:nth-child|:first-child|:last-child/)
+  assert.match(selectors, /html\[data-dsh-animal-island-skin\]/)
+  assert.match(selectors, /\.animal-island-brand__mark/)
+  assert.doesNotMatch(selectors, /(?<![A-Za-z0-9_-])\.[A-Za-z][A-Za-z0-9-]*_[A-Za-z0-9]{5,}(?![A-Za-z0-9_-])/)
+  assert.doesNotMatch(selectors, /\[data-slot[=\]]/)
+  assert.doesNotMatch(selectors, /data-cordis-panel/)
+  assert.doesNotMatch(selectors, /:nth-child|:first-child|:last-child/)
 })
 
 test('skin uses only the reviewed stable data hooks', () => {
-  const hooks = [...css.matchAll(/\[data-([a-z][a-z0-9-]*)(?:[=\]])/g)].map((match) => match[1])
-  const allowed = new Set([
-    'dsh-animal-island-skin',
-    'ds-dark-theme',
-    'composer-card',
-    'conversation-header-corner',
-    'state',
-    // DSH's own composer trigger panel (input-trigger MenuView) carries this
-    // attribute for its dismiss logic, so the skin can key popover chrome off it.
-    'trigger-menu',
-    // Markdown code-block banner: the language label and copy button inherit
-    // label-primary, which is unreadable on the dark code island in light mode.
-    'code-block-banner',
-    // Right sidebar document preview: its flat views (the highlighted code body
-    // and the plain-text pages) keep DSH's own text colour instead of the
-    // theme's dark-island code foreground.
-    'code-preview',
-    'textpreview-plain',
-    // Open-target split button: DSH exposes this marker for its file-explorer
-    // and dropdown actions; light mode needs a perceivable boundary between them.
-    'open-target',
-    // Plugin-manager rows use their own identity attributes. The skin paints a
-    // quiet light-mode reading surface without changing the plugin's list layout.
-    'plugin-item',
-    'plugin-package',
-    // Windows desktop shell marker: the shell paints its outer frame with the
-    // opaque sidebar fill (macOS clears it); the skin clears it so the canvas
-    // behind the UI is visible. deepseek-harness discussion #9490.
-    'windows-titlebar',
-    // DSH's pre-render boot screen. The renderer writes the root marker and the
-    // progress-seal marker itself; the skin only decorates those existing nodes.
-    'dsh-boot',
-    'dsh-boot-spinner',
-  ])
+  const hooks = [...selectors.matchAll(/\[data-([a-z][a-z0-9-]*)(?:[=\]])/g)].map((match) => match[1])
+  const allowed = new Set(ALLOWED_DATA_HOOKS)
   assert.deepEqual(
     [...new Set(hooks)].filter((hook) => !allowed.has(hook)),
     [],
@@ -67,17 +39,20 @@ test('skin uses only the reviewed stable data hooks', () => {
 })
 
 test('light open-target boundaries stay perceivable', () => {
-  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const boundary = rules.find(
+  const boundary = ruleQuery.find(
     (rule) =>
-      rule.includes('body:not([data-ds-dark-theme])') && rule.includes('[data-open-target]') && /border-color:\s*var\(--animal-control-border\)/.test(rule),
+      rule.selector.includes('body:not([data-ds-dark-theme])') &&
+      rule.selector.includes('[data-open-target]') &&
+      rule.declaration('border-color')?.value === 'var(--animal-control-border)' &&
+      rule.declaration('border-color')?.important,
   )
-  const divider = rules.find(
+  const divider = ruleQuery.find(
     (rule) =>
-      rule.includes('body:not([data-ds-dark-theme])') &&
-      rule.includes('[data-open-target]') &&
-      rule.includes('button[aria-haspopup="menu"]') &&
-      /border-left-color:\s*var\(--animal-control-border\)/.test(rule),
+      rule.selector.includes('body:not([data-ds-dark-theme])') &&
+      rule.selector.includes('[data-open-target]') &&
+      rule.selector.includes('button[aria-haspopup="menu"]') &&
+      rule.declaration('border-left-color')?.value === 'var(--animal-control-border)' &&
+      rule.declaration('border-left-color')?.important,
   )
 
   assert.ok(boundary, 'the light open-target boundary override is missing')
@@ -86,24 +61,23 @@ test('light open-target boundaries stay perceivable', () => {
 })
 
 test('light plugin controls stay perceivable and plugin rows keep a reading surface', () => {
-  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const closedSwitch = rules.find(
+  const closedSwitch = ruleQuery.find(
     (candidate) =>
-      candidate.includes('body:not([data-ds-dark-theme])') &&
-      candidate.includes('button[role="switch"]') &&
-      /box-shadow:\s*inset 0 0 0 1\.5px var\(--animal-control-border\)/.test(candidate),
+      candidate.selector.includes('body:not([data-ds-dark-theme])') &&
+      candidate.selector.includes('button[role="switch"]') &&
+      candidate.declaration('box-shadow')?.value.startsWith('inset 0 0 0 1.5px var(--animal-control-border)'),
   )
-  const checkedSwitch = rules.find(
+  const checkedSwitch = ruleQuery.find(
     (candidate) =>
-      candidate.includes('body:not([data-ds-dark-theme])') &&
-      candidate.includes('button[role="switch"][aria-checked="true"]') &&
-      /background-color:\s*var\(--animal-mint-deep\)/.test(candidate),
+      candidate.selector.includes('body:not([data-ds-dark-theme])') &&
+      candidate.selector.includes('button[role="switch"][aria-checked="true"]') &&
+      candidate.declaration('background-color')?.value === 'var(--animal-mint-deep)',
   )
-  const pluginRow = rules.find(
+  const pluginRow = ruleQuery.find(
     (candidate) =>
-      candidate.includes('body:not([data-ds-dark-theme])') &&
-      candidate.includes('li:is([data-plugin-item], [data-plugin-package])') &&
-      /background-color:\s*rgba\(250, 248, 243, 0\.48\)/.test(candidate),
+      candidate.selector.includes('body:not([data-ds-dark-theme])') &&
+      candidate.selector.includes('li:is([data-plugin-item], [data-plugin-package])') &&
+      candidate.declaration('background-color')?.value === 'rgba(250, 248, 243, 0.48)',
   )
 
   assert.ok(closedSwitch, 'the light closed-switch boundary is missing')
@@ -116,19 +90,14 @@ test('light plugin controls stay perceivable and plugin rows keep a reading surf
 })
 
 test('composer 3D send styling leaves text-bearing triggers flat', () => {
-  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0].replaceAll(/\s+/g, ' ').trim())
-  const sendRules = rules.filter((rule) => rule.includes('[data-composer-card] button[aria-label]'))
+  const sendRules = ruleQuery.filter((rule) => rule.selector.includes('[data-composer-card] button[aria-label]'))
 
   assert.ok(sendRules.length >= 5, 'the composer send-key rules are missing')
   for (const rule of sendRules) {
-    assert.match(rule, /:has\(svg\):not\(:has\(span\)\)/)
+    assert.match(rule.selector, /:has\(svg\):not\(:has\(span\)\)/)
   }
 
-  const selector = sendRules
-    .find((rule) => rule.includes('position: relative'))
-    ?.slice(0, sendRules.find((rule) => rule.includes('position: relative')).indexOf('{'))
-    .trim()
+  const selector = sendRules.find((rule) => rule.declaration('position')?.value === 'relative')?.selector
   assert.ok(selector, 'the base send-key selector is missing')
 
   const { document } = new JSDOM(`
@@ -148,14 +117,11 @@ test('composer 3D send styling leaves text-bearing triggers flat', () => {
 })
 
 test('composer focus ring colors the speech-bubble tail', () => {
-  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  const rule = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)]
-    .map((match) => match[0])
-    .find((candidate) => candidate.includes('[data-composer-card]:focus-within::before'))
+  const rule = ruleQuery.find((candidate) => candidate.selector.includes('[data-composer-card]:focus-within::before'))
 
   assert.ok(rule, 'the focused composer tail rule is missing')
-  assert.match(rule, /border-right-color:\s*var\(--animal-mint-deep\)/)
-  assert.match(rule, /border-bottom-color:\s*var\(--animal-mint-deep\)/)
+  assert.equal(rule.declaration('border-right-color')?.value, 'var(--animal-mint-deep)')
+  assert.equal(rule.declaration('border-bottom-color')?.value, 'var(--animal-mint-deep)')
 })
 
 test('windows shell frame is transparent and its content corner is flattened', () => {
@@ -164,31 +130,30 @@ test('windows shell frame is transparent and its content corner is flattened', (
   // Without this shim the veil composites over the opaque sidebar fill and the
   // slider looks dead only on desktop, and the shell corner shows as a stray
   // 16px curve against the themed canvas.
-  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  const frame = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)]
-    .map((match) => match[0])
-    .find((candidate) => candidate.includes('[data-windows-titlebar] #root > div > div'))
+  const frame = ruleQuery.find((candidate) => candidate.selector.includes('[data-windows-titlebar] #root > div > div'))
   assert.ok(frame, 'the Windows shell frame workaround is missing')
-  assert.match(frame, /background:\s*transparent\s*!important/)
+  assert.equal(frame.declaration('background')?.value, 'transparent')
+  assert.equal(frame.declaration('background')?.important, true)
   // DSH sets the token on `.frame` itself, so it must be overridden there too;
   // setting it on <html> is shadowed and the 16px corner stays.
-  assert.match(frame, /--dsh-windows-content-radius:\s*0px/)
+  assert.equal(frame.declaration('--dsh-windows-content-radius')?.value, '0px')
 })
 
 test('windows dark caption keeps a third surface above the sidebar', () => {
-  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const caption = rules.find(
+  const caption = ruleQuery.find(
     (rule) =>
-      rule.includes('html[data-windows-titlebar]') &&
-      rule.includes('body[data-ds-dark-theme]') &&
-      /--dsw-specific-sidebar-fill:\s*#1f3034\s*!important/.test(rule),
+      rule.selector.includes('html[data-windows-titlebar]') &&
+      rule.selector.includes('body[data-ds-dark-theme]') &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.value === '#1f3034' &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.important,
   )
-  const sidebar = rules.find(
+  const sidebar = ruleQuery.find(
     (rule) =>
-      rule.includes('html[data-windows-titlebar]') &&
-      rule.includes('body[data-ds-dark-theme]') &&
-      rule.includes('div:has(> nav[aria-label])') &&
-      /background-color:\s*#303444\s*!important/.test(rule),
+      rule.selector.includes('html[data-windows-titlebar]') &&
+      rule.selector.includes('body[data-ds-dark-theme]') &&
+      rule.selector.includes('div:has(> nav[aria-label])') &&
+      rule.declaration('background-color')?.value === '#303444' &&
+      rule.declaration('background-color')?.important,
   )
 
   assert.ok(caption, 'the dark Windows caption token is missing')
@@ -196,26 +161,28 @@ test('windows dark caption keeps a third surface above the sidebar', () => {
 })
 
 test('windows light caption uses the canvas mint while the app keeps its cream surfaces', () => {
-  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const caption = rules.find(
+  const caption = ruleQuery.find(
     (rule) =>
-      rule.includes('html[data-windows-titlebar]') &&
-      rule.includes('body:not([data-ds-dark-theme])') &&
-      /--dsw-specific-sidebar-fill:\s*#e7efe5\s*!important/.test(rule),
+      rule.selector.includes('html[data-windows-titlebar]') &&
+      rule.selector.includes('body:not([data-ds-dark-theme])') &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.value === '#e7efe5' &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.important,
   )
-  const appRoot = rules.find(
+  const appRoot = ruleQuery.find(
     (rule) =>
-      rule.includes('html[data-windows-titlebar]') &&
-      rule.includes('body:not([data-ds-dark-theme])') &&
-      rule.includes('#root') &&
-      /--dsw-specific-sidebar-fill:\s*rgba\(250, 248, 243, 0\.82\)\s*!important/.test(rule),
+      rule.selector.includes('html[data-windows-titlebar]') &&
+      rule.selector.includes('body:not([data-ds-dark-theme])') &&
+      rule.selector.includes('#root') &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.value === 'rgba(250, 248, 243, 0.82)' &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.important,
   )
-  const sidebar = rules.find(
+  const sidebar = ruleQuery.find(
     (rule) =>
-      rule.includes('html[data-windows-titlebar]') &&
-      rule.includes('body:not([data-ds-dark-theme])') &&
-      rule.includes('div:has(> nav[aria-label])') &&
-      /background-color:\s*rgba\(250, 248, 243, 0\.82\)\s*!important/.test(rule),
+      rule.selector.includes('html[data-windows-titlebar]') &&
+      rule.selector.includes('body:not([data-ds-dark-theme])') &&
+      rule.selector.includes('div:has(> nav[aria-label])') &&
+      rule.declaration('background-color')?.value === 'rgba(250, 248, 243, 0.82)' &&
+      rule.declaration('background-color')?.important,
   )
 
   assert.ok(caption, 'the light Windows caption token is missing')
@@ -227,23 +194,26 @@ test('header ribbon colors the current crumb span directly', () => {
   // 0.2.x's `.crumbCurrent` declares label-primary on the span, which beats the
   // nav's inherited colour. The ribbon must set the span explicitly or the title
   // becomes brown-on-brown (empty-looking plank) on desktop.
-  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  const rule = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0]).find((candidate) => candidate.includes('nav :where(span)'))
+  const rule = ruleQuery.find((candidate) => candidate.selector.includes('nav :where(span)'))
   assert.ok(rule, 'the ribbon crumb span colour rule is missing')
-  assert.match(rule, /color:\s*#fff3d6\s*!important/)
+  assert.equal(rule.declaration('color')?.value, '#fff3d6')
+  assert.equal(rule.declaration('color')?.important, true)
 })
 
 test('light conversation header keeps a quiet but visible divider', () => {
-  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const rule = rules.find(
+  const rule = ruleQuery.find(
     (candidate) =>
-      candidate.includes('body:not([data-ds-dark-theme])') &&
-      candidate.includes('header:has([data-conversation-header-corner])') &&
-      /border-bottom-color:\s*#b9aa90\s*!important/.test(candidate),
+      candidate.selector.includes('body:not([data-ds-dark-theme])') &&
+      candidate.selector.includes('header:has([data-conversation-header-corner])') &&
+      candidate.declaration('border-bottom-color')?.value === '#b9aa90' &&
+      candidate.declaration('border-bottom-color')?.important,
   )
 
   assert.ok(rule, 'the light conversation header divider override is missing')
-  assert.doesNotMatch(rule, /border-(?:width|bottom-width):/)
+  assert.equal(
+    rule.declarations.some((declaration) => declaration.property === 'border-width' || declaration.property === 'border-bottom-width'),
+    false,
+  )
   assert.ok(contrastRatio('#b9aa90', '#d2e7d5') >= 1.5)
 })
 
@@ -253,7 +223,7 @@ test('slot installation uses public contracts without DOM scanning', () => {
     assert.doesNotMatch(source, /(?<![A-Za-z0-9_-])\.[A-Za-z][A-Za-z0-9-]*_[A-Za-z0-9]{5,}(?![A-Za-z0-9_-])/)
   }
   assert.doesNotMatch(slots, /register\(\{\s*name:\s*['"]sidebar['"]/)
-  for (const key of ['sidebar.brand.mark', 'sidebar.brand.name', 'conversation.hero.brand.mark']) {
+  for (const key of PUBLIC_SLOTS.filter((slot) => slot.priority === -100).map((slot) => slot.name)) {
     assert.match(slots, new RegExp(key.replaceAll('.', '\\.')))
   }
 })
@@ -271,20 +241,22 @@ test('ticket selectors reach through DSH slot wrappers', () => {
 })
 
 test('conversation hero renders a responsive day and night island title scene', () => {
-  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-
-  const frame = rules.find((rule) => rule.includes('div[class]:has(> span > div > .animal-island-hero__brand)') && /min-height:\s*142px/.test(rule))
+  const frame = ruleQuery.find(
+    (rule) => rule.selector.includes('div[class]:has(> span > div > .animal-island-hero__brand)') && rule.declaration('min-height')?.value === '142px',
+  )
   assert.ok(frame, 'the island title scene is missing')
-  assert.match(frame, /width:\s*min\(100%,\s*700px\)/)
-  assert.match(frame, /border:\s*0/)
-  assert.match(frame, /box-shadow:\s*none/)
-  assert.doesNotMatch(frame, /\[data-slot/)
+  assert.equal(frame.declaration('width')?.value, 'min(100%, 700px)')
+  assert.equal(frame.declaration('border')?.value, '0')
+  assert.equal(frame.declaration('box-shadow')?.value, 'none')
+  assert.doesNotMatch(frame.selector, /\[data-slot/)
 
-  const dayScene = rules.find((rule) => rule.includes('.animal-island-hero__scenery--day') && /opacity:\s*1/.test(rule))
+  const dayScene = ruleQuery.find((rule) => rule.selector.includes('.animal-island-hero__scenery--day') && rule.declaration('opacity')?.value === '1')
   assert.ok(dayScene, 'the daylight scenery is missing')
-  const nightScene = rules.find(
-    (rule) => rule.includes('body[data-ds-dark-theme]') && rule.includes('.animal-island-hero__scenery--night') && /opacity:\s*1/.test(rule),
+  const nightScene = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('body[data-ds-dark-theme]') &&
+      rule.selector.includes('.animal-island-hero__scenery--night') &&
+      rule.declaration('opacity')?.value === '1',
   )
   assert.ok(nightScene, 'the night scenery is not enabled in dark mode')
   assert.match(brand, /animal-island-hero__scenery--day/)
@@ -292,21 +264,31 @@ test('conversation hero renders a responsive day and night island title scene', 
   assert.match(brand, /animal-island-hero__identity/)
   assert.match(brand, /className="animal-island-hero__english"\s+aria-hidden="true"/)
 
-  const title = rules.find((rule) => rule.includes('> span:has(> span + span)') && /font-size:\s*41px/.test(rule))
+  const title = ruleQuery.find((rule) => rule.selector.includes('> span:has(> span + span)') && rule.declaration('font-size')?.value === '41px')
   assert.ok(title, 'the game-opening title is missing')
-  assert.match(title, /font-weight:\s*900/)
-  assert.match(title, /white-space:\s*nowrap/)
-  assert.match(title, /animation:\s*animal-island-hero-title-in/)
+  assert.equal(title.declaration('font-weight')?.value, '900')
+  assert.equal(title.declaration('white-space')?.value, 'nowrap')
+  assert.match(title.declaration('animation')?.value ?? '', /animal-island-hero-title-in/)
 
-  const badge = rules.find((rule) => rule.includes('> span:has(> span + span) > span + span') && /transform:\s*translateY\(4px\)\s+rotate\(2deg\)/.test(rule))
+  const badge = ruleQuery.find(
+    (rule) => rule.selector.includes('> span:has(> span + span) > span + span') && rule.declaration('transform')?.value === 'translateY(4px) rotate(2deg)',
+  )
   assert.ok(badge, 'the preview badge must sit beside the title')
-  assert.match(badge, /border-radius:\s*999px/)
+  assert.equal(badge.declaration('border-radius')?.value, '999px')
 
-  const mobile = css.slice(css.indexOf('@media (max-width: 520px)'))
-  assert.match(mobile, /min-height:\s*124px/)
-  assert.match(mobile, /font-size:\s*34px/)
-  assert.match(css, /@media \(max-width: 360px\)[\s\S]*font-size:\s*30px/)
-  assert.match(css, /prefers-reduced-motion[\s\S]*\.animal-island-hero__scenery \*[\s\S]*animation:\s*none !important/)
+  const inMedia = (rule, condition) => rule.atRules.some((atRule) => atRule.includes(condition))
+  assert.ok(ruleQuery.find((rule) => inMedia(rule, 'max-width: 520px') && rule.declaration('min-height')?.value === '124px'))
+  assert.ok(ruleQuery.find((rule) => inMedia(rule, 'max-width: 520px') && rule.declaration('font-size')?.value === '34px'))
+  assert.ok(ruleQuery.find((rule) => inMedia(rule, 'max-width: 360px') && rule.declaration('font-size')?.value === '30px'))
+  assert.ok(
+    ruleQuery.find(
+      (rule) =>
+        rule.selector.includes('.animal-island-hero__scenery *') &&
+        inMedia(rule, 'prefers-reduced-motion: reduce') &&
+        rule.declaration('animation')?.value === 'none' &&
+        rule.declaration('animation')?.important,
+    ),
+  )
 })
 
 test('owned CSS hard-coded text and focus combinations remain readable', () => {
@@ -320,59 +302,93 @@ test('owned CSS hard-coded text and focus combinations remain readable', () => {
   for (const background of ['#fffbe7', '#d2e7d5', '#e5c99b', '#f0e8d8']) {
     assert.ok(contrastRatio('#0b6d64', background) >= 3, `deep mint focus on ${background}`)
   }
-  for (const value of ['#6f451f', '#fffbe7', '#2a2520', '#8a5a33', '#5a3d24', '#0b6d64']) {
-    assert.match(css, new RegExp(value))
-  }
-  assert.doesNotMatch(css, /#9c7200/i)
+  const root = ruleQuery.find((rule) => rule.selector === 'html[data-dsh-animal-island-skin]')
+  assert.equal(root?.declaration('--animal-ink')?.value, '#6f451f')
+  assert.equal(root?.declaration('--animal-mint-deep')?.value, '#0b6d64')
+  assert.ok(
+    ruleQuery.find(
+      (rule) =>
+        rule.selector.includes('[data-composer-card]') &&
+        rule.declaration('background-color')?.value === '#fffbe7' &&
+        rule.declaration('background-color')?.important,
+    ),
+  )
+  assert.ok(
+    ruleQuery.find(
+      (rule) =>
+        rule.selector.includes('body[data-ds-dark-theme]') &&
+        rule.selector.includes('[data-composer-card]') &&
+        rule.declaration('background-color')?.value === '#2a2520' &&
+        rule.declaration('background-color')?.important,
+    ),
+  )
+  assert.ok(
+    ruleQuery.find(
+      (rule) => rule.selector.includes('header:has([data-conversation-header-corner])') && rule.declaration('background-color')?.value === '#8a5a33',
+    ),
+  )
+  assert.ok(
+    ruleQuery.find(
+      (rule) =>
+        rule.selector.includes('body[data-ds-dark-theme]') &&
+        rule.selector.includes('header:has([data-conversation-header-corner])') &&
+        rule.declaration('background-color')?.value === '#5a3d24',
+    ),
+  )
+  assert.equal(
+    ruleQuery.all.some((rule) => rule.declarations.some((declaration) => /#9c7200|rgb\(156, 114, 0\)/i.test(declaration.value))),
+    false,
+  )
 })
 
 test('composed dialog fields are skinned once, on the shell', () => {
-  const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const shell = rules.find((rule) => /span:has\(> input/.test(rule) && /border: 2\.5px solid/.test(rule))
+  const shell = ruleQuery.find(
+    (rule) => /span:has\(> input/.test(rule.selector) && rule.declaration('border')?.value === '2.5px solid var(--animal-border-strong)',
+  )
   assert.ok(shell, 'the DSH field shell must carry the field skin')
-  const inner = rules.find((rule) => /span:has\(> input[^{]*\)\s*>\s*input\s*\{/.test(rule))
+  const inner = ruleQuery.find((rule) => rule.selector.includes('span:has(> input') && /\)\s*>\s*input$/.test(rule.selector))
   assert.ok(inner, 'the input inside a composed shell must not draw its own box')
-  for (const declaration of ['border: 0', 'background: transparent', 'box-shadow: none']) {
-    assert.ok(inner.includes(declaration), declaration)
-  }
+  assert.equal(inner.declaration('border')?.value, '0')
+  assert.equal(inner.declaration('background')?.value, 'transparent')
+  assert.equal(inner.declaration('box-shadow')?.value, 'none')
 })
 
 test('popover material inherits the opaque semantic menu surface', () => {
-  const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const material = rules.find((rule) => rule.includes('--dsw-menu-surface-fill'))
+  const material = ruleQuery.find((rule) => rule.declaration('--dsw-menu-surface-fill') !== undefined)
   assert.ok(material, 'the menu material compatibility alias is missing')
-  assert.match(material, /--dsw-menu-surface-fill:\s*var\(--dsw-specific-menu\)\s*!important/)
+  assert.equal(material.declaration('--dsw-menu-surface-fill')?.value, 'var(--dsw-specific-menu)')
+  assert.equal(material.declaration('--dsw-menu-surface-fill')?.important, true)
 })
 
 test('focus rings use the readable deep mint across shell and composer', () => {
-  const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const globalFocus = rules.find((rule) => rule.includes(':focus-visible {') && rule.includes('outline: 3px solid var(--animal-mint-deep)'))
-  const composerFocus = rules.find((rule) => rule.includes('[data-composer-card]:focus-within {'))
+  const globalFocus = ruleQuery.find(
+    (rule) => rule.selector.includes(':focus-visible') && rule.declaration('outline')?.value === '3px solid var(--animal-mint-deep)',
+  )
+  const composerFocus = ruleQuery.find((rule) => rule.selector.includes('[data-composer-card]:focus-within'))
 
   assert.ok(globalFocus, 'global keyboard focus must use the deep mint token')
   assert.ok(composerFocus, 'composer focus state is missing')
-  assert.match(composerFocus, /border-color:\s*var\(--animal-mint-deep\)/)
-  assert.match(composerFocus, /0 0 0 2px #fffbe7/)
-  assert.match(composerFocus, /0 0 0 5px var\(--animal-mint-deep\)/)
+  assert.equal(composerFocus.declaration('border-color')?.value, 'var(--animal-mint-deep)')
+  assert.match(composerFocus.declaration('box-shadow')?.value ?? '', /0 0 0 2px #fffbe7/)
+  assert.match(composerFocus.declaration('box-shadow')?.value ?? '', /0 0 0 5px var\(--animal-mint-deep\)/)
 })
 
 test('appearance slider paints a warm track and mint progress in both engines', () => {
-  const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const input = rules.find((rule) => rule.includes('.animal-island-appearance__slider input[type="range"] {'))
-  const webkitTrack = rules.find((rule) => rule.includes('::-webkit-slider-runnable-track'))
-  const webkitThumb = rules.find((rule) => rule.includes('::-webkit-slider-thumb'))
-  const firefoxTrack = rules.find((rule) => rule.includes('::-moz-range-track'))
-  const firefoxProgress = rules.find((rule) => rule.includes('::-moz-range-progress'))
+  const input = ruleQuery.find((rule) => rule.selector.includes('.animal-island-appearance__slider input[type="range"]'))
+  const webkitTrack = ruleQuery.find((rule) => rule.selector.includes('::-webkit-slider-runnable-track'))
+  const webkitThumb = ruleQuery.find((rule) => rule.selector.includes('::-webkit-slider-thumb'))
+  const firefoxTrack = ruleQuery.find((rule) => rule.selector.includes('::-moz-range-track'))
+  const firefoxProgress = ruleQuery.find((rule) => rule.selector.includes('::-moz-range-progress'))
 
   assert.ok(input && webkitTrack && webkitThumb && firefoxTrack && firefoxProgress)
-  assert.match(input, /appearance:\s*none/)
-  assert.match(webkitTrack, /var\(--animal-slider-track\)/)
-  assert.match(webkitTrack, /--animal-slider-progress/)
-  assert.match(webkitThumb, /border:\s*2px solid var\(--animal-border-strong\)/)
-  assert.match(firefoxTrack, /var\(--animal-slider-track\)/)
-  assert.match(firefoxProgress, /background:\s*var\(--animal-mint\)/)
-  assert.match(css, /--animal-slider-track:\s*#e9dfc9/)
-  assert.match(css, /--animal-slider-track:\s*#5a4b3d/)
+  assert.equal(input.declaration('appearance')?.value, 'none')
+  assert.match(webkitTrack.declaration('background')?.value ?? '', /var\(--animal-slider-track\)/)
+  assert.match(webkitTrack.declaration('background')?.value ?? '', /--animal-slider-progress/)
+  assert.equal(webkitThumb.declaration('border')?.value, '2px solid var(--animal-border-strong)')
+  assert.match(firefoxTrack.declaration('background')?.value ?? '', /var\(--animal-slider-track\)/)
+  assert.match(firefoxProgress.declaration('background')?.value ?? '', /var\(--animal-mint\)/)
+  assert.ok(ruleQuery.find((rule) => rule.declaration('--animal-slider-track')?.value === '#e9dfc9'))
+  assert.ok(ruleQuery.find((rule) => rule.declaration('--animal-slider-track')?.value === '#5a4b3d'))
 })
 
 test('wave artwork is an original local SVG rather than a reference asset', () => {
@@ -387,59 +403,74 @@ test('dark canvas keeps original night leaf and horizon textures', () => {
     assert.doesNotMatch(art, /image\/|href=.*\.png|href=.*\.jpg/)
   }
 
-  const darkCanvas = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)]
-    .map((match) => match[0])
-    .find((rule) => rule.includes('body[data-ds-dark-theme]') && rule.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__'))
+  const darkCanvas = ruleQuery.find(
+    (rule) => rule.selector.includes('body[data-ds-dark-theme]') && rule.declaration('background-image')?.value.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__'),
+  )
   assert.ok(darkCanvas, 'the night canvas textures are missing')
-  assert.match(darkCanvas, /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
-  assert.match(darkCanvas, /100% 240px/)
+  assert.match(darkCanvas.declaration('background-image')?.value ?? '', /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
+  assert.match(darkCanvas.declaration('background-size')?.value ?? '', /100% 240px/)
 })
 
 test('boot screen becomes a day-night island departure card', () => {
-  const uncommented = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  const rules = [...uncommented.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const boot = rules.find((rule) => rule.includes('[data-dsh-boot]') && rule.includes('__ANIMAL_ISLAND_LEAVES__'))
-  const darkBoot = rules.find((rule) => rule.includes('body[data-ds-dark-theme] [data-dsh-boot]') && rule.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__'))
-  const seal = rules.find((rule) => rule.includes('[data-dsh-boot-spinner] {'))
-  const innerSeal = rules.find((rule) => rule.includes('[data-dsh-boot-spinner]::before {'))
-  const orbit = rules.find((rule) => rule.includes('[data-dsh-boot-spinner]::after {'))
+  const boot = ruleQuery.find(
+    (rule) => rule.selector.includes('[data-dsh-boot]') && rule.declaration('background-image')?.value.includes('__ANIMAL_ISLAND_LEAVES__'),
+  )
+  const darkBoot = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('body[data-ds-dark-theme] [data-dsh-boot]') &&
+      rule.declaration('background-image')?.value.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__'),
+  )
+  const seal = ruleQuery.find((rule) => rule.selector.endsWith('[data-dsh-boot-spinner]'))
+  const innerSeal = ruleQuery.find((rule) => rule.selector.includes('[data-dsh-boot-spinner]::before'))
+  const orbit = ruleQuery.find((rule) => rule.selector.includes('[data-dsh-boot-spinner]::after'))
 
   assert.ok(boot, 'the day boot backdrop is missing')
-  assert.match(boot, /__ANIMAL_ISLAND_HORIZON__/)
-  assert.match(boot, /overflow-x:\s*auto/)
-  assert.match(boot, /overflow-y:\s*auto/)
-  assert.match(boot, /place-items:\s*safe center/)
+  assert.match(boot.declaration('background-image')?.value ?? '', /__ANIMAL_ISLAND_HORIZON__/)
+  assert.equal(boot.declaration('overflow-x')?.value, 'auto')
+  assert.equal(boot.declaration('overflow-y')?.value, 'auto')
+  assert.equal(boot.declaration('place-items')?.value, 'safe center')
   assert.ok(darkBoot, 'the night boot backdrop is missing')
-  assert.match(darkBoot, /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
-  const card = rules.find(
-    (rule) => rule.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])') && rule.includes('background-color: var(--animal-boot-paper)'),
+  assert.match(darkBoot.declaration('background-image')?.value ?? '', /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
+  const card = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])') && rule.declaration('background-color')?.value === 'var(--animal-boot-paper)',
   )
   assert.ok(card, 'the boot card must be anchored to the spinner hook')
-  assert.match(card, /margin:\s*0/)
+  assert.equal(card.declaration('margin')?.value, '0')
   assert.ok(seal, 'the boot progress seal is missing')
-  assert.match(seal, /animation:\s*none/)
-  assert.match(seal, /corner-shape:\s*round/)
-  assert.match(seal, /clip-path:\s*circle\(50%\)/)
-  assert.match(seal, /conic-gradient\(/)
-  assert.match(seal, /box-sizing:\s*border-box/)
+  assert.equal(seal.declaration('animation')?.value, 'none')
+  assert.equal(seal.declaration('corner-shape')?.value, 'round')
+  assert.equal(seal.declaration('clip-path')?.value, 'circle(50%)')
+  assert.match(seal.declaration('background-image')?.value ?? '', /conic-gradient\(/)
+  assert.equal(seal.declaration('box-sizing')?.value, 'border-box')
   assert.ok(innerSeal, 'the boot leaf disc is missing')
-  assert.match(innerSeal, /__ANIMAL_ISLAND_BOOT_LEAF__/)
-  assert.match(innerSeal, /inset:\s*5px/)
-  assert.match(innerSeal, /clip-path:\s*circle\(50%\)/)
+  assert.match(innerSeal.declaration('background-image')?.value ?? '', /__ANIMAL_ISLAND_BOOT_LEAF__/)
+  assert.equal(innerSeal.declaration('inset')?.value, '5px')
+  assert.equal(innerSeal.declaration('clip-path')?.value, 'circle(50%)')
   assert.ok(orbit, 'the boot orbit bead is missing')
-  assert.match(orbit, /corner-shape:\s*round/)
-  assert.match(orbit, /clip-path:\s*circle\(50%\)/)
-  const leafSeal = rules.find(
-    (rule) => rule.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])::before') && rule.includes('__ANIMAL_ISLAND_BOOT_LEAF__'),
+  assert.equal(orbit.declaration('corner-shape')?.value, 'round')
+  assert.equal(orbit.declaration('clip-path')?.value, 'circle(50%)')
+  const leafSeal = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])::before') &&
+      rule.declaration('background-image')?.value.includes('__ANIMAL_ISLAND_BOOT_LEAF__'),
   )
   assert.ok(leafSeal, 'the boot leaf seal is missing')
-  assert.match(leafSeal, /corner-shape:\s*round/)
-  assert.match(css, /:has\(\+ \[data-dsh-boot-spinner\]\)/)
-  assert.match(css, /\[data-dsh-boot-spinner\] \+ \*/)
-  assert.doesNotMatch(css, /^[^\n{]*\[data-dsh-boot\][^\n{]*>\s*div\b/m)
-  assert.doesNotMatch(css, /^[^\n{]*\[data-dsh-boot-spinner\]\s*\+\s*div\b/m)
-  assert.match(css, /@keyframes animal-island-boot-orbit/)
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\[data-dsh-boot-spinner\]::after\s*\{[\s\S]*animation:\s*none\s*!important/)
+  assert.equal(leafSeal.declaration('corner-shape')?.value, 'round')
+  assert.match(selectors, /:has\(\+ \[data-dsh-boot-spinner\]\)/)
+  assert.match(selectors, /\[data-dsh-boot-spinner\] \+ \*/)
+  assert.doesNotMatch(selectors, /\[data-dsh-boot\][^\n]*>\s*div\b/)
+  assert.doesNotMatch(selectors, /\[data-dsh-boot-spinner\]\s*\+\s*div\b/)
+  assert.ok(ruleQuery.atRules.includes('@keyframes animal-island-boot-orbit'))
+  assert.ok(
+    ruleQuery.find(
+      (rule) =>
+        rule.selector.includes('[data-dsh-boot-spinner]::after') &&
+        rule.atRules.some((atRule) => atRule.includes('prefers-reduced-motion: reduce')) &&
+        rule.declaration('animation')?.value === 'none' &&
+        rule.declaration('animation')?.important,
+    ),
+  )
   assert.match(loadingLeaf, /<path /)
   assert.doesNotMatch(loadingLeaf, /image\/|href=.*\.png|href=.*\.jpg/)
 })
@@ -482,10 +513,19 @@ test('boot fixtures keep loading anchored and failure diagnostics scrollable', (
 })
 
 test('skin uses only the reviewed ARIA role seams', () => {
-  const roles = new Set([...css.matchAll(/role=["']([^"']+)["']/g)].map((match) => match[1]))
-  const allowed = new Set(['button', 'checkbox', 'dialog', 'group', 'listbox', 'menu', 'menuitem', 'menuitemradio', 'option', 'radio', 'switch', 'treeitem'])
+  const roles = new Set([...selectors.matchAll(/role=["']([^"']+)["']/g)].map((match) => match[1]))
+  const allowed = new Set(REVIEWED_ARIA_ROLES)
   assert.deepEqual(
     [...roles].filter((role) => !allowed.has(role)),
+    [],
+  )
+})
+
+test('skin uses only the reviewed ARIA attributes', () => {
+  const attributes = new Set([...selectors.matchAll(/\[(aria-[a-z-]+)(?:=[^\]]+)?\]/g)].map((match) => match[1]))
+  const allowed = new Set(REVIEWED_ARIA_ATTRIBUTES)
+  assert.deepEqual(
+    [...attributes].filter((attribute) => !allowed.has(attribute)),
     [],
   )
 })
@@ -495,14 +535,15 @@ test("selected-row wood grain survives DSH's selected shorthand", () => {
   // resets background-image, and its class specificity beats our attribute
   // selector. The plank's colour, grain and bevel therefore have to be
   // `!important` or the grain silently disappears on the real rows.
-  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
-  const rule = rules.find((candidate) => /\[role=["']treeitem["']\]\[aria-selected=["']true["']\]/.test(candidate))
+  const rule = ruleQuery.find((candidate) => /\[role=["']treeitem["']\]\[aria-selected=["']true["']\]/.test(candidate.selector))
   assert.ok(rule, 'the selected-row wood-plank rule is missing')
-  for (const declaration of ['background-color:', 'background-image:', 'box-shadow:']) {
-    const line = rule.slice(rule.indexOf(declaration)).split(';')[0]
-    assert.match(line, /!important/, `${declaration} must beat DSH's selected shorthand`)
+  for (const property of ['background-color', 'background-image', 'box-shadow']) {
+    assert.equal(rule.declaration(property)?.important, true, `${property} must beat DSH's selected shorthand`)
   }
-  const content = rules.find((candidate) => /\[role=["']treeitem["']\]\[aria-selected=["']true["']\]/.test(candidate) && candidate.includes(':where(span)'))
+  const content = ruleQuery.find(
+    (candidate) => /\[role=["']treeitem["']\]\[aria-selected=["']true["']\]/.test(candidate.selector) && candidate.selector.includes(':where(span)'),
+  )
   assert.ok(content, 'selected-row text correction is missing')
-  assert.match(content, /color:\s*var\(--dsw-alias-label-secondary\)\s*!important/)
+  assert.equal(content.declaration('color')?.value, 'var(--dsw-alias-label-secondary)')
+  assert.equal(content.declaration('color')?.important, true)
 })
