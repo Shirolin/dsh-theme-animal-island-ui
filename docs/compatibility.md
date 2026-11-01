@@ -44,6 +44,7 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
 | `[data-windows-titlebar]` | 桌面端（仅 Windows）外壳标记：用它把 DSH 自己画在 AppFrame 上的不透明 sidebar-fill 清成透明，画布才透得出来 | Electron 桌面壳自己写的平台标记；macOS 给同一个 frame 的是 `background: 0 0`，Windows 分支漏了这行（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)）。侧栏/右栏各自重画自己的表面，所以只清 frame 不影响可读性 |
 | `--dsh-windows-content-radius` | Windows 内容列/全屏右栏 dock pane 的左上角圆角；皮肤在 **frame 元素**上设为 `0px`，去掉外壳自带的 16px 圆角 | layout 插件公开的 Windows 几何变量，仅改圆角，不改列宽。**必须写在 frame 上**：DSH 的 `[data-windows-titlebar] .frame` 自己声明了 `16px`，写在 `<html>` 上会被它覆盖 |
+| `--dsw-menu-surface-fill` | 新版 DSH 菜单材质的底色兼容别名：映射到不透明的 `--dsw-specific-menu`，避免 Composer 焦点环与内容透过浮层 | 该变量只在目标桌面 runtime 中消费，仓库 `0.1.5-rc.3` 基线会自然忽略；不进入 ThemeRuntime token 载荷，只改颜色，不改几何与交互 |
 | `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
 | `[role='treeitem'][aria-selected='true']` | 选中的会话 / 搜索结果行：木牌底 + 木纹 + 压边 | 工作区树行的 ARIA 选中状态，跨版本稳定 |
 | `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |

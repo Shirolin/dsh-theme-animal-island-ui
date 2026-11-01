@@ -105,7 +105,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 | 不改写插件自有布局（如 opencode-go 的 `modelLayout` 两列与 `modelRow` flex） | 列宽被改、行内控件（开关）位置参差 |
 | 不用「事后清零几何」的方式压制自己的规则，改为让规则一开始就不匹配 | 行高被清零、内边距消失（命令面板 40px 行被压扁） |
 | 胶囊/3D 只给带文字的控件；含 `img`/`video`/`canvas`、带 `svg`、带 switch/checkbox/radio/option 角色的控件一律排除 | 粘贴图片缩略图被套胶囊、图片被挤压截断 |
-| 弹出层不套 dialog 卡片外观，表面走 `--dsw-specific-menu` | 菜单与 composer 同色，看起来像嵌套双框 |
+| 弹出层不套 dialog 卡片外观；新版 DSH 菜单材质的底色变量映射到不透明的 `--dsw-specific-menu` | 菜单与 composer 同色，或半透明表面把焦点环和输入内容透出来 |
 | 通用 token 改动前先查消费方（`--dsw-alias-interactive-bg-hover` 被侧栏会话行共用） | 改一处、连带改掉侧栏 hover/选中 |
 | 变量要声明在**使用它的那个元素**上（继承值打不过元素自身声明，`!important` 也不行）；但组件已经在自己身上设过的变量（`--dsl-code-block-*`）就不要写 | 圆角/背景改不动，或改动了却顶掉组件的自有意图（预览平面样式） |
 

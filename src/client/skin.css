@@ -506,6 +506,13 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :where([role="treeite
     inset 0 -2px 0 rgba(20, 10, 4, 0.45) !important;
 }
 
+/* DSH paints selected-row metadata with label-tertiary, which is too light for
+   the warm plank in light mode and too dim on the dark plank. Keep the selected
+   row's hierarchy readable by raising all of its span content to label-secondary. */
+html[data-dsh-animal-island-skin] :where([role="treeitem"][aria-selected="true"], [aria-current="page"]) :where(span) {
+  color: var(--dsw-alias-label-secondary) !important;
+}
+
 /* The composer's "/" and "@" trigger panel is a scroll area whose max-height DSH
    computes from the space above the composer and sets inline, so CSS must not
    fight that number. A row at the cut edge is clipped mid-line; fading the panel's
@@ -613,6 +620,10 @@ html[data-dsh-animal-island-skin] :where(button, input, textarea, select, [conte
 /* Menus and listboxes keep DSH's own popover chrome (radius, elevation stroke,
    shadow) and take their surface from --dsw-specific-menu; forcing the dialog
    card treatment on them only made popovers repeat the composer's colour. */
+html[data-dsh-animal-island-skin] body {
+  --dsw-menu-surface-fill: var(--dsw-specific-menu) !important;
+}
+
 html[data-dsh-animal-island-skin] [data-composer-card],
 html[data-dsh-animal-island-skin] [role="dialog"] {
   border: 1.5px solid var(--animal-border) !important;

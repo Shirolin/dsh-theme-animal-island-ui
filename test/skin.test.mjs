@@ -219,6 +219,13 @@ test('composed dialog fields are skinned once, on the shell', () => {
   }
 })
 
+test('popover material inherits the opaque semantic menu surface', () => {
+  const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const material = rules.find((rule) => rule.includes('--dsw-menu-surface-fill'))
+  assert.ok(material, 'the menu material compatibility alias is missing')
+  assert.match(material, /--dsw-menu-surface-fill:\s*var\(--dsw-specific-menu\)\s*!important/)
+})
+
 test('focus rings use the readable deep mint across shell and composer', () => {
   const rules = [...css.matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
   const globalFocus = rules.find((rule) => rule.includes(':focus-visible {') && rule.includes('outline: 3px solid var(--animal-mint-deep)'))
@@ -377,4 +384,7 @@ test("selected-row wood grain survives DSH's selected shorthand", () => {
     const line = rule.slice(rule.indexOf(declaration)).split(';')[0]
     assert.match(line, /!important/, `${declaration} must beat DSH's selected shorthand`)
   }
+  const content = rules.find((candidate) => /\[role=["']treeitem["']\]\[aria-selected=["']true["']\]/.test(candidate) && candidate.includes(':where(span)'))
+  assert.ok(content, 'selected-row text correction is missing')
+  assert.match(content, /color:\s*var\(--dsw-alias-label-secondary\)\s*!important/)
 })
