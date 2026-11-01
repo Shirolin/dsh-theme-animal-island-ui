@@ -88,6 +88,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - DSH 组合式输入（`span > 图标 + input`）：由外壳承担输入外观，内部 `input` 保持透明，键盘焦点环随之移到外壳，避免同一字段出现两层边框；
 - Composer/dialog：24–28px 圆角、奶油卡片；dialog 另叠 7% 纸纹 + 内缩纸边 + 虚线缝线（`outline-offset: -10px`，`:not(:focus-visible)` 保留焦点环）；菜单/弹出层不套这层卡片外观，沿用 DSH 自己的弹出chrome，表面取 `--dsw-specific-menu`（= `surface` 白，避免和 composer 的 `#fffbe7` 糊成一片）；
 - 选中态：侧栏会话行 / 面板行用「木牌」——暖木底 + 竖向木纹 + 内嵌高光/压边（`[role='treeitem'][aria-selected='true']`、`[aria-current='page']`）；
+- 插件管理页：亮色开关用暖奶油轨道与 `#8f765e` 内描边建立边界，开启态换深薄荷轨道与浅色滑块；插件行只加一层很淡的奶油阅读面，避免底部波浪穿过描述文字，不改列表布局；
 - 弹出层行列高亮（`[role='option'|'menuitem']` 的 hover / `aria-selected`）用薄荷 `--dsw-alias-interactive-bg-hover-accent`；通用的 `--dsw-alias-interactive-bg-hover` 是暖木色，因为侧栏会话行与它共用；
 - 命令面板（`/`、`@`）的滚动高度由组件按可用空间内联算出，主题只给面板底边加 16px 渐隐（`[data-trigger-menu]::after`，颜色取面板自身表面），让被裁掉的半行读作「下面还有」—— 不改高度，短列表不滚动时不受影响；
 - Code block：圆角/底色跟随 DSH 的代码块变量（圆角 12px，不另立数值 —— 容器变量一旦在容器上覆写，会连带顶掉文档预览刻意设的 `0px` 平面样式）；`pre` 只保留 20/24px padding 与排版，不自己画边框/圆角/底色；banner 文字（语言标签 + 复制按钮）用代码前景色：标签自己声明了 `label-primary`、复制按钮只是 `inherit`，所以 banner 本身与它的直接子元素都要覆盖 —— 否则会出现「右边改好了、左边还是看不清」；右侧栏「文档」预览（`data-code-preview`）是**平面**代码视图，那里必须让文字回到 DSH 自己的颜色：深色代码岛的前景/配色落到浅色面板上只有 1.35:1，灰成一片（高亮的「代码」视图不受影响）；

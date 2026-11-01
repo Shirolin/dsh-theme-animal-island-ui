@@ -1,0 +1,135 @@
+<!doctype html>
+<!--
+  Plugin manager rows and switches in light mode.
+
+  The plugin creates the identity attributes on its list rows and uses the
+  standard switch role. This fixture keeps a small, real DOM shape so the visual
+  boundary and reading surface can be measured without copying the whole page.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>插件管理 · 亮色可读性</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #8fcaa5;
+    background-image:
+      radial-gradient(circle, rgba(74, 126, 83, .24) 1.25px, transparent 1.4px),
+      radial-gradient(circle, rgba(245, 250, 222, .22) .85px, transparent 1px);
+    background-position: 0 0, 8px 8px;
+    background-size: 30px 30px, 15px 15px;
+  }
+  .fixture {
+    position: relative;
+    width: 760px;
+    min-height: 460px;
+    margin: 22px auto;
+    padding: 22px 24px 70px;
+    overflow: hidden;
+    color: var(--animal-body);
+    background: rgba(248, 248, 240, .18);
+    border: 1px solid rgba(143, 118, 94, .2);
+    border-radius: 22px;
+  }
+  .fixture::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    bottom: -22px;
+    left: -40px;
+    height: 96px;
+    border-radius: 50% 50% 0 0;
+    background: rgba(88, 170, 160, .2);
+    pointer-events: none;
+  }
+  .fixture-title {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 18px;
+    color: var(--animal-ink);
+    font-size: 24px;
+    font-weight: 900;
+  }
+  .V7pFBG_page {
+    position: relative;
+    z-index: 1;
+    width: auto;
+    padding: 0;
+    overflow: visible;
+  }
+  .plugin-group + .plugin-group {
+    margin-top: 22px;
+  }
+  .fixture .V7pFBG_cardTitle,
+  .fixture .V7pFBG_cardDesc {
+    position: relative;
+    z-index: 1;
+  }
+  .fixture .V7pFBG_cardDesc {
+    color: var(--animal-muted);
+  }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{TOKENS}} {{BODY_STYLE}}">
+<main class="fixture">
+  <h1 class="fixture-title">插件</h1>
+  <section class="V7pFBG_page" data-plugin-panel="true" aria-busy="false">
+    <section class="V7pFBG_group plugin-group" data-plugin-scope="global" data-plugin-group="extensions">
+      <div class="V7pFBG_groupHead"><h3 class="V7pFBG_groupTitle">实验性插件</h3></div>
+      <ul class="V7pFBG_cards">
+        <li class="V7pFBG_card V7pFBG_cardLink" data-plugin-package="@deepseek-ai/dsh-experimental-agent-team-profile" data-plugin-status="disabled">
+          <div class="V7pFBG_cardHead">
+            <span class="V7pFBG_cardIcon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28"><rect x="4" y="5" width="8" height="8" rx="2" fill="#65b9ff"/><rect x="16" y="5" width="8" height="8" rx="2" fill="#ffc85e"/><rect x="4" y="16" width="8" height="8" rx="2" fill="#52cfa6"/></svg>
+            </span>
+            <div class="V7pFBG_cardMain">
+              <div class="V7pFBG_cardTitle">智能体团队</div>
+              <div class="V7pFBG_cardDesc">启用团队协作、团队工具与共享任务看板。</div>
+            </div>
+            <div class="V7pFBG_cardEnd">
+              <button type="button" role="switch" aria-checked="false" aria-label="启用 智能体团队" class="_switch_1ik0f_5"><span class="_thumb_1ik0f_33"></span></button>
+            </div>
+          </div>
+        </li>
+        <li class="V7pFBG_card V7pFBG_cardLink" data-plugin-package="@deepseek-ai/dsh-experimental-voice-input" data-plugin-status="enabled">
+          <div class="V7pFBG_cardHead">
+            <span class="V7pFBG_cardIcon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28"><path d="M5 14h3l2-6 3 12 3-9 2 3h5" fill="none" stroke="#76a8ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <div class="V7pFBG_cardMain">
+              <div class="V7pFBG_cardTitle">语音输入</div>
+              <div class="V7pFBG_cardDesc">在本机使用 SenseVoice 转写录音。</div>
+            </div>
+            <div class="V7pFBG_cardEnd">
+              <button type="button" role="switch" aria-checked="true" aria-label="启用 语音输入" class="_switch_1ik0f_5"><span class="_thumb_1ik0f_33"></span></button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <section class="V7pFBG_group plugin-group" data-plugin-scope="global" data-plugin-group="basic">
+      <div class="V7pFBG_groupHead"><h3 class="V7pFBG_groupTitle">内置插件配置</h3></div>
+      <ul class="V7pFBG_cards">
+        <li class="V7pFBG_card V7pFBG_cardLink" data-plugin-item="subagent">
+          <div class="V7pFBG_cardHead">
+            <span class="V7pFBG_cardIcon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28"><rect x="7" y="7" width="14" height="14" rx="3" fill="#60d2bc"/><rect x="3" y="3" width="9" height="9" rx="2" fill="#65b9ff"/></svg>
+            </span>
+            <div class="V7pFBG_cardMain">
+              <div class="V7pFBG_cardTitle">子智能体</div>
+              <div class="V7pFBG_cardDesc">设置子智能体的递归层级、数量和模型。</div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </section>
+</main>
+</body>
+</html>

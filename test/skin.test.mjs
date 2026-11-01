@@ -47,6 +47,10 @@ test('skin uses only the reviewed stable data hooks', () => {
     // Open-target split button: DSH exposes this marker for its file-explorer
     // and dropdown actions; light mode needs a perceivable boundary between them.
     'open-target',
+    // Plugin-manager rows use their own identity attributes. The skin paints a
+    // quiet light-mode reading surface without changing the plugin's list layout.
+    'plugin-item',
+    'plugin-package',
     // Windows desktop shell marker: the shell paints its outer frame with the
     // opaque sidebar fill (macOS clears it); the skin clears it so the canvas
     // behind the UI is visible. deepseek-harness discussion #9490.
@@ -65,7 +69,8 @@ test('skin uses only the reviewed stable data hooks', () => {
 test('light open-target boundaries stay perceivable', () => {
   const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
   const boundary = rules.find(
-    (rule) => rule.includes('body:not([data-ds-dark-theme])') && rule.includes('[data-open-target]') && /border-color:\s*var\(--animal-control-border\)/.test(rule),
+    (rule) =>
+      rule.includes('body:not([data-ds-dark-theme])') && rule.includes('[data-open-target]') && /border-color:\s*var\(--animal-control-border\)/.test(rule),
   )
   const divider = rules.find(
     (rule) =>
@@ -78,6 +83,36 @@ test('light open-target boundaries stay perceivable', () => {
   assert.ok(boundary, 'the light open-target boundary override is missing')
   assert.ok(divider, 'the light open-target divider override is missing')
   assert.ok(contrastRatio('#8f765e', '#d2e7d5') >= 3)
+})
+
+test('light plugin controls stay perceivable and plugin rows keep a reading surface', () => {
+  const rules = [...css.replaceAll(/\/\*[\s\S]*?\*\//g, '').matchAll(/[^{}]+\{[^{}]*\}/g)].map((match) => match[0])
+  const closedSwitch = rules.find(
+    (candidate) =>
+      candidate.includes('body:not([data-ds-dark-theme])') &&
+      candidate.includes('button[role="switch"]') &&
+      /box-shadow:\s*inset 0 0 0 1\.5px var\(--animal-control-border\)/.test(candidate),
+  )
+  const checkedSwitch = rules.find(
+    (candidate) =>
+      candidate.includes('body:not([data-ds-dark-theme])') &&
+      candidate.includes('button[role="switch"][aria-checked="true"]') &&
+      /background-color:\s*var\(--animal-mint-deep\)/.test(candidate),
+  )
+  const pluginRow = rules.find(
+    (candidate) =>
+      candidate.includes('body:not([data-ds-dark-theme])') &&
+      candidate.includes('li:is([data-plugin-item], [data-plugin-package])') &&
+      /background-color:\s*rgba\(250, 248, 243, 0\.48\)/.test(candidate),
+  )
+
+  assert.ok(closedSwitch, 'the light closed-switch boundary is missing')
+  assert.ok(checkedSwitch, 'the light checked-switch state is missing')
+  assert.ok(pluginRow, 'the plugin row reading surface is missing')
+  assert.ok(contrastRatio('#8f765e', '#d2e7d5') >= 3)
+  assert.ok(contrastRatio('#8f765e', '#f5ecd9') >= 3)
+  assert.ok(contrastRatio('#0b6d64', '#d2e7d5') >= 3)
+  assert.ok(contrastRatio('#f8fffb', '#0b6d64') >= 4.5)
 })
 
 test('composer 3D send styling leaves text-bearing triggers flat', () => {

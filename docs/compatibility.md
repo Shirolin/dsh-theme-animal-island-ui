@@ -39,6 +39,7 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `[data-code-block-banner]` | 代码块 banner（语言标签 + 复制按钮）的文字颜色 —— 它继承 `label-primary`，亮色下压在深色代码岛上不可读 | 代码块 banner 的标记；只改颜色不动几何，且必须连 banner 的直接子元素一起改：语言标签自己声明了 `label-primary`，元素自身声明赢过继承 |
 | `[data-code-preview]`、`[data-textpreview-plain]` | 右侧栏「文档」预览的两条平面视图（高亮代码体 / 纯文本页）：把它们的 `<pre>` 从主题代码排版规则里排除，保留 DSH 自己的内边距与文字颜色 | 预览 `CodeBody` / `TextBody` 自己渲染的属性；纯文本视图**不是** `CodeBlock` 那条路径，单独用 `data-textpreview-plain` 才命中 |
 | `[data-open-target]` | 分裂式「打开方式」控件在亮色模式下的外框与中缝：DSH 原生的 faint border 在画布上几乎不可见，只增强这两条功能性边界；中缝用其内部 `button[aria-haspopup="menu"]` 定位 | OpenTargetButton 为用户打开动作写出的语义标记，下拉按钮保留标准 menu 语义；不依赖组件 CSS module hash，暗色分支和 DSH 的几何保持原样 |
+| `[data-plugin-item]`、`[data-plugin-package]` | 插件管理列表行在亮色模式下的轻纸面：固定画布波浪会穿过透明行的描述文字；只改背景色，不碰列表的 padding、margin、圆角、阴影或排列 | Plugin Manager 为内置配置行和已安装插件行写出的身份标记，供它自己的行操作使用；不依赖 `V7pFBG_*` CSS module hash |
 | `[data-dsh-boot]` | 全屏启动等待页：昼夜岛屿背景；纸卡只在公开进度章存在时启用，失败页允许官方错误列表滚动 | DSH WebBootPage 在插件加载前自己写出的根标记；主题不接管启动状态，结构消失时自动退回 DSH 原样式 |
 | `[data-dsh-boot-spinner]` | 启动进度章：叶片中心、航线圈与环绕萤火点；纸卡、字标和提示通过该公开 hook 的 `:has()` / 相邻关系定位，不使用 tag 或 hash class；进度弧继续读取 `--dsh-boot-arc` | DSH WebBootPage 创建进度元素时写出的标记；失败状态会移除该元素，因此纸卡装饰同时失配，官方错误列表不受影响 |
 | `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
@@ -49,7 +50,7 @@ Slot 只用于公开组件组合。`data-slot` 可在测试中定位，不作为
 | `role="option" / menuitem / menuitemradio` | 弹出层行列高亮 | ARIA 角色 |
 | `[role='treeitem'][aria-selected='true']` | 选中的会话 / 搜索结果行：木牌底 + 木纹 + 压边 | 工作区树行的 ARIA 选中状态，跨版本稳定 |
 | `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |
-| `[aria-pressed]`、`[aria-selected]`、`[aria-checked]` | 选中态（预设卡片、列表项、外观预设） | ARIA 状态属性 |
+| `[aria-pressed]`、`[aria-selected]`、`[aria-checked]` | 选中态（预设卡片、列表项、外观预设、插件开关） | ARIA 状态属性 |
 
 插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。唯一无 hook 的例外是 Windows 外壳 frame：`html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。另一个受限例外是启动页：纸卡用 `[data-dsh-boot] > :has([data-dsh-boot-spinner])`，字标和提示用进度章的相邻关系定位；所有关系都锚定公开 boot hook，且 spinner 消失即整体失配。两条例外都由 `test/skin.test.mjs` 锁住。
 
