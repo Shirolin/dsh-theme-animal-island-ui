@@ -1,4 +1,4 @@
-import { useSyncExternalStore, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { APPEARANCE_DEFAULTS, APPEARANCE_PRESETS, type AppearancePreset, type AppearanceStore } from '../appearance.ts'
 
 type NamedPreset = Exclude<AppearancePreset, 'custom'>
@@ -18,20 +18,86 @@ export interface AppearanceTabProps {
 export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Element {
   const { getSnapshot, set, subscribe } = appearance
   const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
-  const sliderProgress = ((state.veil - APPEARANCE_DEFAULTS.min) / (APPEARANCE_DEFAULTS.max - APPEARANCE_DEFAULTS.min)) * 100
+  const [draftVeil, setDraftVeil] = useState(state.veil)
+  const draftRef = useRef(state.veil)
+  const draftDirty = useRef(false)
+  const latestSet = useRef(set)
+  const commitFrame = useRef<number | null>(null)
+  const sliderProgress = ((draftVeil - APPEARANCE_DEFAULTS.min) / (APPEARANCE_DEFAULTS.max - APPEARANCE_DEFAULTS.min)) * 100
+  const panelStyle = {
+    '--animal-appearance-draft': String(draftVeil),
+  } as CSSProperties
   const sliderStyle = {
     '--animal-slider-progress': `${sliderProgress}%`,
   } as CSSProperties
 
+  const cancelPendingCommit = () => {
+    if (commitFrame.current === null) return
+    cancelAnimationFrame(commitFrame.current)
+    commitFrame.current = null
+  }
+
+  const flushDraft = () => {
+    if (!draftDirty.current) return
+    draftDirty.current = false
+    latestSet.current({ preset: 'custom', veil: draftRef.current })
+  }
+
+  const scheduleCommit = () => {
+    if (!draftDirty.current || commitFrame.current !== null) return
+    commitFrame.current = requestAnimationFrame(() => {
+      commitFrame.current = null
+      flushDraft()
+    })
+  }
+
+  useEffect(() => {
+    latestSet.current = set
+  }, [set])
+
+  useEffect(() => {
+    if (draftDirty.current) return
+    draftRef.current = state.veil
+    setDraftVeil(state.veil)
+  }, [state.veil])
+
+  useEffect(
+    () => () => {
+      if (commitFrame.current !== null) {
+        cancelAnimationFrame(commitFrame.current)
+        commitFrame.current = null
+      }
+      if (!draftDirty.current) return
+      draftDirty.current = false
+      latestSet.current({ preset: 'custom', veil: draftRef.current })
+    },
+    [],
+  )
+
+  const updateVeil = (veil: number) => {
+    draftRef.current = veil
+    draftDirty.current = true
+    setDraftVeil(veil)
+  }
+
+  const applyPreset = (preset: NamedPreset) => {
+    const veil = APPEARANCE_PRESETS[preset]
+    cancelPendingCommit()
+    draftDirty.current = false
+    draftRef.current = veil
+    setDraftVeil(veil)
+    set({ preset, veil })
+  }
+
   return (
-    <section className="animal-island-appearance">
+    <section className="animal-island-appearance" style={panelStyle}>
       <h3>动森外观</h3>
       <p>画布上那层奶油「纸面」的透明度。越低越绿、越像游戏；越高越纸白、越好读。</p>
 
       {/* Settings itself is an opaque paper card, so the canvas behind it is hidden
           while this tab is open. This swatch mirrors the real canvas (same green
           dotted ground, same cream veil) so the slider shows its effect instantly. */}
-      <div className="animal-island-appearance__preview" role="img" aria-label={`纸面透明度预览，当前 ${state.veil.toFixed(2)}`}>
+      <div className="animal-island-appearance__preview" role="img" aria-label={`纸面透明度预览，当前 ${draftVeil.toFixed(2)}`}>
         <div className="animal-island-appearance__preview-sheet">
           <strong>动森岛</strong>
           <span>今天的岛也是绿油油的。</span>
@@ -44,9 +110,9 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
           <button
             key={preset}
             type="button"
-            aria-pressed={state.preset === preset}
+            aria-pressed={draftVeil === state.veil && state.preset === preset}
             className="animal-island-appearance__preset"
-            onClick={() => set({ preset, veil: APPEARANCE_PRESETS[preset] })}
+            onClick={() => applyPreset(preset)}
           >
             {PRESET_LABELS[preset]}
             <small>{APPEARANCE_PRESETS[preset].toFixed(2)}</small>
@@ -61,22 +127,31 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
           min={APPEARANCE_DEFAULTS.min}
           max={APPEARANCE_DEFAULTS.max}
           step={0.01}
-          value={state.veil}
+          value={draftVeil}
           style={sliderStyle}
-          onChange={(event) => set({ preset: 'custom', veil: Number(event.target.value) })}
+          onChange={(event) => updateVeil(Number(event.target.value))}
+          onPointerUp={scheduleCommit}
+          onPointerCancel={scheduleCommit}
+          onLostPointerCapture={scheduleCommit}
+          onKeyUp={scheduleCommit}
+          onBlur={scheduleCommit}
         />
-        <output>{state.veil.toFixed(2)}</output>
+        <output>{draftVeil.toFixed(2)}</output>
       </label>
 
       <button
         type="button"
         className="animal-island-appearance__reset"
-        onClick={() =>
+        onClick={() => {
+          cancelPendingCommit()
+          draftDirty.current = false
+          draftRef.current = APPEARANCE_DEFAULTS.veil
+          setDraftVeil(APPEARANCE_DEFAULTS.veil)
           set({
             preset: APPEARANCE_DEFAULTS.preset,
             veil: APPEARANCE_DEFAULTS.veil,
           })
-        }
+        }}
       >
         恢复默认（{PRESET_LABELS[APPEARANCE_DEFAULTS.preset]} {APPEARANCE_DEFAULTS.veil.toFixed(2)}）
       </button>

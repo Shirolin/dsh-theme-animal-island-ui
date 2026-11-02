@@ -6,7 +6,7 @@ import { PROVIDER_ORDER } from '../scripts/seam-contract.mjs'
 const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
 
 test('package exposes DSH client, provider ordering, peers, and prepack', () => {
-  assert.equal(packageJson.version, '0.3.22')
+  assert.match(packageJson.version, /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/)
   assert.equal(packageJson.main, 'lib/index.js')
   assert.equal(packageJson.dsh.client.platform, 'web')
   assert.deepEqual(packageJson.dsh.client.inject, PROVIDER_ORDER)

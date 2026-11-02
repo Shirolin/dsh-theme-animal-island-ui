@@ -253,100 +253,146 @@ html[data-dsh-animal-island-skin] [data-dsh-boot] {
   font-family: var(--animal-font-family);
 }
 
-html[data-dsh-animal-island-skin] [data-dsh-boot] > :has([data-dsh-boot-spinner]) {
+/* The failure page uses the same direct-child wrapper as the loading card.
+   Keep its neutral paper surface as the default; the loading branch below
+   overrides it only while the public spinner hook is present. */
+html[data-dsh-animal-island-skin] [data-dsh-boot] > * {
   position: relative;
   box-sizing: border-box;
-  width: min(calc(100vw - 44px), 340px);
-  max-width: 340px;
-  overflow: visible;
-  gap: 18px;
-  margin: 0;
-  padding: 43px 30px 38px;
-  border: 2px solid var(--animal-boot-border);
-  border-radius: 28px;
-  color: var(--animal-boot-muted);
-  background-color: var(--animal-boot-paper);
-  background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.35), transparent 48%), url("__ANIMAL_ISLAND_GRAIN__");
-  background-size:
-    auto,
-    180px 180px;
+  width: min(calc(100vw - 44px), 980px);
+  margin: 24px 0;
+  padding: clamp(20px, 4vw, 36px);
+  border: 1.5px solid var(--animal-boot-border);
+  border-radius: 24px;
+  background-color: var(--animal-boot-scrim);
   box-shadow:
-    inset 0 2px rgba(255, 255, 255, 0.72),
-    inset 0 -2px rgba(90, 55, 25, 0.08),
-    0 6px 0 var(--animal-boot-shadow),
-    0 18px 42px rgba(39, 78, 47, 0.2);
-  animation: animal-island-boot-card-in 420ms cubic-bezier(0.22, 0.82, 0.3, 1) both;
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 8px 24px rgba(39, 78, 47, 0.18);
 }
 
-html[data-dsh-animal-island-skin] [data-dsh-boot] > :has([data-dsh-boot-spinner])::before {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  top: -30px;
-  left: 50%;
-  box-sizing: border-box;
-  width: 56px;
-  height: 56px;
-  border: 2px solid var(--animal-boot-border);
-  border-radius: 50%;
-  corner-shape: round;
-  background-color: var(--animal-boot-paper);
-  background-image: url("__ANIMAL_ISLAND_BOOT_LEAF__");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 40px 40px;
-  box-shadow:
-    inset 0 2px rgba(255, 255, 255, 0.7),
-    0 3px 0 var(--animal-boot-shadow);
-  transform: translateX(-50%) rotate(-3deg);
+/* DSH's spinner is the stable public loading marker. Set the style container
+   once here instead of repeating :has() on every card, wordmark and pseudo
+   rule; streaming text then invalidates one ancestor check instead of ten. */
+html[data-dsh-animal-island-skin] [data-dsh-boot]:has([data-dsh-boot-spinner]) {
+  --animal-boot-loading: 1;
+  container-name: animal-boot;
+  container-type: style;
 }
 
-html[data-dsh-animal-island-skin] [data-dsh-boot] > :has([data-dsh-boot-spinner])::after {
-  content: "ANIMAL ISLAND / ISLAND TRANSIT";
-  position: absolute;
-  right: 24px;
-  bottom: 11px;
-  left: 24px;
-  padding-top: 7px;
-  border-top: 1px dashed color-mix(in srgb, var(--animal-boot-border) 34%, transparent);
-  color: color-mix(in srgb, var(--animal-boot-muted) 78%, transparent);
-  font-size: 8px;
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: 0.16em;
-  text-align: center;
-}
+@container animal-boot style(--animal-boot-loading: 1) {
+  html[data-dsh-animal-island-skin] [data-dsh-boot] > * {
+    position: relative;
+    box-sizing: border-box;
+    width: min(calc(100vw - 44px), 340px);
+    max-width: 340px;
+    overflow: visible;
+    gap: 18px;
+    margin: 0;
+    padding: 43px 30px 38px;
+    border: 2px solid var(--animal-boot-border);
+    border-radius: 28px;
+    color: var(--animal-boot-muted);
+    background-color: var(--animal-boot-paper);
+    background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.35), transparent 48%), url("__ANIMAL_ISLAND_GRAIN__");
+    background-size:
+      auto,
+      180px 180px;
+    box-shadow:
+      inset 0 2px rgba(255, 255, 255, 0.72),
+      inset 0 -2px rgba(90, 55, 25, 0.08),
+      0 6px 0 var(--animal-boot-shadow),
+      0 18px 42px rgba(39, 78, 47, 0.2);
+    animation: animal-island-boot-card-in 420ms cubic-bezier(0.22, 0.82, 0.3, 1) both;
+  }
 
-html[data-dsh-animal-island-skin] [data-dsh-boot] :has(+ [data-dsh-boot-spinner]) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  font-size: 0;
-  line-height: 1;
-  letter-spacing: 0;
-  text-align: center;
-}
+  html[data-dsh-animal-island-skin] [data-dsh-boot] > *::before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    top: -30px;
+    left: 50%;
+    box-sizing: border-box;
+    width: 56px;
+    height: 56px;
+    border: 2px solid var(--animal-boot-border);
+    border-radius: 50%;
+    corner-shape: round;
+    background-color: var(--animal-boot-paper);
+    background-image: url("__ANIMAL_ISLAND_BOOT_LEAF__");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 40px 40px;
+    box-shadow:
+      inset 0 2px rgba(255, 255, 255, 0.7),
+      0 3px 0 var(--animal-boot-shadow);
+    transform: translateX(-50%) rotate(-3deg);
+  }
 
-html[data-dsh-animal-island-skin] [data-dsh-boot] :has(+ [data-dsh-boot-spinner])::before {
-  content: "HARNESS / DSH";
-  color: color-mix(in srgb, var(--animal-boot-muted) 82%, transparent);
-  font-size: 8px;
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: 0.22em;
-}
+  html[data-dsh-animal-island-skin] [data-dsh-boot] > *::after {
+    content: "ANIMAL ISLAND / ISLAND TRANSIT";
+    position: absolute;
+    right: 24px;
+    bottom: 11px;
+    left: 24px;
+    padding-top: 7px;
+    border-top: 1px dashed color-mix(in srgb, var(--animal-boot-border) 34%, transparent);
+    color: color-mix(in srgb, var(--animal-boot-muted) 78%, transparent);
+    font-size: 8px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-align: center;
+  }
 
-html[data-dsh-animal-island-skin] [data-dsh-boot] :has(+ [data-dsh-boot-spinner])::after {
-  content: "动森岛";
-  color: var(--animal-boot-ink);
-  font-size: 27px;
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: 0.13em;
-  text-shadow:
-    0 1px rgba(255, 255, 255, 0.82),
-    0 3px rgba(58, 90, 54, 0.12);
+  html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] > * {
+    background-image: linear-gradient(145deg, rgba(255, 240, 205, 0.055), transparent 52%), url("__ANIMAL_ISLAND_GRAIN__");
+    box-shadow:
+      inset 0 2px rgba(255, 247, 222, 0.08),
+      inset 0 -2px rgba(0, 0, 0, 0.24),
+      0 6px 0 var(--animal-boot-shadow),
+      0 20px 54px rgba(0, 0, 0, 0.38);
+  }
+
+  /* The loading card has one non-spinner label before the seal and one hint
+     after it. This keeps the text hidden and its pseudo-content decorated
+     without asking the engine to re-evaluate previous-sibling :has(). */
+  html[data-dsh-animal-island-skin] [data-dsh-boot] > * > :not([data-dsh-boot-spinner]):not([data-dsh-boot-spinner] + *) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 0;
+    line-height: 1;
+    letter-spacing: 0;
+    text-align: center;
+  }
+
+  html[data-dsh-animal-island-skin] [data-dsh-boot] > * > :not([data-dsh-boot-spinner]):not([data-dsh-boot-spinner] + *)::before {
+    content: "HARNESS / DSH";
+    color: color-mix(in srgb, var(--animal-boot-muted) 82%, transparent);
+    font-size: 8px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.22em;
+  }
+
+  html[data-dsh-animal-island-skin] [data-dsh-boot] > * > :not([data-dsh-boot-spinner]):not([data-dsh-boot-spinner] + *)::after {
+    content: "动森岛";
+    color: var(--animal-boot-ink);
+    font-size: 27px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.13em;
+    text-shadow:
+      0 1px rgba(255, 255, 255, 0.82),
+      0 3px rgba(58, 90, 54, 0.12);
+  }
+
+  html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] > * > :not([data-dsh-boot-spinner]):not([data-dsh-boot-spinner] + *)::after {
+    text-shadow:
+      0 1px rgba(0, 0, 0, 0.7),
+      0 4px rgba(0, 0, 0, 0.22);
+  }
 }
 
 html[data-dsh-animal-island-skin] [data-dsh-boot-spinner] {
@@ -443,38 +489,6 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] {
     148px 148px,
     auto;
   background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat;
-}
-
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] > :has([data-dsh-boot-spinner]) {
-  background-image: linear-gradient(145deg, rgba(255, 240, 205, 0.055), transparent 52%), url("__ANIMAL_ISLAND_GRAIN__");
-  box-shadow:
-    inset 0 2px rgba(255, 247, 222, 0.08),
-    inset 0 -2px rgba(0, 0, 0, 0.24),
-    0 6px 0 var(--animal-boot-shadow),
-    0 20px 54px rgba(0, 0, 0, 0.38);
-}
-
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-dsh-boot] :has(+ [data-dsh-boot-spinner])::after {
-  text-shadow:
-    0 1px rgba(0, 0, 0, 0.7),
-    0 4px rgba(0, 0, 0, 0.22);
-}
-
-/* The official failure list keeps its own DOM and scrolling. A light paper
-   scrim separates long diagnostics from the illustrated island without turning
-   the failure page into a second loading card. */
-html[data-dsh-animal-island-skin] [data-dsh-boot]:not(:has([data-dsh-boot-spinner])) > * {
-  position: relative;
-  box-sizing: border-box;
-  width: min(calc(100vw - 44px), 980px);
-  margin: 24px 0;
-  padding: clamp(20px, 4vw, 36px);
-  border: 1.5px solid var(--animal-boot-border);
-  border-radius: 24px;
-  background-color: var(--animal-boot-scrim);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 8px 24px rgba(39, 78, 47, 0.18);
 }
 
 @keyframes animal-island-boot-card-in {
@@ -938,6 +952,13 @@ html[data-dsh-animal-island-skin] body:not([data-ds-dark-theme]) header:has([dat
   border-bottom-color: #b9aa90 !important;
 }
 
+/* DSH paints a cream backing behind the title cluster. Keep it transparent so
+   the island canvas shows through in both themes; the wooden nav sign supplies
+   the title surface. */
+html[data-dsh-animal-island-skin] header:has([data-conversation-header-corner]) div:has(> nav[aria-label]) {
+  background-color: transparent !important;
+}
+
 /* Header ribbon, built inside the nav box because DSH clips it
    (.crumbs carries overflow: hidden). It is a painted wooden sign: the front
    plank is the top layer (::after), the swallowtail tails and their fold
@@ -1322,7 +1343,17 @@ html[data-dsh-animal-island-skin] :where(span, div):has(> :where(span, div) > .a
 }
 
 .animal-island-hero__brand {
+  position: static;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   gap: 10px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
   color: var(--animal-ink);
 }
 
@@ -1346,8 +1377,10 @@ body[data-ds-dark-theme] .animal-island-hero__wordmark {
 
 /* The conversation hero is a small island title scene rather than a framed
    sign. DSH renders the public mark slot one level below the headline, so the
-   :has() branch selects only the headline that owns this theme's brand. The
-   SVG scenery swaps from daylight to a moonlit island with the color theme. */
+   :has() branch selects only the headline that owns this theme's brand. Once
+   inside the hero, the brand's own class is the stable scope; repeating the
+   outer :has() on every descendant made each streaming update invalidate far
+   more rules than necessary. */
 html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) {
   position: relative;
   isolation: isolate;
@@ -1368,22 +1401,13 @@ html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-h
   box-shadow: none;
   overflow: hidden;
   color: #1f4c33;
+  /* The Hero stays mounted for theme transitions, but offscreen island paint
+     does not need to join every conversation scroll frame. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 142px;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) > span > div > .animal-island-hero__brand {
-  position: static;
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 0;
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-}
-
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scenery {
+html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__scenery {
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -1395,19 +1419,19 @@ html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-h
   transition: opacity 320ms ease;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scenery--day {
+html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__scenery--day {
   opacity: 1;
 }
 
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scenery--day {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__scenery--day {
   opacity: 0;
 }
 
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scenery--night {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__scenery--night {
   opacity: 1;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__identity {
+html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__identity {
   position: relative;
   z-index: 2;
   display: inline-flex;
@@ -1416,14 +1440,14 @@ html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-h
   min-width: 0;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__divider {
+html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__divider {
   width: 22px;
   height: 1px;
   margin-inline: 2px;
   background: linear-gradient(90deg, transparent, rgba(64, 112, 79, 0.62));
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__english {
+html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__english {
   color: #315b3a;
   font-size: 8px;
   font-weight: 900;
@@ -1432,7 +1456,7 @@ html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-h
   white-space: nowrap;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__brand .animal-island-brand__mark {
+html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__identity .animal-island-brand__mark {
   box-sizing: content-box;
   width: 27px;
   height: 27px;
@@ -1445,7 +1469,7 @@ html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-h
     0 1px 0 rgba(42, 83, 54, 0.12);
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__wordmark {
+html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__wordmark {
   color: #235d3d;
   font-size: 15px;
   line-height: 1;
@@ -1483,7 +1507,7 @@ html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-h
   bottom: -10px;
   width: 52px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(95, 150, 111, 0.7), transparent);
+  background: var(--animal-island-hero-title-rule, linear-gradient(90deg, transparent, rgba(95, 150, 111, 0.7), transparent));
   transform: translateX(-50%);
 }
 
@@ -1503,26 +1527,39 @@ html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-h
   box-shadow: 0 1px 0 rgba(47, 125, 60, 0.1);
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scene-sun-glow,
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scene-moon-glow {
+html[data-dsh-animal-island-skin]
+  body:not([data-ds-dark-theme])
+  .animal-island-hero__brand
+  .animal-island-hero__scenery--day
+  .animal-island-hero__scene-sun-glow {
   transform-box: fill-box;
   transform-origin: center;
   animation: animal-island-hero-sky-breathe 7s ease-in-out infinite;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scene-cloud {
+html[data-dsh-animal-island-skin] body:not([data-ds-dark-theme]) .animal-island-hero__brand .animal-island-hero__scenery--day .animal-island-hero__scene-cloud {
   animation: animal-island-hero-cloud-drift 9s ease-in-out infinite;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scene-cloud--two {
+html[data-dsh-animal-island-skin]
+  body:not([data-ds-dark-theme])
+  .animal-island-hero__brand
+  .animal-island-hero__scenery--day
+  .animal-island-hero__scene-cloud--two {
   animation-delay: -3s;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scene-stars {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__scenery--night .animal-island-hero__scene-moon-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: animal-island-hero-sky-breathe 7s ease-in-out infinite;
+}
+
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__scenery--night .animal-island-hero__scene-stars {
   animation: animal-island-hero-stars-twinkle 5.5s ease-in-out infinite;
 }
 
-html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__scene-fireflies {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__scenery--night .animal-island-hero__scene-fireflies {
   animation: animal-island-hero-fireflies 4.8s ease-in-out infinite;
 }
 
@@ -1580,16 +1617,13 @@ html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-h
 }
 
 html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span > div > .animal-island-hero__brand) {
+  --animal-island-hero-title-rule: linear-gradient(90deg, transparent, rgba(164, 214, 159, 0.52), transparent);
   background: radial-gradient(ellipse at 52% 40%, rgba(44, 91, 72, 0.27), transparent 64%);
   box-shadow: none;
   color: #f4e9ca;
 }
 
-html[data-dsh-animal-island-skin]
-  body[data-ds-dark-theme]
-  div[class]:has(> span > div > .animal-island-hero__brand)
-  .animal-island-hero__identity
-  .animal-island-brand__mark {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__identity .animal-island-brand__mark {
   background: rgba(246, 232, 195, 0.9);
   filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.42));
   box-shadow:
@@ -1597,16 +1631,16 @@ html[data-dsh-animal-island-skin]
     0 1px 0 rgba(0, 0, 0, 0.34);
 }
 
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__wordmark {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__wordmark {
   color: #c9edb8;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
 
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__divider {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__divider {
   background: linear-gradient(90deg, transparent, rgba(169, 218, 165, 0.55));
 }
 
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__english {
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-hero__brand .animal-island-hero__english {
   color: #94b79a;
 }
 
@@ -1616,10 +1650,6 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span
     0 1px 0 rgba(0, 0, 0, 0.55),
     0 4px 0 rgba(15, 43, 34, 0.44),
     0 9px 18px rgba(0, 0, 0, 0.24);
-}
-
-html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span > div > .animal-island-hero__brand) > span:has(> span + span)::after {
-  background: linear-gradient(90deg, transparent, rgba(164, 214, 159, 0.52), transparent);
 }
 
 html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span > div > .animal-island-hero__brand) > span:has(> span + span) > span + span {
@@ -1638,25 +1668,25 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span
     border-radius: 27px;
   }
 
-  html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__identity {
+  html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__identity {
     gap: 5px;
   }
 
-  html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__divider {
+  html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__divider {
     width: 14px;
     margin-inline: 1px;
   }
 
-  html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__brand .animal-island-brand__mark {
+  html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__identity .animal-island-brand__mark {
     width: 24px;
     height: 24px;
   }
 
-  html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__wordmark {
+  html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__wordmark {
     font-size: 13px;
   }
 
-  html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__english {
+  html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__english {
     font-size: 7px;
     letter-spacing: 0.15em;
   }
@@ -1678,11 +1708,11 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] div[class]:has(> span
     font-size: 30px;
   }
 
-  html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__english {
+  html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__english {
     display: none;
   }
 
-  html[data-dsh-animal-island-skin] div[class]:has(> span > div > .animal-island-hero__brand) .animal-island-hero__divider {
+  html[data-dsh-animal-island-skin] .animal-island-hero__brand .animal-island-hero__divider {
     display: none;
   }
 }
@@ -1749,8 +1779,9 @@ html[data-dsh-animal-island-skin] .animal-island-appearance p {
 }
 
 /* A miniature of the real canvas: the same mint-green dotted ground under the
-   same cream veil. The veil layer reads --animal-canvas-veil, so the swatch and
-   the actual canvas always move together as the slider is dragged. */
+   same cream veil. Dragging paints only the panel-local draft variable so the
+   full app does not restyle on every pointer frame; the released value is then
+   committed to --animal-canvas-veil for the actual canvas. */
 html[data-dsh-animal-island-skin] .animal-island-appearance__preview {
   position: relative;
   isolation: isolate;
@@ -1784,8 +1815,11 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__preview-sheet {
   /* The real centre column stacks TWO bg-base layers (layout centreCol + the
      conversation root), so a single sheet here would read greener than the app.
      Colour + one gradient layer reproduce that 1-(1-v)^2 composite. */
-  background-color: rgba(248, 248, 240, var(--animal-canvas-veil, 0.4));
-  background-image: linear-gradient(rgba(248, 248, 240, var(--animal-canvas-veil, 0.4)), rgba(248, 248, 240, var(--animal-canvas-veil, 0.4)));
+  background-color: rgba(248, 248, 240, var(--animal-appearance-draft, var(--animal-canvas-veil, 0.4)));
+  background-image: linear-gradient(
+    rgba(248, 248, 240, var(--animal-appearance-draft, var(--animal-canvas-veil, 0.4))),
+    rgba(248, 248, 240, var(--animal-appearance-draft, var(--animal-canvas-veil, 0.4)))
+  );
   color: var(--animal-ink);
 }
 
@@ -1830,10 +1864,10 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-appear
 html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-appearance__preview-sheet {
   /* Mirror the dark `--dsw-alias-bg-base` curve below so the swatch never lies;
      two layers match the real centre column's double bg-base stack. */
-  background-color: rgba(41, 35, 28, clamp(0.55, calc(0.84 + (var(--animal-canvas-veil, 0.4) - 0.4) * 0.8), 0.96));
+  background-color: rgba(41, 35, 28, clamp(0.55, calc(0.84 + (var(--animal-appearance-draft, var(--animal-canvas-veil, 0.4)) - 0.4) * 0.8), 0.96));
   background-image: linear-gradient(
-    rgba(41, 35, 28, clamp(0.55, calc(0.84 + (var(--animal-canvas-veil, 0.4) - 0.4) * 0.8), 0.96)),
-    rgba(41, 35, 28, clamp(0.55, calc(0.84 + (var(--animal-canvas-veil, 0.4) - 0.4) * 0.8), 0.96))
+    rgba(41, 35, 28, clamp(0.55, calc(0.84 + (var(--animal-appearance-draft, var(--animal-canvas-veil, 0.4)) - 0.4) * 0.8), 0.96)),
+    rgba(41, 35, 28, clamp(0.55, calc(0.84 + (var(--animal-appearance-draft, var(--animal-canvas-veil, 0.4)) - 0.4) * 0.8), 0.96))
   );
 }
 
@@ -2014,6 +2048,10 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__note {
   html[data-dsh-animal-island-skin] {
     --animal-canvas-veil: 0.52 !important;
   }
+
+  html[data-dsh-animal-island-skin] .animal-island-appearance {
+    --animal-appearance-draft: 0.52 !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2039,7 +2077,7 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__note {
     animation: none !important;
   }
 
-  html[data-dsh-animal-island-skin] [data-dsh-boot] > :has([data-dsh-boot-spinner]),
+  html[data-dsh-animal-island-skin] [data-dsh-boot] > *,
   html[data-dsh-animal-island-skin] [data-dsh-boot-spinner]::before,
   html[data-dsh-animal-island-skin] [data-dsh-boot-spinner]::after {
     animation: none !important;

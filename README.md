@@ -105,15 +105,15 @@ pnpm run release 0.3.6     # 打包 + 回写 SHA；版本号必须是新的
 `prepack` 会自动重建 `lib`。当前规范产物为：
 
 ```text
-artifacts/release-v0.3.22/dsh-theme-animal-island-ui-0.3.22.tgz
-SHA-256: F034709622BDBF0AE04739E5A62638E16C092233DA46042E90633A3291BF236D
+artifacts/release-v0.3.23/dsh-theme-animal-island-ui-0.3.23.tgz
+SHA-256: 39B233A4939A366B40AB972E315A0FF951E7E09C6E60D4B554E06B826EAF0F34
 ```
 
 把 `.tgz` 装进目标 `web` profile 并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）：
 
 ```sh
 cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v0.3.22/dsh-theme-animal-island-ui-0.3.22.tgz
+pnpm add file:<仓库>/artifacts/release-v0.3.23/dsh-theme-animal-island-ui-0.3.23.tgz
 ```
 
 之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。

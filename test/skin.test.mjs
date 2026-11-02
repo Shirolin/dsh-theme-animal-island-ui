@@ -217,6 +217,20 @@ test('light conversation header keeps a quiet but visible divider', () => {
   assert.ok(contrastRatio('#b9aa90', '#d2e7d5') >= 1.5)
 })
 
+test('conversation header clears the title cluster backing in both themes', () => {
+  const rule = ruleQuery.find(
+    (candidate) =>
+      candidate.selector.includes('header:has([data-conversation-header-corner])') &&
+      candidate.selector.includes('div:has(> nav[aria-label])') &&
+      candidate.declaration('background-color')?.value === 'transparent' &&
+      candidate.declaration('background-color')?.important,
+  )
+
+  assert.ok(rule, 'the title cluster backing override is missing')
+  assert.doesNotMatch(rule.selector, /data-ds-dark-theme/)
+  assert.doesNotMatch(rule.selector, /an3WzG_/)
+})
+
 test('slot installation uses public contracts without DOM scanning', () => {
   for (const source of [slots, install]) {
     assert.doesNotMatch(source, /querySelector|closest\(|MutationObserver|__DSH_BOOT__|ReactDOM/)
@@ -248,7 +262,33 @@ test('conversation hero renders a responsive day and night island title scene', 
   assert.equal(frame.declaration('width')?.value, 'min(100%, 700px)')
   assert.equal(frame.declaration('border')?.value, '0')
   assert.equal(frame.declaration('box-shadow')?.value, 'none')
+  assert.equal(frame.declaration('content-visibility')?.value, 'auto')
+  assert.equal(frame.declaration('contain-intrinsic-size')?.value, 'auto 142px')
   assert.doesNotMatch(frame.selector, /\[data-slot/)
+
+  const heroHasRules = ruleQuery.filter((rule) => rule.selector.includes('div[class]:has(> span > div > .animal-island-hero__brand)'))
+  assert.ok(heroHasRules.length <= 12, `hero still repeats its outer :has() in ${heroHasRules.length} rules`)
+  assert.ok(
+    heroHasRules.some((rule) => rule.selector.includes('body[data-ds-dark-theme]') && rule.declaration('color')?.value === '#f4e9ca'),
+    'the dark hero container must keep its public DOM seam',
+  )
+
+  const heroDescendantClasses = [
+    '.animal-island-hero__scenery',
+    '.animal-island-hero__identity',
+    '.animal-island-hero__divider',
+    '.animal-island-hero__english',
+    '.animal-island-hero__wordmark',
+    '.animal-island-brand__mark',
+  ]
+  const heroDescendantSelectors = ruleQuery.all
+    .flatMap((rule) => rule.selector.split(','))
+    .map((selector) => selector.trim())
+    .filter((selector) => selector.includes('animal-island-hero') && heroDescendantClasses.some((className) => selector.includes(className)))
+  assert.ok(heroDescendantSelectors.length >= 10, 'the themed hero descendants are missing')
+  for (const selector of heroDescendantSelectors) {
+    assert.doesNotMatch(selector, /div\[class\]:has/, `hero descendant selector still repeats the outer :has(): ${selector}`)
+  }
 
   const dayScene = ruleQuery.find((rule) => rule.selector.includes('.animal-island-hero__scenery--day') && rule.declaration('opacity')?.value === '1')
   assert.ok(dayScene, 'the daylight scenery is missing')
@@ -263,6 +303,16 @@ test('conversation hero renders a responsive day and night island title scene', 
   assert.match(brand, /animal-island-hero__scenery--night/)
   assert.match(brand, /animal-island-hero__identity/)
   assert.match(brand, /className="animal-island-hero__english"\s+aria-hidden="true"/)
+
+  const infiniteHeroAnimations = ruleQuery.filter(
+    (rule) => rule.selector.includes('animal-island-hero__scene') && rule.declaration('animation')?.value.includes('infinite'),
+  )
+  assert.ok(infiniteHeroAnimations.length >= 4, 'the hero scene animations are missing')
+  for (const rule of infiniteHeroAnimations) {
+    const isDay = rule.selector.includes('body:not([data-ds-dark-theme])') && rule.selector.includes('.animal-island-hero__scenery--day')
+    const isNight = rule.selector.includes('body[data-ds-dark-theme]') && rule.selector.includes('.animal-island-hero__scenery--night')
+    assert.notEqual(isDay, isNight, `hero animation is not scoped to exactly one theme: ${rule.selector}`)
+  }
 
   const title = ruleQuery.find((rule) => rule.selector.includes('> span:has(> span + span)') && rule.declaration('font-size')?.value === '41px')
   assert.ok(title, 'the game-opening title is missing')
@@ -379,14 +429,31 @@ test('appearance slider paints a warm track and mint progress in both engines', 
   const webkitThumb = ruleQuery.find((rule) => rule.selector.includes('::-webkit-slider-thumb'))
   const firefoxTrack = ruleQuery.find((rule) => rule.selector.includes('::-moz-range-track'))
   const firefoxProgress = ruleQuery.find((rule) => rule.selector.includes('::-moz-range-progress'))
+  const previewSheet = ruleQuery.find(
+    (rule) => rule.selector.endsWith('.animal-island-appearance__preview-sheet') && rule.declaration('background-color') !== undefined,
+  )
+  const darkPreviewSheet = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('body[data-ds-dark-theme]') &&
+      rule.selector.endsWith('.animal-island-appearance__preview-sheet') &&
+      rule.declaration('background-color') !== undefined,
+  )
+  const contrastDraft = ruleQuery.find(
+    (rule) =>
+      rule.selector.endsWith('.animal-island-appearance') &&
+      rule.declaration('--animal-appearance-draft')?.value === '0.52' &&
+      rule.atRules.includes('@media (prefers-contrast: more)'),
+  )
 
-  assert.ok(input && webkitTrack && webkitThumb && firefoxTrack && firefoxProgress)
+  assert.ok(input && webkitTrack && webkitThumb && firefoxTrack && firefoxProgress && previewSheet && darkPreviewSheet && contrastDraft)
   assert.equal(input.declaration('appearance')?.value, 'none')
   assert.match(webkitTrack.declaration('background')?.value ?? '', /var\(--animal-slider-track\)/)
   assert.match(webkitTrack.declaration('background')?.value ?? '', /--animal-slider-progress/)
   assert.equal(webkitThumb.declaration('border')?.value, '2px solid var(--animal-border-strong)')
   assert.match(firefoxTrack.declaration('background')?.value ?? '', /var\(--animal-slider-track\)/)
   assert.match(firefoxProgress.declaration('background')?.value ?? '', /var\(--animal-mint\)/)
+  assert.match(previewSheet.declaration('background-color')?.value ?? '', /var\(--animal-appearance-draft, var\(--animal-canvas-veil/)
+  assert.match(darkPreviewSheet.declaration('background-color')?.value ?? '', /var\(--animal-appearance-draft, var\(--animal-canvas-veil/)
   assert.ok(ruleQuery.find((rule) => rule.declaration('--animal-slider-track')?.value === '#e9dfc9'))
   assert.ok(ruleQuery.find((rule) => rule.declaration('--animal-slider-track')?.value === '#5a4b3d'))
 })
@@ -431,11 +498,23 @@ test('boot screen becomes a day-night island departure card', () => {
   assert.equal(boot.declaration('place-items')?.value, 'safe center')
   assert.ok(darkBoot, 'the night boot backdrop is missing')
   assert.match(darkBoot.declaration('background-image')?.value ?? '', /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
+  const bootContainer = '@container animal-boot style(--animal-boot-loading: 1)'
+  const bootMarker = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('[data-dsh-boot]:has([data-dsh-boot-spinner])') &&
+      rule.declaration('container-name')?.value === 'animal-boot' &&
+      rule.declaration('container-type')?.value === 'style',
+  )
   const card = ruleQuery.find(
     (rule) =>
-      rule.selector.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])') && rule.declaration('background-color')?.value === 'var(--animal-boot-paper)',
+      rule.selector.endsWith('[data-dsh-boot] > *') &&
+      rule.declaration('background-color')?.value === 'var(--animal-boot-paper)' &&
+      rule.atRules.includes(bootContainer),
   )
   assert.ok(card, 'the boot card must be anchored to the spinner hook')
+  assert.ok(bootMarker, 'the boot spinner must establish the style container')
+  const bootHasRules = ruleQuery.filter((rule) => rule.selector.includes('[data-dsh-boot]') && rule.selector.includes(':has('))
+  assert.equal(bootHasRules.length, 1, 'the boot screen should evaluate its spinner hook once')
   assert.equal(card.declaration('margin')?.value, '0')
   assert.ok(seal, 'the boot progress seal is missing')
   assert.equal(seal.declaration('animation')?.value, 'none')
@@ -452,12 +531,13 @@ test('boot screen becomes a day-night island departure card', () => {
   assert.equal(orbit.declaration('clip-path')?.value, 'circle(50%)')
   const leafSeal = ruleQuery.find(
     (rule) =>
-      rule.selector.includes('[data-dsh-boot] > :has([data-dsh-boot-spinner])::before') &&
+      rule.selector.endsWith('[data-dsh-boot] > *::before') &&
+      rule.atRules.includes(bootContainer) &&
       rule.declaration('background-image')?.value.includes('__ANIMAL_ISLAND_BOOT_LEAF__'),
   )
   assert.ok(leafSeal, 'the boot leaf seal is missing')
   assert.equal(leafSeal.declaration('corner-shape')?.value, 'round')
-  assert.match(selectors, /:has\(\+ \[data-dsh-boot-spinner\]\)/)
+  assert.match(selectors, /:not\(\[data-dsh-boot-spinner\] \+ \*\)/)
   assert.match(selectors, /\[data-dsh-boot-spinner\] \+ \*/)
   assert.doesNotMatch(selectors, /\[data-dsh-boot\][^\n]*>\s*div\b/)
   assert.doesNotMatch(selectors, /\[data-dsh-boot-spinner\]\s*\+\s*div\b/)

@@ -42,7 +42,7 @@ DSH 证据与探测方式只在 `scripts/seam-contract.mjs` 维护；本文保�
 | `[data-open-target]` | 分裂式「打开方式」控件在亮色模式下的外框与中缝：DSH 原生的 faint border 在画布上几乎不可见，只增强这两条功能性边界；中缝用其内部 `button[aria-haspopup="menu"]` 定位 | OpenTargetButton 为用户打开动作写出的语义标记，下拉按钮保留标准 menu 语义；不依赖组件 CSS module hash，暗色分支和 DSH 的几何保持原样 |
 | `[data-plugin-item]`、`[data-plugin-package]` | 插件管理列表行在亮色模式下的轻纸面：固定画布波浪会穿过透明行的描述文字；只改背景色，不碰列表的 padding、margin、圆角、阴影或排列 | Plugin Manager 为内置配置行和已安装插件行写出的身份标记，供它自己的行操作使用；不依赖 `V7pFBG_*` CSS module hash |
 | `[data-dsh-boot]` | 全屏启动等待页：昼夜岛屿背景；纸卡只在公开进度章存在时启用，失败页允许官方错误列表滚动 | DSH WebBootPage 在插件加载前自己写出的根标记；主题不接管启动状态，结构消失时自动退回 DSH 原样式 |
-| `[data-dsh-boot-spinner]` | 启动进度章：叶片中心、航线圈与环绕萤火点；纸卡、字标和提示通过该公开 hook 的 `:has()` / 相邻关系定位，不使用 tag 或 hash class；进度弧继续读取 `--dsh-boot-arc` | DSH WebBootPage 创建进度元素时写出的标记；失败状态会移除该元素，因此纸卡装饰同时失配，官方错误列表不受影响 |
+| `[data-dsh-boot-spinner]` | 启动进度章：叶片中心、航线圈与环绕萤火点；该公开 hook 用一次 `:has()` 建立命名样式容器，纸卡、字标和提示在容器内按直接子元素关系定位，不使用 tag 或 hash class；进度弧继续读取 `--dsh-boot-arc` | DSH WebBootPage 创建进度元素时写出的标记；失败状态会移除该元素，因此纸卡装饰同时失配，官方错误列表不受影响 |
 | `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
 | `[data-windows-titlebar]` | 桌面端（仅 Windows）外壳标记：用它把 DSH 自己画在 AppFrame 上的不透明 sidebar-fill 清成透明，画布才透得出来 | Electron 桌面壳自己写的平台标记；macOS 给同一个 frame 的是 `background: 0 0`，Windows 分支漏了这行（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)）。侧栏/右栏各自重画自己的表面，所以只清 frame 不影响可读性 |
@@ -55,7 +55,7 @@ DSH 证据与探测方式只在 `scripts/seam-contract.mjs` 维护；本文保�
 | `[aria-pressed]`、`[aria-selected]`、`[aria-checked]`、`[aria-expanded]` | 选中、展开与开关状态（预设卡片、列表项、外观预设、插件开关） | ARIA 状态属性 |
 | `[aria-haspopup]`、`[aria-label]` | 定位菜单触发器与区分带文字控件 | 标准 ARIA 属性；只读语义，不依赖 DOM 位置 |
 
-插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。Windows 外壳 frame 的例外是 `html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。启动页的受限例外用 `[data-dsh-boot] > :has([data-dsh-boot-spinner])` 锚定纸卡，字标和提示用进度章的相邻关系定位；spinner 消失即整体失配。Windows 标题栏让 `body` 的 sidebar-fill 成为 caption 色，并在 `#root` 恢复应用内奶油 token；暗色另用 `div:has(> nav[aria-label])` 找到侧栏根节点恢复深蓝，只改背景色，不改侧栏布局。以上关系都由 `test/skin.test.mjs` 与桌面夹具锁住。
+插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。Windows 外壳 frame 的例外是 `html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。启动页的受限例外用一次 `[data-dsh-boot]:has([data-dsh-boot-spinner])` 建立样式容器，纸卡、字标和提示在其后代规则中定位；spinner 消失即容器条件整体失配。Windows 标题栏让 `body` 的 sidebar-fill 成为 caption 色，并在 `#root` 恢复应用内奶油 token；暗色另用 `div:has(> nav[aria-label])` 找到侧栏根节点恢复深蓝，只改背景色，不改侧栏布局。以上关系都由 `test/skin.test.mjs` 与桌面夹具锁住。
 
 ## 插件自有布局
 
