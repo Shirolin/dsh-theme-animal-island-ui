@@ -120,41 +120,57 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
         ))}
       </fieldset>
 
-      <label className="animal-island-appearance__slider">
-        <span>自定义</span>
-        <input
-          type="range"
-          min={APPEARANCE_DEFAULTS.min}
-          max={APPEARANCE_DEFAULTS.max}
-          step={0.01}
-          value={draftVeil}
-          style={sliderStyle}
-          onChange={(event) => updateVeil(Number(event.target.value))}
-          onPointerUp={scheduleCommit}
-          onPointerCancel={scheduleCommit}
-          onLostPointerCapture={scheduleCommit}
-          onKeyUp={scheduleCommit}
-          onBlur={scheduleCommit}
-        />
-        <output>{draftVeil.toFixed(2)}</output>
-      </label>
+      <div className="animal-island-appearance__custom">
+        <label className="animal-island-appearance__slider">
+          <span className="animal-island-appearance__slider-title">自定义</span>
+          <output className="animal-island-appearance__slider-value">{draftVeil.toFixed(2)}</output>
+          <input
+            type="range"
+            min={APPEARANCE_DEFAULTS.min}
+            max={APPEARANCE_DEFAULTS.max}
+            step={0.01}
+            value={draftVeil}
+            style={sliderStyle}
+            onChange={(event) => updateVeil(Number(event.target.value))}
+            onPointerUp={scheduleCommit}
+            onPointerCancel={scheduleCommit}
+            onLostPointerCapture={scheduleCommit}
+            onKeyUp={scheduleCommit}
+            onBlur={scheduleCommit}
+          />
+        </label>
 
-      <button
-        type="button"
-        className="animal-island-appearance__reset"
-        onClick={() => {
-          cancelPendingCommit()
-          draftDirty.current = false
-          draftRef.current = APPEARANCE_DEFAULTS.veil
-          setDraftVeil(APPEARANCE_DEFAULTS.veil)
-          set({
-            preset: APPEARANCE_DEFAULTS.preset,
-            veil: APPEARANCE_DEFAULTS.veil,
-          })
-        }}
-      >
-        恢复默认（{PRESET_LABELS[APPEARANCE_DEFAULTS.preset]} {APPEARANCE_DEFAULTS.veil.toFixed(2)}）
-      </button>
+        <div className="animal-island-appearance__custom-actions">
+          <span className="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
+          <button
+            type="button"
+            className="animal-island-appearance__reset"
+            onClick={() => {
+              cancelPendingCommit()
+              draftDirty.current = false
+              draftRef.current = APPEARANCE_DEFAULTS.veil
+              setDraftVeil(APPEARANCE_DEFAULTS.veil)
+              set({
+                preset: APPEARANCE_DEFAULTS.preset,
+                veil: APPEARANCE_DEFAULTS.veil,
+              })
+            }}
+          >
+            <span className="animal-island-appearance__reset-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10" />
+                <path d="M4.7 2.7v3.1h3.1" />
+              </svg>
+            </span>
+            <span className="animal-island-appearance__reset-copy">
+              <span>恢复默认</span>
+              <small>
+                {PRESET_LABELS[APPEARANCE_DEFAULTS.preset]} {APPEARANCE_DEFAULTS.veil.toFixed(2)}
+              </small>
+            </span>
+          </button>
+        </div>
+      </div>
 
       <p className="animal-island-appearance__note">
         设置卡片本身是固定纸面，滑杆调整的是它背后的画布，上方「画布预览」会实时同步；偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。

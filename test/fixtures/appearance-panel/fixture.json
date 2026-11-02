@@ -1,0 +1,23 @@
+{
+  "title": "动森外观 · 自定义透明度控件（560px / 320px，亮暗）",
+  "pluginCss": [],
+  "assertions": [
+    {
+      "message": "自定义控件在宽窄两种面板中都不溢出，并使用内嵌卡片",
+      "expression": "(() => [...document.querySelectorAll('.animal-island-appearance')].every((panel) => { const control = panel.querySelector('.animal-island-appearance__custom'); if (!control) return false; const rect = control.getBoundingClientRect(); const style = getComputedStyle(control); return rect.width > 0 && control.scrollWidth <= control.clientWidth + 1 && style.borderStyle === 'solid' && style.borderRadius === '16px'; }))()"
+    },
+    {
+      "message": "标题和数值占据首行，滑杆独占下一行",
+      "expression": "(() => [...document.querySelectorAll('.animal-island-appearance__slider')].every((slider) => { const title = slider.querySelector('.animal-island-appearance__slider-title'); const value = slider.querySelector('.animal-island-appearance__slider-value'); const input = slider.querySelector('input[type=\"range\"]'); if (!title || !value || !input) return false; const titleRect = title.getBoundingClientRect(); const valueRect = value.getBoundingClientRect(); const inputRect = input.getBoundingClientRect(); return getComputedStyle(slider).display === 'grid' && valueRect.left > titleRect.right && inputRect.top >= Math.max(titleRect.bottom, valueRect.bottom) && inputRect.width > 200; }))()"
+    },
+    {
+      "message": "数值是独立的薄荷强调徽章，滑杆保留自绘轨道且不继承输入框底影",
+      "expression": "(() => [...document.querySelectorAll('.animal-island-appearance__slider')].every((slider) => { const value = slider.querySelector('.animal-island-appearance__slider-value'); const input = slider.querySelector('input[type=\"range\"]'); if (!value || !input) return false; const badge = getComputedStyle(value); const dot = getComputedStyle(value, '::before'); const range = getComputedStyle(input); const expectedDot = document.body.hasAttribute('data-ds-dark-theme') ? 'rgb(97, 217, 203)' : 'rgb(25, 200, 185)'; return badge.borderRadius === '999px' && badge.backgroundColor !== 'rgba(0, 0, 0, 0)' && dot.backgroundColor === expectedDot && range.appearance === 'none' && range.boxShadow === 'none'; }))()"
+    },
+    {
+      "message": "恢复默认是带图标和副标题的次级按钮",
+      "expression": "(() => [...document.querySelectorAll('.animal-island-appearance__reset')].every((button) => { const icon = button.querySelector('.animal-island-appearance__reset-icon svg'); const copy = button.querySelector('.animal-island-appearance__reset-copy'); const subline = copy?.querySelector('small'); if (!icon || !copy || !subline) return false; const rect = button.getBoundingClientRect(); const display = getComputedStyle(button).display; return rect.height >= 36 && button.scrollWidth <= button.clientWidth + 1 && copy.children.length === 2 && subline.textContent.trim() === '均衡 0.40' && (display === 'flex' || display === 'inline-flex'); }))()"
+    }
+  ],
+  "variants": [{ "id": "light", "mode": "light", "window": "980,540" }, { "id": "dark", "mode": "dark", "window": "980,540" }]
+}

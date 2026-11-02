@@ -3,17 +3,17 @@
 当前唯一规范产物：
 
 ```text
-release-v0.3.28/dsh-theme-animal-island-ui-0.3.28.tgz
-SHA-256: 7E99C6EF64D9B09CD5DE9A72D873C2291EBC67D53F0B6EA7F4B770F2874747B8
+release-v0.3.31/dsh-theme-animal-island-ui-0.3.31.tgz
+SHA-256: 6CF924756C2BB31A50E8F423395D56F10B5A4A417CD0A8B914D7A5F9C753400B
 ```
 
-规范产物由 `pnpm pack --pack-destination artifacts/release-v0.3.28` 生成，`prepack` 会先清空并重建 `lib`。重新出包后请同步更新上面的 SHA；若该版本已经分发过，请改版本号而不是原地重打。
+规范产物由 `pnpm pack --pack-destination artifacts/release-v0.3.31` 生成，`prepack` 会先清空并重建 `lib`。重新出包后请同步更新上面的 SHA；若该版本已经分发过，请改版本号而不是原地重打。
 
 ## 目录说明
 
 | 目录 | 内容 | 是否可用于验收 |
 | --- | --- | --- |
-| `release-v0.3.28/` | 当前规范产物 | 是 |
+| `release-v0.3.31/` | 当前规范产物 | 是 |
 | `release-v0.3.27/` | 上一版，profile 回滚用 | 仅回滚 |
 | `release-v0.3.26/` | 更早版本，仅作回滚留档 | 仅回滚 |
 | `release-v0.1.x` – `release-v0.3.2`、`release/`、`release-final/`、`final/`、`dsh-theme-animal-island-ui-0.1.0.tgz` | 历史归档，含早期重复的 0.1.0 包 | 否 |

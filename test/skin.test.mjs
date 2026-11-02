@@ -12,6 +12,7 @@ const selectors = ruleQuery.all.map((rule) => rule.selector).join('\n')
 const slots = await readFile(new URL('../src/client/slots.ts', import.meta.url), 'utf8')
 const install = await readFile(new URL('../src/client/install.ts', import.meta.url), 'utf8')
 const brand = await readFile(new URL('../src/client/components/brand.tsx', import.meta.url), 'utf8')
+const appearanceTab = await readFile(new URL('../src/client/components/appearance-tab.tsx', import.meta.url), 'utf8')
 const wave = await readFile(new URL('../src/client/assets/sidebar-wave.svg', import.meta.url), 'utf8')
 const nightLeaves = await readFile(new URL('../src/client/assets/night-leaves.svg', import.meta.url), 'utf8')
 const nightHorizon = await readFile(new URL('../src/client/assets/night-horizon.svg', import.meta.url), 'utf8')
@@ -515,6 +516,7 @@ test('appearance slider paints a warm track and mint progress in both engines', 
 
   assert.ok(input && webkitTrack && webkitThumb && firefoxTrack && firefoxProgress && previewSheet && darkPreviewSheet && contrastDraft)
   assert.equal(input.declaration('appearance')?.value, 'none')
+  assert.equal(input.declaration('box-shadow')?.value, 'none')
   assert.match(webkitTrack.declaration('background')?.value ?? '', /var\(--animal-slider-track\)/)
   assert.match(webkitTrack.declaration('background')?.value ?? '', /--animal-slider-progress/)
   assert.equal(webkitThumb.declaration('border')?.value, '2px solid var(--animal-border-strong)')
@@ -524,6 +526,30 @@ test('appearance slider paints a warm track and mint progress in both engines', 
   assert.match(darkPreviewSheet.declaration('background-color')?.value ?? '', /var\(--animal-appearance-draft, var\(--animal-canvas-veil/)
   assert.ok(ruleQuery.find((rule) => rule.declaration('--animal-slider-track')?.value === '#e9dfc9'))
   assert.ok(ruleQuery.find((rule) => rule.declaration('--animal-slider-track')?.value === '#5a4b3d'))
+})
+
+test('appearance custom control keeps its label, value, slider and reset in one panel', () => {
+  const custom = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__custom'))
+  const slider = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__slider'))
+  const value = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__slider-value'))
+  const reset = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__reset'))
+  const focus = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('.animal-island-appearance__slider input[type="range"]:focus-visible') && rule.declaration('outline-offset')?.value === '2px',
+  )
+
+  assert.ok(custom && slider && value && reset && focus)
+  assert.equal(custom.declaration('display')?.value, 'grid')
+  assert.equal(custom.declaration('border-radius')?.value, '16px')
+  assert.equal(slider.declaration('display')?.value, 'grid')
+  assert.match(slider.declaration('grid-template-columns')?.value ?? '', /minmax\(0, 1fr\) auto/)
+  assert.equal(value.declaration('display')?.value, 'inline-flex')
+  assert.equal(value.declaration('border-radius')?.value, '999px')
+  assert.equal(reset.declaration('display')?.value, 'inline-flex')
+  assert.match(appearanceTab, /className="animal-island-appearance__custom"/)
+  assert.match(appearanceTab, /className="animal-island-appearance__slider-title"/)
+  assert.match(appearanceTab, /className="animal-island-appearance__reset-icon"/)
+  assert.match(appearanceTab, /className="animal-island-appearance__reset-copy"/)
 })
 
 test('wave artwork is an original local SVG rather than a reference asset', () => {

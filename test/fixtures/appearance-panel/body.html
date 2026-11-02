@@ -1,0 +1,111 @@
+<!doctype html>
+<!--
+  The custom veil control at its natural settings width and at a narrow width.
+  The markup mirrors AppearanceTab's public plugin-owned classes so the grid
+  hierarchy, value badge, reset action, focus ring and overflow can be checked
+  against the real skin in both light and dark themes.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>动森外观 · 自定义透明度</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  * { box-sizing: border-box; }
+  body { min-height: 100vh; margin: 0; padding: 24px; }
+  .fixture {
+    display: grid;
+    grid-template-columns: minmax(0, 560px) minmax(0, 320px);
+    align-items: start;
+    gap: 24px;
+    width: min(930px, 100%);
+    margin: 0 auto;
+  }
+  .settings-sheet {
+    min-width: 0;
+    padding: 18px;
+    border: 1.5px solid var(--animal-border);
+    border-radius: 24px;
+    background: var(--animal-cream);
+    box-shadow: 0 8px 24px var(--animal-shadow-card);
+  }
+  .settings-sheet .animal-island-appearance {
+    max-width: none;
+    padding: 0;
+  }
+  .fixture-label {
+    margin: 0 0 14px;
+    color: var(--animal-muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .06em;
+  }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{TOKENS}} {{BODY_STYLE}}">
+<main class="fixture">
+  <article class="settings-sheet" role="dialog" aria-label="动森外观设置（正常宽度）">
+    <p class="fixture-label">正常宽度 · 560px</p>
+    <section class="animal-island-appearance">
+      <h3>动森外观</h3>
+      <p>画布上那层奶油「纸面」的透明度。越低越绿、越像游戏；越高越纸白、越好读。</p>
+      <fieldset class="animal-island-appearance__presets" aria-label="外观预设">
+        <button type="button" class="animal-island-appearance__preset">纸白<small>0.52</small></button>
+        <button type="button" class="animal-island-appearance__preset" aria-pressed="true">均衡<small>0.40</small></button>
+        <button type="button" class="animal-island-appearance__preset">海岛<small>0.28</small></button>
+      </fieldset>
+      <div class="animal-island-appearance__custom">
+        <label class="animal-island-appearance__slider">
+          <span class="animal-island-appearance__slider-title">自定义</span>
+          <output class="animal-island-appearance__slider-value">0.40</output>
+          <input type="range" min="0.15" max="0.60" step="0.01" value="0.40" style="--animal-slider-progress: 55.5556%">
+        </label>
+        <div class="animal-island-appearance__custom-actions">
+          <span class="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
+          <button type="button" class="animal-island-appearance__reset">
+            <span class="animal-island-appearance__reset-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10"/><path d="M4.7 2.7v3.1h3.1"/></svg>
+            </span>
+            <span class="animal-island-appearance__reset-copy"><span>恢复默认</span><small>均衡 0.40</small></span>
+          </button>
+        </div>
+      </div>
+      <p class="animal-island-appearance__note">偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。</p>
+    </section>
+  </article>
+
+  <article class="settings-sheet" role="dialog" aria-label="动森外观设置（窄宽）">
+    <p class="fixture-label">窄宽 · 320px</p>
+    <section class="animal-island-appearance">
+      <h3>动森外观</h3>
+      <p>画布上那层奶油「纸面」的透明度。</p>
+      <fieldset class="animal-island-appearance__presets" aria-label="外观预设">
+        <button type="button" class="animal-island-appearance__preset">纸白<small>0.52</small></button>
+        <button type="button" class="animal-island-appearance__preset" aria-pressed="true">均衡<small>0.40</small></button>
+        <button type="button" class="animal-island-appearance__preset">海岛<small>0.28</small></button>
+      </fieldset>
+      <div class="animal-island-appearance__custom">
+        <label class="animal-island-appearance__slider">
+          <span class="animal-island-appearance__slider-title">自定义</span>
+          <output class="animal-island-appearance__slider-value">0.40</output>
+          <input type="range" min="0.15" max="0.60" step="0.01" value="0.40" style="--animal-slider-progress: 55.5556%">
+        </label>
+        <div class="animal-island-appearance__custom-actions">
+          <span class="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
+          <button type="button" class="animal-island-appearance__reset">
+            <span class="animal-island-appearance__reset-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10"/><path d="M4.7 2.7v3.1h3.1"/></svg>
+            </span>
+            <span class="animal-island-appearance__reset-copy"><span>恢复默认</span><small>均衡 0.40</small></span>
+          </button>
+        </div>
+      </div>
+      <p class="animal-island-appearance__note">偏好保存在本机这个客户端。</p>
+    </section>
+  </article>
+</main>
+</body>
+</html>
