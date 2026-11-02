@@ -2,6 +2,8 @@
 
 [简体中文](README.md)
 
+[Product site](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30-second promo film](https://shirolin.github.io/dsh-theme-animal-island-ui/#film)
+
 [![check](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml)
 [![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-f3c969.svg)](LICENSE)

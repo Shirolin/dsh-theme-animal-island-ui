@@ -20,7 +20,7 @@ test('package exposes DSH client, provider ordering, peers, and prepack', () => 
   assert.equal(packageJson.peerDependencies, undefined)
   assert.equal(packageJson.repository.url, 'git+https://github.com/Shirolin/dsh-theme-animal-island-ui.git')
   assert.equal(packageJson.bugs.url, 'https://github.com/Shirolin/dsh-theme-animal-island-ui/issues')
-  assert.equal(packageJson.homepage, 'https://github.com/Shirolin/dsh-theme-animal-island-ui#readme')
+  assert.equal(packageJson.homepage, 'https://shirolin.github.io/dsh-theme-animal-island-ui/')
   assert.equal(packageJson.packageManager, 'pnpm@11.1.2')
 })
 
@@ -30,7 +30,20 @@ test('package ships its docs, scripts and engine metadata', () => {
   }
   assert.equal(packageJson.engines.node, '>=22.13.0')
   assert.ok(packageJson.keywords.includes('dsh'))
-  for (const script of ['build', 'format', 'format:check', 'lint', 'typecheck', 'test', 'check:compat', 'check:visual', 'fixture', 'release', 'check']) {
+  for (const script of [
+    'build',
+    'format',
+    'format:check',
+    'lint',
+    'typecheck',
+    'test',
+    'check:compat',
+    'check:visual',
+    'check:site',
+    'fixture',
+    'release',
+    'check',
+  ]) {
     assert.ok(packageJson.scripts[script], `script missing: ${script}`)
   }
 })

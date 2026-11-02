@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" role="img" aria-label="Animal Island floating doodles">
+  <g opacity=".18">
+    <path d="M64 74c-9 5-14 14-13 23 9 1 18-4 23-13 4-7 3-14 2-18-4 1-8 3-12 8Z" fill="#4f9a55"/>
+    <path d="M55 92c5-3 10-7 14-12" fill="none" stroke="#a6dd8c" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g opacity=".15">
+    <path d="M286 148c10 6 15 16 13 26-10 1-19-5-24-15-4-7-3-15-1-19 4 2 8 4 12 8Z" fill="#2f8a3b"/>
+    <path d="M296 166c-6-3-11-8-15-13" fill="none" stroke="#bfe8a5" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g opacity=".13">
+    <circle cx="120" cy="250" r="6" fill="#ffd75e"/>
+    <circle cx="120" cy="236" r="4.6" fill="#fff6d8"/>
+    <circle cx="133" cy="247" r="4.6" fill="#fff6d8"/>
+    <circle cx="129" cy="262" r="4.6" fill="#fff6d8"/>
+    <circle cx="113" cy="262" r="4.6" fill="#fff6d8"/>
+    <circle cx="108" cy="247" r="4.6" fill="#fff6d8"/>
+    <circle cx="120" cy="250" r="3.4" fill="#ffb47a"/>
+  </g>
+  <g opacity=".13">
+    <path d="M258 296l3.4 8.6 9.2.6-7.1 5.9 2.3 8.9-7.8-5-7.8 5 2.3-8.9-7.1-5.9 9.2-.6Z" fill="#ffd75e"/>
+  </g>
+  <g opacity=".12">
+    <path d="M196 60c-6 8-6 18 0 26 6-8 6-18 0-26Z" fill="#61d9cb"/>
+    <path d="M196 74v14" stroke="#2f8a3b" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

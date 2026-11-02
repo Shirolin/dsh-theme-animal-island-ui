@@ -9,7 +9,7 @@
   "bugs": {
     "url": "https://github.com/Shirolin/dsh-theme-animal-island-ui/issues"
   },
-  "homepage": "https://github.com/Shirolin/dsh-theme-animal-island-ui#readme",
+  "homepage": "https://shirolin.github.io/dsh-theme-animal-island-ui/",
   "type": "module",
   "packageManager": "pnpm@11.1.2",
   "license": "MIT",
@@ -86,8 +86,9 @@
     "capture:desktop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/capture-desktop.ps1",
     "desktop:debug": "scripts\\dsh-desktop-debug.cmd",
     "release": "node scripts/release.mjs",
+    "check:site": "node scripts/check-site.mjs",
     "prepack": "pnpm run build",
-    "check": "pnpm run typecheck && pnpm run build && node test/run.mjs && node scripts/check-compat.mjs"
+    "check": "pnpm run check:site && pnpm run typecheck && pnpm run build && node test/run.mjs && node scripts/check-compat.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.4",
