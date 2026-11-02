@@ -1,0 +1,19 @@
+{
+  "title": "快捷键弹窗 · 搜索输入（真实 DSH DOM）",
+  "pluginCss": ["@deepseek-ai/dsh-client-ui-shortcuts"],
+  "assertions": [
+    {
+      "message": "搜索框只由外层 role=search 绘制",
+      "expression": "(() => { const field = document.querySelector('[role=\"search\"]'); const input = field?.querySelector(':scope > input[type=\"search\"]'); if (!field || !input) return false; const fieldStyle = getComputedStyle(field); const inputStyle = getComputedStyle(input); return fieldStyle.borderTopWidth === '1px' && fieldStyle.borderRadius === '12px' && fieldStyle.backgroundColor !== 'rgba(0, 0, 0, 0)' && inputStyle.borderTopWidth === '0px' && inputStyle.backgroundColor === 'rgba(0, 0, 0, 0)' && inputStyle.boxShadow === 'none'; })()"
+    },
+    {
+      "message": "聚焦时只保留一圈薄荷外环",
+      "expression": "(() => { const field = document.querySelector('[role=\"search\"]'); const input = field?.querySelector(':scope > input[type=\"search\"]'); if (!field || !input) return false; input.focus(); const dark = document.body.hasAttribute('data-ds-dark-theme'); const mint = dark ? 'rgb(123, 226, 213)' : 'rgb(11, 109, 100)'; const fieldStyle = getComputedStyle(field); const inputStyle = getComputedStyle(input); return document.activeElement === input && fieldStyle.borderTopColor === mint && fieldStyle.boxShadow.includes(mint + ' 0px 0px 0px 1px') && inputStyle.outlineStyle === 'none'; })()"
+    },
+    {
+      "message": "快捷键列表首尾行使用完整的内嵌聚焦环",
+      "expression": "(() => { const rows = [...document.querySelectorAll('.St8tea_rowButton')]; if (rows.length < 2) return false; return rows.every((row) => { row.focus({ focusVisible: true }); const style = getComputedStyle(row); return document.activeElement === row && style.outlineStyle === 'solid' && style.outlineWidth === '2px' && style.outlineOffset === '-2px'; }); })()"
+    }
+  ],
+  "variants": [{ "id": "light", "mode": "light", "window": "700,700" }, { "id": "dark", "mode": "dark", "window": "700,700" }]
+}

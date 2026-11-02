@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>keybinding search</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; }
+  .stage { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .St8tea_dialog { position: relative; }
+  .St8tea_contents { min-height: 0; }
+  .previewList { padding: 8px 16px 18px; color: var(--animal-muted); font-size: 13px; line-height: 1.8; }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{TOKENS}} {{BODY_STYLE}}">
+<main class="stage">
+  <div role="dialog" aria-modal="true" aria-label="快捷键" tabindex="-1" class="St8tea_dialog">
+    <div class="St8tea_contents">
+      <header class="St8tea_header">
+        <h2 class="St8tea_title">快捷键</h2>
+        <button type="button" class="St8tea_close" aria-label="关闭快捷键">×</button>
+      </header>
+      <div class="St8tea_searchRow">
+        <div class="St8tea_searchField" role="search" aria-label="搜索快捷键">
+          <svg class="St8tea_searchIcon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M10.28 5.86536C10.28 3.41381 8.29245 1.42644 5.84094 1.42627C3.38929 1.42627 1.40186 3.4137 1.40186 5.86536C1.40203 8.31686 3.38939 10.3044 5.84094 10.3044C8.29234 10.3043 10.2799 8.31676 10.28 5.86536ZM11.4174 5.86536C11.4172 8.94498 8.92057 11.4416 5.84094 11.4418C2.76117 11.4418 0.263843 8.94509 0.263672 5.86536C0.263672 2.78548 2.76106 0.288086 5.84094 0.288086C8.92067 0.288258 11.4174 2.78559 11.4174 5.86536Z" fill="currentColor"/>
+            <path d="M13.7372 12.9078L12.9323 13.7127L9.9732 10.7536L10.7781 9.94867L13.7372 12.9078Z" fill="currentColor"/>
+          </svg>
+          <input class="St8tea_search" type="search" aria-label="搜索快捷键" placeholder="搜索快捷键">
+        </div>
+      </div>
+      <div class="St8tea_list">
+        <section aria-label="应用操作">
+          <ul class="St8tea_rows">
+            <li class="St8tea_row">
+              <button type="button" class="St8tea_rowButton" aria-label="修改快捷键速查快捷键"></button>
+              <span class="St8tea_commandLabel">快捷键速查</span>
+              <span class="St8tea_binding"><span class="St8tea_keyBadge">Ctrl + /</span></span>
+            </li>
+            <li class="St8tea_row">
+              <button type="button" class="St8tea_rowButton" aria-label="修改新会话快捷键"></button>
+              <span class="St8tea_commandLabel">新会话</span>
+              <span class="St8tea_binding"><span class="St8tea_keyBadge">Ctrl + N</span></span>
+            </li>
+            <li class="St8tea_row">
+              <button type="button" class="St8tea_rowButton" aria-label="修改分栏快捷键"></button>
+              <span class="St8tea_commandLabel">分栏</span>
+              <span class="St8tea_binding"><span class="St8tea_keyBadge">Ctrl + \</span></span>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+  document.querySelector('.St8tea_rowButton')?.focus({ focusVisible: true })
+</script>
+</body>
+</html>

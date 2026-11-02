@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>settings navigation</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; }
+  .stage { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .AnXs9G_panel { height: min(620px, calc(100vh - 48px)); }
+  .preview { flex: 1; min-width: 0; padding: 24px; color: var(--animal-body); }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{TOKENS}} {{BODY_STYLE}}">
+<main class="stage">
+  <div role="dialog" aria-modal="true" aria-label="设置" tabindex="-1" class="AnXs9G_panel">
+    <nav class="AnXs9G_nav">
+      <div class="AnXs9G_navTitle">设置</div>
+      <div class="AnXs9G_navList">
+        <button type="button" class="AnXs9G_navCell">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M3.5 13c.5-2.6 2.1-4 4.5-4s4 1.4 4.5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">账号与余额</span>
+        </button>
+        <button type="button" class="AnXs9G_navCell AnXs9G_active">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">通用设置</span>
+        </button>
+        <button type="button" class="AnXs9G_navCell">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 4.5h10M3 8h10M3 11.5h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">模型</span>
+        </button>
+        <button type="button" class="AnXs9G_navCell">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="2.5" y="3" width="11" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">内置插件</span>
+        </button>
+        <button type="button" class="AnXs9G_navCell">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2.5 13 5v6l-5 2.5L3 11V5l5-2.5Z" stroke="currentColor" stroke-width="1.2"/>
+            <path d="m5.5 8 1.5 1.5L11 6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">Agent 预设</span>
+        </button>
+      </div>
+    </nav>
+    <div class="preview">通用设置</div>
+  </div>
+</main>
+<script>
+  document.querySelectorAll('[role="dialog"] nav button')[1]?.focus({ focusVisible: true })
+</script>
+</body>
+</html>

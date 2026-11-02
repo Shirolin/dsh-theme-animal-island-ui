@@ -1,0 +1,19 @@
+{
+  "title": "设置弹窗 · 左侧导航对齐（真实 DSH DOM）",
+  "pluginCss": ["@deepseek-ai/dsh-client-ui-settings-general"],
+  "assertions": [
+    {
+      "message": "导航行铺满左栏，图标与设置标题左对齐",
+      "expression": "(() => { const dialog = document.querySelector('[role=\"dialog\"]'); const nav = dialog?.querySelector(':scope > nav'); const title = nav?.querySelector(':scope > div:first-child'); const list = nav?.querySelector(':scope > div:last-child'); if (!nav || !title || !list) return false; const titleStyle = getComputedStyle(title); const titleLeft = title.getBoundingClientRect().left + parseFloat(titleStyle.paddingLeft); const listRect = list.getBoundingClientRect(); const rows = [...list.querySelectorAll(':scope > button')]; if (getComputedStyle(list).alignItems !== 'normal' || rows.length !== 5) return false; return rows.every((row) => { const rect = row.getBoundingClientRect(); const icon = row.querySelector('svg')?.getBoundingClientRect(); return Math.abs(rect.left - listRect.left) < 0.5 && Math.abs(rect.width - listRect.width) < 0.5 && icon !== undefined && Math.abs(icon.left - titleLeft) < 0.5; }); })()"
+    },
+    {
+      "message": "导航行仍保持 DSH 的 40px 高度",
+      "expression": "(() => [...document.querySelectorAll('[role=\"dialog\"] > nav button')].every((button) => getComputedStyle(button).height === '40px'))()"
+    },
+    {
+      "message": "键盘聚焦环完整画在导航行内部",
+      "expression": "(() => { const dialog = document.querySelector('[role=\"dialog\"]'); const row = dialog?.querySelectorAll('nav button')[1]; if (!row) return false; row.focus({ focusVisible: true }); const style = getComputedStyle(row); return document.activeElement === row && style.outlineStyle === 'solid' && style.outlineWidth === '2px' && style.outlineOffset === '-2px'; })()"
+    }
+  ],
+  "variants": [{ "id": "light", "mode": "light", "window": "900,760" }, { "id": "dark", "mode": "dark", "window": "900,760" }]
+}

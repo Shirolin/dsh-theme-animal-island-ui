@@ -46,10 +46,10 @@ DSH 证据与探测方式只在 `scripts/seam-contract.mjs` 维护；本文保�
 | `--dsl-code-block-*` | 代码块圆角/底色/banner 变量 —— 皮肤**只读不写**：写了会连带顶掉文档预览刻意设的 `0px` / `transparent` | DSH 为代码块预留的公开样式变量 |
 | `body[data-ds-dark-theme]` | 深色分支 | ThemePresenter 写出的调色板属性 |
 | `[data-windows-titlebar]` | 桌面端（仅 Windows）外壳标记：用它把 DSH 自己画在 AppFrame 上的不透明 sidebar-fill 清成透明，画布才透得出来 | Electron 桌面壳自己写的平台标记；macOS 给同一个 frame 的是 `background: 0 0`，Windows 分支漏了这行（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)）。侧栏/右栏各自重画自己的表面，所以只清 frame 不影响可读性 |
-| `#root` + `div:has(> nav[aria-label])` | Windows 标题栏的三层表面：亮色让 caption 读取薄荷色，再把 `#root` 内恢复为奶油 token；暗色 caption 用夜青色，侧栏根节点恢复深蓝底色 | `#root` 是 DSH 的根 slot 容器，侧栏根节点包含直接子元素 `nav[aria-label]`；只改 token/背景色，不选中 `nav`、不改列宽/内边距/排列。桌面夹具同时锁定 caption、侧栏与画布三种底色 |
+| `#root` + `div:has(> nav[aria-label])` | Windows 标题栏的三层表面：亮色让 caption 读取薄荷色，再把 `#root` 内恢复为奶油 token；暗色 caption 用夜青色，侧栏根节点恢复深蓝底色。侧栏根节点同时把 `--dsw-specific-sidebar-fill` 恢复为自身底色，供会话列表底部渐隐层消费 | `#root` 是 DSH 的根 slot 容器，侧栏根节点包含直接子元素 `nav[aria-label]`；只改 token/背景色，不选中 `nav`、不改列宽/内边距/排列。桌面夹具同时锁定 caption、侧栏、画布与渐隐层底色 |
 | `--dsh-windows-content-radius` | Windows 内容列/全屏右栏 dock pane 的左上角圆角；皮肤在 **frame 元素**上设为 `0px`，去掉外壳自带的 16px 圆角 | layout 插件公开的 Windows 几何变量，仅改圆角，不改列宽。**必须写在 frame 上**：DSH 的 `[data-windows-titlebar] .frame` 自己声明了 `16px`，写在 `<html>` 上会被它覆盖 |
 | `--dsw-menu-surface-fill` | 新版 DSH 菜单材质的底色兼容别名：映射到不透明的 `--dsw-specific-menu`，避免 Composer 焦点环与内容透过浮层 | 该变量只在目标桌面 runtime 中消费，仓库 `0.1.5-rc.3` 基线会自然忽略；不进入 ThemeRuntime token 载荷，只改颜色，不改几何与交互 |
-| `role="button" / checkbox / dialog / group / listbox / menu / menuitem / menuitemradio / option / radio / switch / treeitem` | DSH 控件、弹层与树行的语义锚点；只按角色或角色状态增强，不依赖组件 class | 标准 ARIA 角色，跨组件实现稳定 |
+| `role="button" / checkbox / dialog / group / listbox / menu / menuitem / menuitemradio / option / radio / search / switch / treeitem` | DSH 控件、弹层、搜索框与树行的语义锚点；只按角色或角色状态增强，不依赖组件 class | 标准 ARIA 角色，跨组件实现稳定 |
 | `[role='treeitem'][aria-selected='true']` | 选中的会话 / 搜索结果行：木牌底 + 木纹 + 压边 | 工作区树行的 ARIA 选中状态，跨版本稳定 |
 | `[aria-current='page']` | 侧栏面板行的当前项：木牌底 + 木纹 + 压边 | 侧栏面板的 ARIA 当前页标记 |
 | `[aria-pressed]`、`[aria-selected]`、`[aria-checked]`、`[aria-expanded]` | 选中、展开与开关状态（预设卡片、列表项、外观预设、插件开关） | ARIA 状态属性 |

@@ -128,14 +128,16 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
 /* The native Windows caption and sidebar both read
    --dsw-specific-sidebar-fill. In dark mode that collapses the caption into
    the sidebar, so give the caption a third night-sky surface and restore the
-   sidebar through its direct semantic nav. This changes only those two
-   backgrounds; the light caption is handled below and sidebar geometry stays
-   untouched. */
+   sidebar through its direct semantic nav. Restore the sidebar-local token too:
+   DSH's session-list fade consumes it, so leaving the caption color there draws
+   a darker rectangle above the account row. Light caption and sidebar use the
+   same split below; neither branch changes sidebar geometry. */
 html[data-windows-titlebar] body[data-ds-dark-theme] {
   --dsw-specific-sidebar-fill: #1f3034 !important;
 }
 
 html[data-windows-titlebar] body[data-ds-dark-theme] div:has(> nav[aria-label]) {
+  --dsw-specific-sidebar-fill: #303444 !important;
   background-color: #303444 !important;
 }
 
@@ -153,6 +155,7 @@ html[data-windows-titlebar] body:not([data-ds-dark-theme]) #root {
 }
 
 html[data-windows-titlebar] body:not([data-ds-dark-theme]) div:has(> nav[aria-label]) {
+  --dsw-specific-sidebar-fill: rgba(250, 248, 243, 0.82) !important;
   background-color: rgba(250, 248, 243, 0.82) !important;
 }
 
@@ -633,9 +636,10 @@ html[data-dsh-animal-island-skin] [data-trigger-menu]::after {
 
 /* Reserve vertical space in the settings header for the open-config-file
    action and the icon-only close button, without changing the button itself.
-   The :not(li *) guard keeps it off list rows and card footers, which also hold
-   icon buttons and were inheriting the 64px header height. */
-html[data-dsh-animal-island-skin] [role="dialog"] :where(div):has(> button > svg):not(li *) {
+   The list/nav guards keep it off list rows, card footers and the settings side
+   navigation, whose icon buttons would otherwise turn the nav column into a
+   centered stack on top of DSH's stretched full-width rows. */
+html[data-dsh-animal-island-skin] [role="dialog"] :where(div):has(> button > svg):not(li *):not(nav *) {
   min-height: 64px;
   height: auto;
   align-items: center;
@@ -692,6 +696,35 @@ html[data-dsh-animal-island-skin] :where([role="dialog"], [role="menu"]) span:ha
   outline-offset: 2px;
 }
 
+/* DSH's shortcut reference uses a standard role=search wrapper around the
+   input rather than the span>input shape handled above. Let the wrapper carry
+   the field surface so the global dialog input rule cannot paint a second box.
+   Border and spread share the same mint color on focus, reading as one 2px
+   ring instead of stacked border/outline rings. */
+html[data-dsh-animal-island-skin] :where([role="dialog"], [role="menu"]) [role="search"] {
+  box-sizing: border-box;
+  border: 1px solid var(--animal-border-strong) !important;
+  border-radius: 12px !important;
+  background: var(--animal-cream-deep) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+html[data-dsh-animal-island-skin] :where([role="dialog"], [role="menu"]) [role="search"] > input[type="search"] {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none !important;
+}
+
+html[data-dsh-animal-island-skin] :where([role="dialog"], [role="menu"]) [role="search"]:focus-within {
+  border-color: var(--animal-mint-deep) !important;
+  outline: none !important;
+  box-shadow:
+    0 0 0 1px var(--animal-mint-deep),
+    inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
 html[data-dsh-animal-island-skin]
   body[data-ds-dark-theme]
   :where([data-composer-card], [role="dialog"], [role="menu"])
@@ -707,15 +740,53 @@ html[data-dsh-animal-island-skin]
   background: #2a2520;
 }
 
+html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :where([role="dialog"], [role="menu"]) [role="search"] {
+  background: var(--animal-cream-deep) !important;
+}
+
 html[data-dsh-animal-island-skin] :where(input, textarea, select, [contenteditable="true"])::placeholder {
   color: var(--animal-muted);
   opacity: 1;
 }
 
-html[data-dsh-animal-island-skin] :where(button, input, textarea, select, [contenteditable="true"], [role="button"]):focus-visible {
-  outline: 3px solid var(--animal-mint-deep) !important;
-  outline-offset: 2px;
+/* DSH uses scroll containers and clipped rows throughout the sidebar, menus,
+   settings, and right rail. An outward ring is therefore cut at row edges.
+   Paint one consistent keyboard ring inside the control instead; the ticket
+   brand and composer keep their own larger focus treatments below. */
+html[data-dsh-animal-island-skin]
+  :where(
+    button,
+    input,
+    textarea,
+    select,
+    [contenteditable="true"],
+    [role="button"],
+    [role="checkbox"],
+    [role="menuitem"],
+    [role="menuitemradio"],
+    [role="option"],
+    [role="radio"],
+    [role="switch"],
+    [role="treeitem"],
+    [tabindex]
+  ):focus-visible {
+  outline: 2px solid var(--animal-mint-deep) !important;
+  outline-offset: -2px;
   border-color: var(--animal-mint-deep) !important;
+}
+
+/* The composer card already renders the composed focus state. DSH's inner
+   editor is nested in a scroll box, so its own ring can only paint clipped
+   corner fragments; leave the card as the single visible focus carrier. */
+html[data-dsh-animal-island-skin] [data-composer-card] [contenteditable="true"]:focus-visible {
+  outline: none !important;
+}
+
+/* Keep the settings rail explicit: this was the first verified clipped surface
+   and its full-width rows remain a useful regression target. */
+html[data-dsh-animal-island-skin] [role="dialog"] nav :where(button, [role="button"]):focus-visible {
+  outline: 2px solid var(--animal-mint-deep) !important;
+  outline-offset: -2px;
 }
 
 /* Menus and listboxes keep DSH's own popover chrome (radius, elevation stroke,

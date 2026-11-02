@@ -9,6 +9,10 @@
     {
       "message": "插件行有轻纸面但暗色模式保持原样",
       "expression": "(() => { const rows = [...document.querySelectorAll('li[data-plugin-item], li[data-plugin-package]')]; if (rows.length !== 3) return false; const dark = document.body.hasAttribute('data-ds-dark-theme'); return rows.every((row) => { const style = getComputedStyle(row); return dark ? style.backgroundColor === 'rgba(0, 0, 0, 0)' : style.backgroundColor === 'rgba(250, 248, 243, 0.48)'; }); })()"
+    },
+    {
+      "message": "开关在滚动列表边界内显示完整的 2px 内嵌聚焦环",
+      "expression": "(() => { const control = document.querySelector('button[role=\"switch\"]'); if (!control) return false; control.focus({ focusVisible: true }); const style = getComputedStyle(control); return document.activeElement === control && style.outlineStyle === 'solid' && style.outlineWidth === '2px' && style.outlineOffset === '-2px'; })()"
     }
   ],
   "variants": [{ "id": "light", "mode": "light", "window": "820,540" }, { "id": "dark", "mode": "dark", "window": "820,540" }]

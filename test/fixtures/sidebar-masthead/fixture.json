@@ -1,10 +1,14 @@
 {
   "title": "侧栏品牌区 · 渡岛船票（0.2.1-rc.5 真实侧栏 DOM）",
-  "pluginCss": ["@deepseek-ai/dsh-client-ui-sidebar"],
+  "pluginCss": ["@deepseek-ai/dsh-client-ui-sidebar", "@deepseek-ai/dsh-client-ui-workspace"],
   "assertions": [
     {
       "message": "标题栏、侧栏和画布保持三个独立表面",
       "expression": "(() => { const strip = document.querySelector('.shellStrip'); const root = document.querySelector('.wtg9ga_root'); if (!strip || !root) return false; const dark = document.body.hasAttribute('data-ds-dark-theme'); return getComputedStyle(strip).backgroundColor === (dark ? 'rgb(31, 48, 52)' : 'rgb(231, 239, 229)') && getComputedStyle(root).backgroundColor === (dark ? 'rgb(48, 52, 68)' : 'rgba(250, 248, 243, 0.82)'); })()"
+    },
+    {
+      "message": "会话列表渐隐层读取与侧栏相同的底色",
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const fade = root.querySelector('.GAkraW_fade'); if (fade === null) return false; const sidebarColor = getComputedStyle(root).backgroundColor; return getComputedStyle(fade).backgroundImage.includes(sidebarColor); }))()"
     },
     {
       "message": "三档侧栏都渲染出对应宽度的 60px 船票",

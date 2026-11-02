@@ -152,6 +152,8 @@ test('windows dark caption keeps a third surface above the sidebar', () => {
       rule.selector.includes('html[data-windows-titlebar]') &&
       rule.selector.includes('body[data-ds-dark-theme]') &&
       rule.selector.includes('div:has(> nav[aria-label])') &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.value === '#303444' &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.important &&
       rule.declaration('background-color')?.value === '#303444' &&
       rule.declaration('background-color')?.important,
   )
@@ -181,6 +183,8 @@ test('windows light caption uses the canvas mint while the app keeps its cream s
       rule.selector.includes('html[data-windows-titlebar]') &&
       rule.selector.includes('body:not([data-ds-dark-theme])') &&
       rule.selector.includes('div:has(> nav[aria-label])') &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.value === 'rgba(250, 248, 243, 0.82)' &&
+      rule.declaration('--dsw-specific-sidebar-fill')?.important &&
       rule.declaration('background-color')?.value === 'rgba(250, 248, 243, 0.82)' &&
       rule.declaration('background-color')?.important,
   )
@@ -403,6 +407,52 @@ test('composed dialog fields are skinned once, on the shell', () => {
   assert.equal(inner.declaration('box-shadow')?.value, 'none')
 })
 
+test('settings header sizing leaves side navigation rows to DSH layout', () => {
+  const header = ruleQuery.find((rule) => rule.declaration('min-height')?.value === '64px' && rule.selector.includes('[role="dialog"]'))
+  assert.ok(header, 'the settings header sizing rule is missing')
+  assert.ok(header.selector.includes(':not(li *)'), 'the header rule must exclude list rows')
+  assert.ok(header.selector.includes(':not(nav *)'), 'the header rule must exclude settings navigation')
+})
+
+test('settings navigation focus ring stays inside its clipped rail', () => {
+  const focus = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('[role="dialog"] nav') &&
+      rule.selector.includes(':focus-visible') &&
+      rule.declaration('outline')?.value === '2px solid var(--animal-mint-deep)',
+  )
+  assert.ok(focus, 'the settings navigation focus ring is missing')
+  assert.doesNotMatch(focus.selector, /nav\s*>/)
+  assert.equal(focus.declaration('outline')?.important, true)
+  assert.equal(focus.declaration('outline-offset')?.value, '-2px')
+})
+
+test('dialog search fields use the semantic wrapper as the only field surface', () => {
+  const field = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('[role="search"]') &&
+      rule.declaration('border')?.value === '1px solid var(--animal-border-strong)' &&
+      rule.declaration('border')?.important,
+  )
+  const input = ruleQuery.find((rule) => rule.selector.includes('[role="search"]') && rule.selector.includes('> input[type="search"]'))
+  const focus = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('[role="search"]:focus-within') &&
+      rule.declaration('border-color')?.value === 'var(--animal-mint-deep)' &&
+      rule.declaration('border-color')?.important,
+  )
+
+  assert.ok(field, 'the semantic search field surface is missing')
+  assert.equal(field.declaration('border-radius')?.value, '12px')
+  assert.ok(input, 'the inner search input must defer its surface to the wrapper')
+  assert.equal(input.declaration('border')?.value, '0')
+  assert.equal(input.declaration('box-shadow')?.value, 'none')
+  assert.equal(input.declaration('outline')?.value, 'none')
+  assert.equal(input.declaration('outline')?.important, true)
+  assert.ok(focus, 'the single semantic search focus ring is missing')
+  assert.match(focus.declaration('box-shadow')?.value, /0 0 0 1px var\(--animal-mint-deep\)/)
+})
+
 test('popover material inherits the opaque semantic menu surface', () => {
   const material = ruleQuery.find((rule) => rule.declaration('--dsw-menu-surface-fill') !== undefined)
   assert.ok(material, 'the menu material compatibility alias is missing')
@@ -410,17 +460,35 @@ test('popover material inherits the opaque semantic menu surface', () => {
   assert.equal(material.declaration('--dsw-menu-surface-fill')?.important, true)
 })
 
-test('focus rings use the readable deep mint across shell and composer', () => {
+test('focus rings stay complete inside DSH scroll surfaces', () => {
   const globalFocus = ruleQuery.find(
-    (rule) => rule.selector.includes(':focus-visible') && rule.declaration('outline')?.value === '3px solid var(--animal-mint-deep)',
+    (rule) => rule.selector.includes(':focus-visible') && rule.declaration('outline')?.value === '2px solid var(--animal-mint-deep)',
+  )
+  const composerInner = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('[data-composer-card]') && rule.selector.includes('[contenteditable="true"]') && rule.declaration('outline')?.value === 'none',
   )
   const composerFocus = ruleQuery.find((rule) => rule.selector.includes('[data-composer-card]:focus-within'))
+  const ticketFocus = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('.animal-island-brand__name') &&
+      rule.selector.includes(':focus-visible') &&
+      rule.declaration('outline')?.value === '3px solid var(--animal-mint-deep)',
+  )
 
-  assert.ok(globalFocus, 'global keyboard focus must use the deep mint token')
+  assert.ok(globalFocus, 'the clipped-surface keyboard focus ring is missing')
+  assert.equal(globalFocus.declaration('outline-offset')?.value, '-2px')
+  for (const role of ['button', 'menuitem', 'option', 'switch', 'treeitem']) {
+    assert.match(globalFocus.selector, new RegExp(`\\[role="${role}"\\]`))
+  }
+  assert.match(globalFocus.selector, /\[tabindex\]/)
+  assert.ok(composerInner, 'the composer must not paint a second clipped inner focus ring')
+  assert.equal(composerInner.declaration('outline')?.important, true)
   assert.ok(composerFocus, 'composer focus state is missing')
   assert.equal(composerFocus.declaration('border-color')?.value, 'var(--animal-mint-deep)')
   assert.match(composerFocus.declaration('box-shadow')?.value ?? '', /0 0 0 2px #fffbe7/)
   assert.match(composerFocus.declaration('box-shadow')?.value ?? '', /0 0 0 5px var\(--animal-mint-deep\)/)
+  assert.ok(ticketFocus, 'the overflow-visible brand ticket must keep its outer focus ring')
 })
 
 test('appearance slider paints a warm track and mint progress in both engines', () => {

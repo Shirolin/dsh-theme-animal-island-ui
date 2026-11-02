@@ -239,6 +239,11 @@ export const PUBLIC_ARIA_ROLES = [
     evidence: ariaStandard('Reviewed against DSH selection controls.'),
   },
   {
+    role: 'search',
+    purpose: 'Scope search fields whose wrapper supplies the field surface.',
+    evidence: ariaStandard('Reviewed against the DSH shortcut reference search field.'),
+  },
+  {
     role: 'switch',
     purpose: 'Style switch controls and their checked state.',
     evidence: ariaStandard('Reviewed against DSH settings controls.'),
