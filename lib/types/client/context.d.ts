@@ -1,9 +1,9 @@
 import type { ComponentType } from 'react';
 import type { TokenPairs } from '../types.ts';
-export interface ThemeRuntimeLike {
+interface ThemeRuntimeLike {
     overrideTokens(source: string, tokens: TokenPairs): () => void;
 }
-export interface SlotRegistrationOptions {
+interface SlotRegistrationOptions {
     name: string;
     locale?: string;
     priority?: number;
@@ -22,7 +22,7 @@ export interface SlotRegistrationOptions {
     }>>;
     inject?: (...args: never[]) => object;
 }
-export interface SlotSpecLike {
+interface SlotSpecLike {
     kind: string;
     scope: string;
 }
@@ -36,3 +36,4 @@ export interface ClientContextLike {
     slots?: SlotRegistryLike;
     effect(effect: () => (() => void) | undefined, name?: string): unknown;
 }
+export {};

@@ -50,7 +50,7 @@ await build({
 const ownedSkinCss = await buildOwnedSkinCss()
 
 const result = await build({
-  entryPoints: ['src/client-entry.ts'],
+  entryPoints: ['src/client/index.ts'],
   outfile: 'lib/client.js',
   bundle: true,
   write: false,

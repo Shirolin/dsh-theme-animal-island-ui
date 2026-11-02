@@ -1,6 +1,5 @@
 import type { SlotRegistryLike } from './context.ts';
 import type { InstalledSkin } from './install.ts';
-export declare const APPEARANCE_TAB_ID = "animal-island-appearance";
 /**
  * Register the per-client appearance preference and its Settings → Plugins tab.
  *

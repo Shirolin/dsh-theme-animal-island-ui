@@ -2,7 +2,7 @@ import type { SlotRegistryLike } from './context.ts'
 import { AppearanceTab } from './components/appearance-tab.tsx'
 import type { InstalledSkin } from './install.ts'
 
-export const APPEARANCE_TAB_ID = 'animal-island-appearance'
+const APPEARANCE_TAB_ID = 'animal-island-appearance'
 
 function tabLabel(): string {
   return typeof navigator !== 'undefined' && navigator.language.toLowerCase().startsWith('zh') ? '动森外观' : 'Island appearance'

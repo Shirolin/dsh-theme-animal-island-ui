@@ -9,7 +9,7 @@
 
 export type AppearancePreset = 'paper' | 'balanced' | 'island' | 'custom'
 
-export interface AppearanceState {
+interface AppearanceState {
   preset: AppearancePreset
   veil: number
 }

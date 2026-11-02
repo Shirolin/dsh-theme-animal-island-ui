@@ -1,6 +1,6 @@
 export type Mode = 'light' | 'dark'
 
-export interface CodePalette {
+interface CodePalette {
   bg: string
   fg: string
   comment: string

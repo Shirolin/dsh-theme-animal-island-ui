@@ -1,5 +1,5 @@
 export type Mode = 'light' | 'dark';
-export interface CodePalette {
+interface CodePalette {
     bg: string;
     fg: string;
     comment: string;
@@ -43,3 +43,4 @@ export type TokenPairs = Record<string, {
     dark: string;
 }>;
 export type TokenMap = Record<string, string>;
+export {};

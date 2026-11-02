@@ -1,16 +1,13 @@
 import { buildTokenOverrides } from '../tokens.ts'
-import type { TokenPairs } from '../types.ts'
 import type { ClientContextLike } from './context.ts'
 import { installOwnedSkin } from './install.ts'
 import { installPublicSlots } from './slots.ts'
-
-export type ThemeTokenOverrides = TokenPairs
 
 // Module-level inject uses Cordis service names. Package-level provider ordering
 // lives in package.json's dsh.client.inject manifest.
 export const inject = ['theme', 'slots']
 
-export const THEME_SOURCE = 'dsh-theme-animal-island-ui:palette'
+const THEME_SOURCE = 'dsh-theme-animal-island-ui:palette'
 
 function applyThemeLayer(ctx: ClientContextLike): boolean {
   const theme = ctx.theme
@@ -44,5 +41,3 @@ export function apply(ctx: ClientContextLike): void {
   if (installedSkin === undefined) return
   installPublicSlots(ctx, installedSkin)
 }
-
-export { buildTokenOverrides }

@@ -7,7 +7,7 @@
  * document because it is a purely visual, per-device preference.
  */
 export type AppearancePreset = 'paper' | 'balanced' | 'island' | 'custom';
-export interface AppearanceState {
+interface AppearanceState {
     preset: AppearancePreset;
     veil: number;
 }
@@ -30,3 +30,4 @@ export declare const APPEARANCE_DEFAULTS: {
 };
 /** Create the appearance store owned by one installed skin root. */
 export declare function createAppearanceStore(root: HTMLElement): AppearanceStore;
+export {};
