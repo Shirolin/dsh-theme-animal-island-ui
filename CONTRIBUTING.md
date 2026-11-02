@@ -4,7 +4,7 @@
 
 ## 环境
 
-- Node.js ≥ 20（`package.json` 的 `engines`），包管理用 pnpm；
+- Node.js ≥ 22.13（`package.json` 的 `engines`），包管理用 pnpm 11.1.2；
 - 本机装有 DSH（默认 `~/.dsh/app`，也可用 `DSH_APP` 环境变量或 `--dsh` 参数指定）；
 - 桌面夹具可自动从官方客户端的 `app.asar` 准备 runtime；
 - headless Chrome（用于离屏夹具截图与断言，可选；不装也能跑门禁）。
@@ -74,18 +74,34 @@ pnpm run check:visual                                    # 侧栏船票 fixture 
 ## 发布
 
 ```sh
-pnpm run release 0.3.6     # 打包 + 计算 SHA-256 + 回写 README 与 artifacts/README.md
+pnpm run release <version>  # 打包 + 计算 SHA-256 + 回写 artifacts/README.md
 ```
 
 脚本会：改 `package.json` 版本 → `pnpm pack --pack-destination artifacts/release-v<版本>` →
-把新 SHA-256 写进 `README.md` 与 `artifacts/README.md` → 打印摘要。之后把 tgz 装进目标 profile：
+把新 SHA-256 写进 `artifacts/README.md` → 打印摘要。
+
+发布前：
+
+1. 在 `CHANGELOG.md` 增加对应版本小节；
+2. 运行 `pnpm run check`、`pnpm run format:check` 和 `pnpm run lint`；
+3. 检查 `git status`，确认版本号、产物路径与 SHA 同步更新；
+4. 提交并推送 `main`。
+
+然后推送与包版本一致的 tag：
+
+```sh
+git tag v<version>
+git push origin v<version>
+```
+
+`release` workflow 会重新运行门禁，核对 tag、`package.json`、CHANGELOG、产物清单与 tarball SHA，并把 `.tgz`、`SHA256SUMS` 发布到 GitHub Release。本地验收安装：
 
 ```sh
 cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v0.3.6/dsh-theme-animal-island-ui-0.3.6.tgz
+pnpm add file:<仓库>/artifacts/release-v<version>/dsh-theme-animal-island-ui-<version>.tgz
 ```
 
-**同一版本号不要重复出包**（除非该版本尚未分发）；已经分发过的内容请改版本号。
+**同一版本号不要重复出包**；每次发布都使用新的版本号。
 
 ## 许可证
 

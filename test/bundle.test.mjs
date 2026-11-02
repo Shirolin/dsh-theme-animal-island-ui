@@ -11,18 +11,26 @@ test('package exposes DSH client, provider ordering, peers, and prepack', () => 
   assert.equal(packageJson.dsh.client.platform, 'web')
   assert.deepEqual(packageJson.dsh.client.inject, PROVIDER_ORDER)
   assert.equal(packageJson.exports['./client'].default, './lib/client.js')
+  assert.equal(packageJson.exports['./palette'].default, './lib/palette.js')
+  assert.equal(packageJson.exports['./palette'].types, './lib/types/palette.d.ts')
+  assert.equal(packageJson.exports['./tokens'].default, './lib/tokens.js')
+  assert.equal(packageJson.exports['./tokens'].types, './lib/types/tokens.d.ts')
   assert.equal(packageJson.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(packageJson.scripts.prepack, 'pnpm run build')
   assert.equal(packageJson.peerDependencies, undefined)
+  assert.equal(packageJson.repository.url, 'git+https://github.com/Shirolin/dsh-theme-animal-island-ui.git')
+  assert.equal(packageJson.bugs.url, 'https://github.com/Shirolin/dsh-theme-animal-island-ui/issues')
+  assert.equal(packageJson.homepage, 'https://github.com/Shirolin/dsh-theme-animal-island-ui#readme')
+  assert.equal(packageJson.packageManager, 'pnpm@11.1.2')
 })
 
 test('package ships its docs, scripts and engine metadata', () => {
-  for (const entry of ['lib', 'README.md', 'CHANGELOG.md', 'docs', 'LICENSE', 'THIRD_PARTY_NOTICES.md']) {
+  for (const entry of ['lib', 'README.md', 'README.en.md', 'CHANGELOG.md', 'docs', 'LICENSE', 'THIRD_PARTY_NOTICES.md']) {
     assert.ok(packageJson.files.includes(entry), `files must ship ${entry}`)
   }
-  assert.equal(packageJson.engines.node, '>=20')
+  assert.equal(packageJson.engines.node, '>=22.13.0')
   assert.ok(packageJson.keywords.includes('dsh'))
-  for (const script of ['build', 'format', 'lint', 'typecheck', 'test', 'check:compat', 'check:visual', 'fixture', 'release', 'check']) {
+  for (const script of ['build', 'format', 'format:check', 'lint', 'typecheck', 'test', 'check:compat', 'check:visual', 'fixture', 'release', 'check']) {
     assert.ok(packageJson.scripts[script], `script missing: ${script}`)
   }
 })
@@ -75,4 +83,12 @@ test('host runtime modules expose the published export interface', async () => {
   assert.deepEqual(Object.keys(index).sort(), ['apply'])
   assert.deepEqual(Object.keys(palette).sort(), ['ANIMAL_ISLAND_DARK', 'ANIMAL_ISLAND_LIGHT', 'ANIMAL_ISLAND_PALETTES'])
   assert.deepEqual(Object.keys(tokens).sort(), ['ANIMAL_ISLAND_PALETTES', 'buildTokenOverrides', 'buildTokens', 'contrastRatio'])
+})
+
+test('published palette and token subpaths resolve through the package exports map', async () => {
+  const palette = await import('dsh-theme-animal-island-ui/palette')
+  const tokens = await import('dsh-theme-animal-island-ui/tokens')
+
+  assert.equal(palette.ANIMAL_ISLAND_PALETTES.light.accent, '#19c8b9')
+  assert.equal(tokens.buildTokenOverrides()['--dsw-alias-brand-primary'].light, '#19c8b9')
 })

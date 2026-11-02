@@ -1,0 +1,43 @@
+name: 功能建议
+description: 建议新的视觉能力、兼容范围或开发体验改进
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请先说明建议解决的问题，而不是只描述实现方式。
+        涉及新增 DSH 接缝时，请同时说明它是否属于公开 API，以及如何验证。
+  - type: textarea
+    id: problem
+    attributes:
+      label: 要解决的问题
+      description: 当前哪里不够好？谁会在什么场景遇到？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+      description: 可以描述交互、视觉或工程方案；不要求一开始就完整。
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 已考虑的替代方案
+    validations:
+      required: false
+  - type: dropdown
+    id: surface
+    attributes:
+      label: 影响范围
+      multiple: true
+      options:
+        - Web
+        - Windows 桌面端
+        - 主题 token / palette
+        - DSH 兼容性
+        - 开发工具或文档
+        - 其他
+    validations:
+      required: true

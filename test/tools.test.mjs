@@ -31,6 +31,12 @@ test('fixture tooling is present and parses', () => {
   }
 })
 
+test('release verification tooling is present and parses', () => {
+  const file = join(root, 'scripts/verify-release.mjs')
+  assert.ok(existsSync(file), 'scripts/verify-release.mjs is missing')
+  execFileSync(process.execPath, ['--check', file], { stdio: 'pipe' })
+})
+
 test('DSH runtime reader resolves packages, validates installs, and extracts CSS', async (t) => {
   await mkdir(join(root, '.tmp'), { recursive: true })
   const temporaryRoot = await mkdtemp(join(root, '.tmp', 'dsh-runtime-test-'))

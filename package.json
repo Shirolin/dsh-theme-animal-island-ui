@@ -1,8 +1,17 @@
 {
   "name": "dsh-theme-animal-island-ui",
-  "version": "0.3.31",
+  "version": "0.3.32",
   "description": "A high-fidelity Animal Island inspired DSH Web skin with ThemeRuntime tokens and public slots",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shirolin/dsh-theme-animal-island-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Shirolin/dsh-theme-animal-island-ui/issues"
+  },
+  "homepage": "https://github.com/Shirolin/dsh-theme-animal-island-ui#readme",
   "type": "module",
+  "packageManager": "pnpm@11.1.2",
   "license": "MIT",
   "author": "Shirolin",
   "keywords": [
@@ -14,7 +23,7 @@
     "plugin"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13.0"
   },
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -26,6 +35,14 @@
     "./client": {
       "types": "./lib/types/client/index.d.ts",
       "default": "./lib/client.js"
+    },
+    "./palette": {
+      "types": "./lib/types/palette.d.ts",
+      "default": "./lib/palette.js"
+    },
+    "./tokens": {
+      "types": "./lib/types/tokens.d.ts",
+      "default": "./lib/tokens.js"
     },
     "./package.json": "./package.json"
   },
@@ -47,6 +64,7 @@
   "files": [
     "lib",
     "README.md",
+    "README.en.md",
     "CHANGELOG.md",
     "docs",
     "cordis.patch.yml",
@@ -57,6 +75,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "format": "biome format --write .",
+    "format:check": "biome format .",
     "lint": "biome lint .",
     "typecheck": "tsc --noEmit",
     "test": "pnpm run build && node test/run.mjs",

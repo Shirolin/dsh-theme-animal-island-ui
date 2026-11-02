@@ -12,7 +12,7 @@ body:
     attributes:
       label: 版本
       description: 主题版本、DSH 版本、操作系统
-      placeholder: "theme 0.3.4 / DSH 0.1.5-rc.3 / Windows 11"
+      placeholder: "theme <version> / DSH <version> / Windows 11"
     validations:
       required: true
   - type: input

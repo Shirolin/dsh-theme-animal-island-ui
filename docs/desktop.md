@@ -142,7 +142,7 @@ powershell -ExecutionPolicy Bypass -File scripts\capture-desktop.ps1 `
 powershell -ExecutionPolicy Bypass -File scripts\capture-desktop.ps1 -NoFallback
 ```
 
-脚本先调用 `scripts/cdp-shot.mjs`（Node 22+ 的全局 WebSocket，无额外依赖；Node 20 需加 `--experimental-websocket`）；失败时用
+脚本先调用 `scripts/cdp-shot.mjs`（Node 22+ 的全局 WebSocket，无额外依赖）；失败时用
 `scripts/dwm-shot.ps1` 把目标窗口注册成离屏 DWM 缩略图再截宿主。DWM 路径被其它窗口挡住也能拍，
 最小化时可能冻结/空白；它走 Windows PowerShell 5.1，因为 pwsh 7 的 .NET 10 WinForms/GDI+ 引用链
 不值得维护。

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
  * Release helper: bump the version, pack the canonical tarball, and record its
- * SHA-256 in the two places that document it (README.md, artifacts/README.md).
+ * SHA-256 in artifacts/README.md.
  *
  * Hand-editing those hashes is how a release quietly drifts from its artifact,
  * so this script rewrites them from the packed file and fails loudly when the
@@ -53,15 +53,19 @@ const sha = createHash('sha256')
 console.log(`tarball: ${destination}/${packageJson.name}-${version}.tgz (${size} bytes)`)
 console.log(`sha256 : ${sha}`)
 
-const documents = [
-  { file: 'README.md', expected: /SHA-256: [0-9A-F]{64}/ },
-  { file: 'artifacts/README.md', expected: /SHA-256: [0-9A-F]{64}/ },
-]
+const document = {
+  file: 'artifacts/README.md',
+  expected: /SHA-256: [0-9A-F]{64}/,
+}
 
 /*
- * Rewrite only the versioned references to *this* artifact. A blanket
- * `release-v<semver>/` sweep would also relabel the "previous release" row in
- * artifacts/README.md's table, which has to keep naming the older directory.
+ * README.md ships inside the tarball, so it must not name the tarball's own
+ * version or SHA: rewriting that data after packing would change the next
+ * pack's bytes. Keep release-specific metadata in the unshipped artifact log.
+ *
+ * A blanket `release-v<semver>/` sweep would also relabel the "previous
+ * release" row in artifacts/README.md's table, which has to keep naming the
+ * older directory.
  */
 const semver = '\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?'
 const artifactName = packageJson.name.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -79,18 +83,17 @@ const rewrites = [
   [/SHA-256: [0-9A-F]{64}/g, `SHA-256: ${sha}`],
 ]
 
-for (const { file, expected } of documents) {
-  const path = join(root, file)
-  const original = await readFile(path, 'utf8')
-  if (!expected.test(original)) {
-    console.error(`${file}: no "SHA-256: <64 hex>" line found — update the document shape first`)
-    process.exit(1)
-  }
-  const next = rewrites.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), original)
-  if (next !== original) {
-    await writeFile(path, next)
-    console.log(`updated: ${file}`)
-  }
+const { file, expected } = document
+const path = join(root, file)
+const original = await readFile(path, 'utf8')
+if (!expected.test(original)) {
+  console.error(`${file}: no "SHA-256: <64 hex>" line found — update the document shape first`)
+  process.exit(1)
+}
+const next = rewrites.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), original)
+if (next !== original) {
+  await writeFile(path, next)
+  console.log(`updated: ${file}`)
 }
 
 console.log('\nnext: git status && git commit — then install the tarball into the target profile:')

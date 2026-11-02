@@ -1,10 +1,25 @@
 # DSH Animal Island UI Theme
 
+[English](README.en.md)
+
+[![check](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml)
+[![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)
+[![license: MIT](https://img.shields.io/badge/license-MIT-f3c969.svg)](LICENSE)
+
 `Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创资源与 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
 
-当前发布 **0.3.28**。侧栏品牌已换成 **216×60 的渡岛船票**（奶油纸面 + 薄荷票根 + 虚线撕口）；其余已发布内容包含气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态，「设置 → 插件 → 动森外观」的透明度调节（含与真实画布同层数的预览）、快捷键搜索框的单一表面与单圈聚焦描边、覆盖全部界面控件的 2px 内嵌键盘聚焦环，以及 Windows 桌面端外壳透明化、圆角归零与会话列表渐隐层色差修正。Windows 只保留一个 parity 分支。
+发布版本、下载与校验值见 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)。当前功能包含 **216×60 的渡岛船票**品牌区（奶油纸面 + 薄荷票根 + 虚线撕口）、气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态，「设置 → 插件 → 动森外观」的透明度调节（含与真实画布同层数的预览）、快捷键搜索框的单一表面与单圈聚焦描边、覆盖全部界面控件的 2px 内嵌键盘聚焦环，以及 Windows 桌面端外壳透明化、圆角归零与会话列表渐隐层色差修正。Windows 只保留一个 parity 分支。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
+
+<details>
+<summary>真实 DSH DOM 夹具：亮色 / 暗色侧栏</summary>
+
+| Light | Dark |
+| --- | --- |
+| ![Light sidebar](docs/screenshots/sidebar-light.png) | ![Dark sidebar](docs/screenshots/sidebar-dark.png) |
+
+</details>
 
 ## 视觉范围
 
@@ -18,7 +33,7 @@
 - 设置 → 插件 → 动森外观：纸白 / 均衡 / 海岛三档预设 + 0.15–0.60 滑杆，默认均衡 0.40，面板内附实时「画布预览」；
 - 内嵌 Nunito Latin 字体，中文回退 Noto Sans SC / 苹方 / 微软雅黑。
 
-设计图是方向性 specimen；真实 DSH 截图是最终验收依据。
+顶部设计图是方向性 specimen；折叠区截图来自真实 DSH CSS/DOM 夹具，用于回归验收，最终观感仍以 DSH 实机为准。
 
 ## 文档
 
@@ -56,7 +71,18 @@ official Sidebar + public Brand/Hero slots
 
 主题仍叠加在 DSH Light / Dark / System 之上；唯一的持久化外观设置是「画布透明度」，保存在本机 `localStorage`（不同 web/desktop 客户端各自记忆）。
 
+### Host helpers
+
+需要复用色板或 token 派生逻辑时，可以使用包的独立子路径：
+
+```ts
+import { ANIMAL_ISLAND_PALETTES } from 'dsh-theme-animal-island-ui/palette'
+import { buildTokenOverrides, contrastRatio } from 'dsh-theme-animal-island-ui/tokens'
+```
+
 ## 开发
+
+需要 Node.js 22.13 或更高版本，以及 pnpm 11.1.2。
 
 ```sh
 pnpm install
@@ -97,30 +123,22 @@ pnpm run check:visual                      # 侧栏船票真实 DOM 视觉门禁
 
 ## 安装到 DSH profile
 
-```sh
-pnpm install
-pnpm run release 0.3.6     # 打包 + 回写 SHA；版本号必须是新的
-```
-
-`prepack` 会自动重建 `lib`。当前规范产物为：
-
-```text
-artifacts/release-v0.3.31/dsh-theme-animal-island-ui-0.3.31.tgz
-SHA-256: 6CF924756C2BB31A50E8F423395D56F10B5A4A417CD0A8B914D7A5F9C753400B
-```
-
-把 `.tgz` 装进目标 `web` profile 并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）：
+1. 从 [Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases) 下载最新 `.tgz` 与 `SHA256SUMS`；
+2. 对照 `SHA256SUMS` 校验下载文件；
+3. 把 `.tgz` 装进目标 profile，并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）。
 
 ```sh
 cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v0.3.31/dsh-theme-animal-island-ui-0.3.31.tgz
+pnpm add file:<下载目录>/dsh-theme-animal-island-ui-<version>.tgz
 ```
 
 之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。
 
 桌面客户端（Electron）用的是独立的 `desktop` profile，插件不会跨 profile 生效，安装方式也不同 —— 见 [docs/desktop.md](docs/desktop.md)。
 
-发布脚本会改版本号、出包、把新 SHA-256 同时写进本文件与 `artifacts/README.md`（测试 `docs.test.mjs` 会校验两处一致）；**已分发过的版本请改版本号，不要原地重打**。
+## 维护者发布
+
+发布步骤与验证要求见 [CONTRIBUTING.md](CONTRIBUTING.md#发布)。推送 `v<version>` tag 后，GitHub Actions 会重新运行完整门禁、打包、核对版本/CHANGELOG/tarball SHA，并创建 GitHub Release。维护者的本地产物与哈希记录在仓库内 `artifacts/README.md`，不随 tgz 打包；公开下载以 GitHub Release 附件及其 `SHA256SUMS` 为准。**同一版本号不要重复出包。**
 
 ## 兼容性
 

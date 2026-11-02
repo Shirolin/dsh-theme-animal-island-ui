@@ -9,6 +9,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const documents = [
   'README.md',
+  'README.en.md',
   'CONTRIBUTING.md',
   'CHANGELOG.md',
   'SECURITY.md',
@@ -39,19 +40,30 @@ test('repository documents exist and their relative links resolve', async () => 
   }
 })
 
-test('both documents that name the canonical artifact agree with the package version', async () => {
+test('release manifest records the current artifact without self-referential README metadata', async () => {
   const packageJson = JSON.parse(await readFile(resolve(root, 'package.json'), 'utf8'))
   const expected = `${packageJson.name}-${packageJson.version}.tgz`
+  const manifest = await readFile(resolve(root, 'artifacts/README.md'), 'utf8')
+  const readme = await readFile(resolve(root, 'README.md'), 'utf8')
 
-  const shas = new Set()
-  for (const document of ['README.md', 'artifacts/README.md']) {
-    const text = await readFile(resolve(root, document), 'utf8')
-    assert.ok(text.includes(`release-v${packageJson.version}/${expected}`), `${document}: must name release-v${packageJson.version}/${expected}`)
-    const sha = text.match(/SHA-256: ([0-9A-F]{64})/)
-    assert.ok(sha, `${document}: missing a SHA-256 line`)
-    shas.add(sha[1])
-  }
-  assert.equal(shas.size, 1, 'README.md and artifacts/README.md record different SHA-256 values')
+  assert.ok(manifest.includes(`release-v${packageJson.version}/${expected}`), `artifacts/README.md: must name release-v${packageJson.version}/${expected}`)
+  assert.equal([...manifest.matchAll(/SHA-256: [0-9A-F]{64}/g)].length, 1, 'artifacts/README.md: expected exactly one SHA-256 line')
+  assert.doesNotMatch(readme, /release-v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?\//)
+  assert.doesNotMatch(readme, /SHA-256: [0-9A-F]{64}/)
+})
+
+test('community templates use canonical repository links and current contribution paths', async () => {
+  const readme = await readFile(resolve(root, 'README.md'), 'utf8')
+  const issueConfig = await readFile(resolve(root, '.github/ISSUE_TEMPLATE/config.yml'), 'utf8')
+  const pullRequest = await readFile(resolve(root, '.github/PULL_REQUEST_TEMPLATE.md'), 'utf8')
+
+  assert.doesNotMatch(readme, /当前发布\s+\*\*\d+\.\d+\.\d+/)
+  assert.match(readme, /github\.com\/Shirolin\/dsh-theme-animal-island-ui\/releases/)
+  assert.doesNotMatch(issueConfig, /\bOWNER\/REPO\b/)
+  assert.match(issueConfig, /https:\/\/github\.com\/Shirolin\/dsh-theme-animal-island-ui\/blob\/main\/CONTRIBUTING\.md/)
+  assert.match(issueConfig, /https:\/\/github\.com\/Shirolin\/dsh-theme-animal-island-ui\/security\/advisories\/new/)
+  assert.match(pullRequest, /scripts\/seam-contract\.mjs/)
+  assert.doesNotMatch(pullRequest, /test\/skin\.test\.mjs/)
 })
 
 test('compatibility documentation covers every machine-readable public seam', async () => {
