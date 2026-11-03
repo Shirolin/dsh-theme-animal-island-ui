@@ -40,4 +40,4 @@ SOFTWARE.
 
 `src/client/assets/sidebar-wave.svg`、React Brand/Hero Mark 和 skin CSS geometry 为本项目原创资源，随本插件 MIT License 发布。
 
-`site/promo/animal-island-promo.mp4`、poster、storyboard 与 social card 同为项目原创发布素材，随本项目 MIT License 发布。宣传片画面来自项目自有的 DSH CSS/DOM 夹具与站点资源；配乐由项目程序化生成，不含第三方音频采样。
+`site/promo/animal-island-promo.mp4`、poster、storyboard 与 social card 同为项目发布素材，随本项目 MIT License 发布。真实界面来自项目自有的 DSH CSS/DOM 夹具与站点资源；纸艺海岛与撕票微距为制作阶段由 AI 生成、再按项目视觉重新构图的原创素材，不含第三方界面或品牌素材。配乐、纸张撕裂、转场与 UI 音效均由项目程序化生成，不含第三方音频采样。

@@ -644,6 +644,12 @@ code {
   margin-top: 1.8rem;
 }
 
+.film-link-separator {
+  display: inline-block;
+  margin: 0 10px;
+  color: rgba(75, 46, 31, 0.42);
+}
+
 .film-frame {
   aspect-ratio: 16 / 9;
   overflow: hidden;

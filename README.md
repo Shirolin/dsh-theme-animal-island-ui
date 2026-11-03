@@ -2,7 +2,7 @@
 
 [English](README.en.md)
 
-[产品页](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30 秒宣传片](https://shirolin.github.io/dsh-theme-animal-island-ui/#film)
+[产品页](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30 秒宣传片：从船票撕口登入完整 DSH](https://shirolin.github.io/dsh-theme-animal-island-ui/#film)
 
 [![check](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml)
 [![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)

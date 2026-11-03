@@ -9,7 +9,7 @@
 - 系统字体通过独立的 `dsh-theme-animal-island-ui:appearance` token 层覆盖 `--dsw-font-family`，只换拉丁字形，不碰字号与代码字体；层注册失败时保持主题字体并告警；
 - 新增 `docs/research/theme-settings-survey.md`：12 个社区主题的设置面、面板落位与持久化方式调研，以及本主题采用/延后/不做的取舍；
 - 新增 `test/fixtures/appearance-calm/`（亮/暗）离屏夹具，并在 `appearance-panel` 夹具中锁住细节三行不溢出、每行单一选中态与底部重置位置；
-- 产品页外观预览、六幕分镜与 30 秒宣传片同步到 0.3.35：截图完整展示三档预设、浓度、diff 配色、插画、纸纹、字体与恢复默认；
+- 重做 30 秒产品宣传片与分镜：撕票微距进入完整 DSH 工作台，再以连续运镜展示外观、夜岛与快捷键；界面保持原始比例，纸艺环境、光学转场、粒子与原创配乐共同组成新版成片；
 - `install:local` 改为按 tarball 内容哈希暂存依赖，同一版本重新出包也能刷新 desktop / web profile；安装失败时恢复原 profile 清单；
 - 修正英文 README 中三档预设的错值（`0.22/0.40/0.55` → `0.52/0.40/0.28`）。
 
