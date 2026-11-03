@@ -31,7 +31,7 @@
 - **触感与微交互**：奶油色 3D 主按钮按压反馈、输入时气泡呼吸发光、发送键涟漪、叶片悬停轻摆；
 - **全界面键盘焦点**：2px 内嵌薄荷焦点环，快捷键搜索框保持单一表面与单圈聚焦描边，滚动与弹窗边界不裁切；
 - **代码与排版**：Light / Dark 均经对比度校准的深棕代码块与 Shiki 语法配色；内嵌 Nunito Latin 字体，中文回退至苹方 / 微软雅黑 / Noto Sans SC；
-- **应用内外观设置**：「设置 → 插件 → 动森外观」提供纸白 / 均衡 / 海岛三档预设与 `0.15–0.60` 滑杆（默认均衡 `0.40`），面板内实时预览画布层次。
+- **应用内外观设置**：「设置 → 插件 → 动森外观」提供纸白 / 均衡 / 海岛三档预设与 `0.15–0.60` 滑杆（默认均衡 `0.40`），面板内实时预览画布层次；同一页还有插画装饰、纸纹与界面字体三组细节开关。
 
 顶部色板图为设计标本；折叠区截图由真实 DSH CSS/DOM 夹具渲染，用于回归验收，实际观感以 DSH 客户端为准。
 
@@ -43,6 +43,7 @@
 | [docs/design.md](docs/design.md) | 色板、形状与反馈、暗色派生、**样式边界**（不得越界的地方） |
 | [docs/compatibility.md](docs/compatibility.md) | DSH 接缝、已审阅属性/变量、工程约束、离屏验收夹具 |
 | [docs/session-list-blank.md](docs/session-list-blank.md) | 侧栏会话区空白一次误判的排查记录（结论：DSH 侧） |
+| [docs/research/theme-settings-survey.md](docs/research/theme-settings-survey.md) | 社区 DSH 主题的设置项调研：常见设置面、面板落位与本主题的取舍 |
 | [docs/desktop.md](docs/desktop.md) | 桌面客户端（Electron）：profile 隔离、安装/验证/回滚、截图与远程调试（CDP/DWM）、何时要重启、怎么对着桌面 runtime 跑夹具 |
 | [docs/web-vs-desktop.md](docs/web-vs-desktop.md) | Web / Windows 桌面端样式差异清单：平台分支、版本差异、历史问题归类与待定项 |
 | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | 参考项目基线与许可证 |
@@ -69,7 +70,7 @@ plugin-owned CSS / fonts / original SVG
 official Sidebar + public Brand/Hero slots
 ```
 
-主题仍叠加在 DSH Light / Dark / System 之上；唯一的持久化外观设置是「画布透明度」，保存在本机 `localStorage`（不同 web/desktop 客户端各自记忆）。
+主题仍叠加在 DSH Light / Dark / System 之上；外观偏好（纸面浓度、diff 配色、插画装饰、纸纹、界面字体）保存在本机 `localStorage`（不同 web/desktop 客户端各自记忆）。
 
 ### Host helpers
 
@@ -90,6 +91,7 @@ pnpm run format
 pnpm run lint
 pnpm run typecheck
 pnpm run build
+pnpm run install:local   # 当前版本 tarball 同步到 desktop + web profile
 pnpm test
 pnpm run check:compat
 ```

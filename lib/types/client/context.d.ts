@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import type { TokenPairs } from '../types.ts';
-interface ThemeRuntimeLike {
+export interface ThemeRuntimeLike {
     overrideTokens(source: string, tokens: TokenPairs): () => void;
 }
 interface SlotRegistrationOptions {

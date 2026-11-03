@@ -11,7 +11,7 @@ export const PLUGIN_ROOT_ATTRIBUTE = 'dsh-animal-island-skin'
  * seams), but the CSS policy test still requires every data-* selector to be
  * reviewed, so they live in the same allowlist under a separate category.
  */
-export const PLUGIN_OWNED_DATA_ATTRIBUTES = ['animal-appearance', 'animal-diff-syntax']
+export const PLUGIN_OWNED_DATA_ATTRIBUTES = ['animal-appearance', 'animal-diff-syntax', 'animal-decor', 'animal-grain', 'animal-font']
 
 const dshSource = (packageName, file, marker, note) => ({
   kind: 'dsh-source',

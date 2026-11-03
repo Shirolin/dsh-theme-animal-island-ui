@@ -528,17 +528,18 @@ test('appearance slider paints a warm track and mint progress in both engines', 
   assert.ok(ruleQuery.find((rule) => rule.declaration('--animal-slider-track')?.value === '#5a4b3d'))
 })
 
-test('appearance custom control keeps its label, value, slider and reset in one panel', () => {
+test('appearance custom control keeps its label, value and slider; reset is a panel action', () => {
   const custom = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__custom'))
   const slider = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__slider'))
   const value = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__slider-value'))
   const reset = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__reset'))
+  const actions = ruleQuery.find((rule) => rule.selector.endsWith('.animal-island-appearance__actions'))
   const focus = ruleQuery.find(
     (rule) =>
       rule.selector.includes('.animal-island-appearance__slider input[type="range"]:focus-visible') && rule.declaration('outline-offset')?.value === '2px',
   )
 
-  assert.ok(custom && slider && value && reset && focus)
+  assert.ok(custom && slider && value && reset && actions && focus)
   assert.equal(custom.declaration('display')?.value, 'grid')
   assert.equal(custom.declaration('border-radius')?.value, '16px')
   assert.equal(slider.declaration('display')?.value, 'grid')
@@ -546,10 +547,12 @@ test('appearance custom control keeps its label, value, slider and reset in one 
   assert.equal(value.declaration('display')?.value, 'inline-flex')
   assert.equal(value.declaration('border-radius')?.value, '999px')
   assert.equal(reset.declaration('display')?.value, 'inline-flex')
+  assert.equal(actions.declaration('justify-content')?.value, 'flex-end')
   assert.match(appearanceTab, /className="animal-island-appearance__custom"/)
   assert.match(appearanceTab, /className="animal-island-appearance__slider-title"/)
   assert.match(appearanceTab, /className="animal-island-appearance__reset-icon"/)
   assert.match(appearanceTab, /className="animal-island-appearance__reset-copy"/)
+  assert.ok(appearanceTab.indexOf('animal-island-appearance__details') < appearanceTab.indexOf('animal-island-appearance__actions'))
 })
 
 test('diff syntax setting keeps a warm default and offers a DSH-native alternative on light paper', () => {
@@ -571,6 +574,55 @@ test('diff syntax setting keeps a warm default and offers a DSH-native alternati
   assert.match(appearanceTab, /set\(\{ diffSyntax: 'native' \}\)/)
 })
 
+test('appearance detail toggles remove only their own layer', () => {
+  const root = ruleQuery.find((rule) => rule.selector === 'html[data-dsh-animal-island-skin]')
+  assert.match(root?.declaration('--animal-system-font-family')?.value ?? '', /^system-ui,/)
+  assert.match(root?.declaration('--animal-paper-grain')?.value ?? '', /__ANIMAL_ISLAND_GRAIN__/)
+
+  const calm = ruleQuery.find((rule) => rule.selector.includes('[data-animal-decor="off"]'))
+  assert.ok(calm, 'the calm-canvas rule is missing')
+  for (const name of [
+    '--animal-decor-horizon',
+    '--animal-decor-leaves',
+    '--animal-decor-wave',
+    '--animal-decor-night-leaves',
+    '--animal-decor-night-horizon',
+    '--animal-decor-night-glow',
+  ]) {
+    assert.equal(calm.declaration(name)?.value, 'none', `${name} must be removed in calm mode`)
+  }
+
+  // The decorative layers keep their slots even when `none`, so the parallel
+  // background-position/size lists stay aligned with the gradients that remain.
+  const lightCanvas = ruleQuery.find((rule) => rule.selector === 'html[data-dsh-animal-island-skin] body')
+  for (const name of ['horizon', 'leaves', 'wave']) {
+    assert.match(lightCanvas?.declaration('background-image')?.value ?? '', new RegExp(`var\\(--animal-decor-${name}, none\\)`))
+  }
+
+  const grainOff = ruleQuery.find((rule) => rule.selector.includes('[data-animal-grain="off"]'))
+  assert.equal(grainOff?.declaration('--animal-paper-grain')?.value, 'none', 'the grain-off rule is missing')
+
+  const fontSystem = ruleQuery.find((rule) => rule.selector.includes('[data-animal-font="system"]') && rule.declaration('--animal-font-family') !== undefined)
+  assert.equal(fontSystem?.declaration('--animal-font-family')?.value, 'var(--animal-system-font-family)')
+
+  const composerGrain = ruleQuery.find(
+    (rule) => rule.selector.includes('[data-composer-card]') && rule.declaration('background-image')?.value.includes('var(--animal-paper-grain'),
+  )
+  const dialogGrain = ruleQuery.find(
+    (rule) => rule.selector.includes('[role="dialog"]') && rule.declaration('background-image')?.value.includes('var(--animal-paper-grain'),
+  )
+  assert.ok(composerGrain, 'composer grain must follow the toggle')
+  assert.ok(dialogGrain, 'dialog grain must follow the toggle')
+
+  assert.match(appearanceTab, /插画装饰/)
+  assert.match(appearanceTab, /纸纹/)
+  assert.match(appearanceTab, /界面字体/)
+  assert.match(appearanceTab, /set\(\{ decor: false \}\)/)
+  assert.match(appearanceTab, /set\(\{ grain: false \}\)/)
+  assert.match(appearanceTab, /set\(\{ font: 'system' \}\)/)
+  assert.match(appearanceTab, /reset\(\)/)
+})
+
 test('wave artwork is an original local SVG rather than a reference asset', () => {
   assert.match(wave, /viewBox="0 0 240 130"/)
   assert.match(wave, /C28 42 58 40 90 62/)
@@ -583,11 +635,16 @@ test('dark canvas keeps original night leaf and horizon textures', () => {
     assert.doesNotMatch(art, /image\/|href=.*\.png|href=.*\.jpg/)
   }
 
+  const root = ruleQuery.find((rule) => rule.selector === 'html[data-dsh-animal-island-skin]')
+  assert.match(root?.declaration('--animal-decor-night-leaves')?.value ?? '', /__ANIMAL_ISLAND_NIGHT_LEAVES__/)
+  assert.match(root?.declaration('--animal-decor-night-horizon')?.value ?? '', /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
+
   const darkCanvas = ruleQuery.find(
-    (rule) => rule.selector.includes('body[data-ds-dark-theme]') && rule.declaration('background-image')?.value.includes('__ANIMAL_ISLAND_NIGHT_LEAVES__'),
+    (rule) => rule.selector.includes('body[data-ds-dark-theme]') && rule.declaration('background-image')?.value.includes('var(--animal-decor-night-leaves'),
   )
   assert.ok(darkCanvas, 'the night canvas textures are missing')
-  assert.match(darkCanvas.declaration('background-image')?.value ?? '', /__ANIMAL_ISLAND_NIGHT_HORIZON__/)
+  assert.match(darkCanvas.declaration('background-image')?.value ?? '', /var\(--animal-decor-night-glow/)
+  assert.match(darkCanvas.declaration('background-image')?.value ?? '', /var\(--animal-decor-night-horizon/)
   assert.match(darkCanvas.declaration('background-size')?.value ?? '', /100% 240px/)
 })
 

@@ -84,8 +84,10 @@ pnpm run release <version>  # 打包 + 计算 SHA-256 + 回写 artifacts/README.
 
 1. 在 `CHANGELOG.md` 增加对应版本小节；
 2. 运行 `pnpm run check`、`pnpm run format:check` 和 `pnpm run lint`；
-3. 检查 `git status`，确认版本号、产物路径与 SHA 同步更新；
-4. 提交并推送 `main`。
+3. 运行 `pnpm run install:local` 把新产物同步到本机 desktop / web 两个 profile（只装一个用
+   `--only web`），并在客户端里点一遍设置入口；
+4. 检查 `git status`，确认版本号、产物路径与 SHA 同步更新；
+5. 提交并推送 `main`。
 
 然后推送与包版本一致的 tag：
 

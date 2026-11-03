@@ -16,7 +16,7 @@ export interface AppearanceTabProps {
 }
 
 export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Element {
-  const { getSnapshot, set, subscribe } = appearance
+  const { getSnapshot, set, subscribe, reset } = appearance
   const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
   const [draftVeil, setDraftVeil] = useState(state.veil)
   const draftRef = useRef(state.veil)
@@ -89,6 +89,14 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
     set({ preset, veil })
   }
 
+  const resetAll = () => {
+    cancelPendingCommit()
+    draftDirty.current = false
+    draftRef.current = APPEARANCE_DEFAULTS.veil
+    setDraftVeil(APPEARANCE_DEFAULTS.veil)
+    reset()
+  }
+
   return (
     <section className="animal-island-appearance" style={panelStyle}>
       <h3>动森外观</h3>
@@ -139,37 +147,7 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
             onBlur={scheduleCommit}
           />
         </label>
-
-        <div className="animal-island-appearance__custom-actions">
-          <span className="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
-          <button
-            type="button"
-            className="animal-island-appearance__reset"
-            onClick={() => {
-              cancelPendingCommit()
-              draftDirty.current = false
-              draftRef.current = APPEARANCE_DEFAULTS.veil
-              setDraftVeil(APPEARANCE_DEFAULTS.veil)
-              set({
-                preset: APPEARANCE_DEFAULTS.preset,
-                veil: APPEARANCE_DEFAULTS.veil,
-              })
-            }}
-          >
-            <span className="animal-island-appearance__reset-icon" aria-hidden="true">
-              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10" />
-                <path d="M4.7 2.7v3.1h3.1" />
-              </svg>
-            </span>
-            <span className="animal-island-appearance__reset-copy">
-              <span>恢复默认</span>
-              <small>
-                {PRESET_LABELS[APPEARANCE_DEFAULTS.preset]} {APPEARANCE_DEFAULTS.veil.toFixed(2)}
-              </small>
-            </span>
-          </button>
-        </div>
+        <span className="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
       </div>
 
       <fieldset className="animal-island-appearance__diff" aria-label="diff 语法配色">
@@ -198,6 +176,69 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
           </button>
         </div>
       </fieldset>
+
+      <fieldset className="animal-island-appearance__details" aria-label="外观细节">
+        <span className="animal-island-appearance__details-title">细节</span>
+
+        <div className="animal-island-appearance__details-row">
+          <span className="animal-island-appearance__details-label">插画装饰</span>
+          <fieldset className="animal-island-appearance__details-options" aria-label="插画装饰">
+            <button type="button" className="animal-island-appearance__preset" aria-pressed={state.decor} onClick={() => set({ decor: true })}>
+              显示
+              <small>山丘与叶</small>
+            </button>
+            <button type="button" className="animal-island-appearance__preset" aria-pressed={!state.decor} onClick={() => set({ decor: false })}>
+              隐藏
+              <small>只留底纹</small>
+            </button>
+          </fieldset>
+        </div>
+
+        <div className="animal-island-appearance__details-row">
+          <span className="animal-island-appearance__details-label">纸纹</span>
+          <fieldset className="animal-island-appearance__details-options" aria-label="纸纹">
+            <button type="button" className="animal-island-appearance__preset" aria-pressed={state.grain} onClick={() => set({ grain: true })}>
+              开<small>纸面颗粒</small>
+            </button>
+            <button type="button" className="animal-island-appearance__preset" aria-pressed={!state.grain} onClick={() => set({ grain: false })}>
+              关<small>纯色纸</small>
+            </button>
+          </fieldset>
+        </div>
+
+        <div className="animal-island-appearance__details-row">
+          <span className="animal-island-appearance__details-label">界面字体</span>
+          <fieldset className="animal-island-appearance__details-options" aria-label="界面字体">
+            <button type="button" className="animal-island-appearance__preset" aria-pressed={state.font === 'theme'} onClick={() => set({ font: 'theme' })}>
+              动森
+              <small>Nunito</small>
+            </button>
+            <button type="button" className="animal-island-appearance__preset" aria-pressed={state.font === 'system'} onClick={() => set({ font: 'system' })}>
+              系统
+              <small>跟随平台</small>
+            </button>
+          </fieldset>
+        </div>
+
+        <p className="animal-island-appearance__details-hint">
+          隐藏插画只保留波点与斜纹底；纸纹只作用于 composer 与对话框。字体只换拉丁字形，中文仍走系统 CJK 字体，字号由 DSH 设置管理。
+        </p>
+      </fieldset>
+
+      <div className="animal-island-appearance__actions">
+        <button type="button" className="animal-island-appearance__reset" aria-label="恢复全部外观设置" onClick={resetAll}>
+          <span className="animal-island-appearance__reset-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10" />
+              <path d="M4.7 2.7v3.1h3.1" />
+            </svg>
+          </span>
+          <span className="animal-island-appearance__reset-copy">
+            <span>全部恢复默认</span>
+            <small>均衡 0.40</small>
+          </span>
+        </button>
+      </div>
 
       <p className="animal-island-appearance__note">
         设置卡片本身是固定纸面，滑杆调整的是它背后的画布，上方「画布预览」会实时同步；偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。

@@ -45,6 +45,20 @@ $env:PATH = "C:\Software\DeepSeek Harness\resources\runtime\bin;$env:PATH"
 
 `dsh.profile.bundles` 里还要有 `dsh-theme-animal-island-ui`，否则包装了也不会挂载。
 
+日常本地发版不用记上面这套命令：
+
+```sh
+pnpm run install:local                 # desktop + web
+pnpm run install:local --only web      # 只装一个 profile
+pnpm run install:local --dry-run       # 只打印会改的依赖
+```
+
+脚本按当前 `package.json` 版本定位 `artifacts/release-v<版本>/<包名>-<版本>.tgz`，按文件 SHA-256
+复制到 DSH home 下的内容寻址缓存，再把 `file:` 依赖写进两个 profile（缺 `dsh.profile.bundles` 会补上）。
+因此同一版本重新出包后，pnpm 也会识别为新的本地依赖。desktop 自动走上面的 Electron-as-node 安装，
+web 走常规 pnpm。任一步安装或版本校验失败时，脚本会把该 profile 的 `package.json` 恢复到安装前的原文。
+桌面装在非默认位置时用 `DSH_DESKTOP_APP` 指过去；tarball 路径可用 `DSH_THEME_TARBALL` 覆盖。
+
 离线验证组合结果（不必启动客户端）。桌面宿主用的就是
 `loadProfileDirectory(binName, dir, installAnchor)`，可以直接调它并打印被跳过的组合包：
 

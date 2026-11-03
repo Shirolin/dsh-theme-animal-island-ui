@@ -1,0 +1,49 @@
+<!doctype html>
+<!--
+  The appearance panel's three "detail" switches at their non-default values:
+  no canvas illustrations, no paper grain, and the system UI font. The fixture
+  keeps the real skin CSS plus a composer and a dialog so the removed layers can
+  be measured on the elements that consume them.
+-->
+<html
+  lang="zh-CN"
+  data-dsh-animal-island-skin="active"
+  data-animal-decor="off"
+  data-animal-grain="off"
+  data-animal-font="system"
+>
+<head>
+<meta charset="utf-8">
+<title>动森外观 · 素净画布</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  * { box-sizing: border-box; }
+  body { min-height: 100vh; margin: 0; padding: 32px; }
+  .fixture {
+    display: grid;
+    gap: 24px;
+    width: min(720px, 100%);
+    margin: 0 auto;
+  }
+  .fixture h1 { margin: 0; color: var(--animal-ink); font-size: 16px; font-weight: 900; }
+  [data-composer-card] { min-height: 132px; padding: 18px 20px; }
+  [data-composer-card] p { margin: 0; color: var(--animal-body); font-size: 13px; line-height: 1.6; }
+  [role="dialog"] { min-height: 96px; padding: 18px 20px; }
+  [role="dialog"] p { margin: 0; color: var(--animal-body); font-size: 13px; line-height: 1.6; }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{TOKENS}} {{BODY_STYLE}}">
+<main class="fixture">
+  <h1>素净画布：只留波点与斜纹底</h1>
+  <div data-composer-card>
+    <p>composer 仍保留叶片水印，但纸纹层已经关闭。</p>
+  </div>
+  <div role="dialog" aria-label="示例对话框">
+    <p>对话框只剩纯色纸面，没有 feTurbulence 纸纹。</p>
+  </div>
+</main>
+</body>
+</html>

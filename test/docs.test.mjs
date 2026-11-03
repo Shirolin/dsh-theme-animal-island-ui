@@ -20,6 +20,7 @@ const documents = [
   'docs/desktop.md',
   'docs/web-vs-desktop.md',
   'docs/session-list-blank.md',
+  'docs/research/theme-settings-survey.md',
 ]
 
 test('repository documents exist and their relative links resolve', async () => {

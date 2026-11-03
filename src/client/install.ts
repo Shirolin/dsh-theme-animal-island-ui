@@ -1,5 +1,6 @@
-import type { ClientContextLike } from './context.ts'
+import type { ClientContextLike, ThemeRuntimeLike } from './context.ts'
 import { createAppearanceStore, type AppearanceStore } from './appearance.ts'
+import { createFontLayer } from './font-layer.ts'
 import { SKIN_CSS } from 'virtual:animal-island-skin-css'
 
 export const PLUGIN_ID = 'dsh-theme-animal-island-ui'
@@ -25,14 +26,14 @@ function restoreRootAttribute(root: HTMLElement, previousValue: string | null): 
   else root.setAttribute(ROOT_ATTRIBUTE, previousValue)
 }
 
-function createInstallation(root: HTMLElement): Installation {
+function createInstallation(root: HTMLElement, theme: ThemeRuntimeLike | undefined): Installation {
   const previousValue = root.getAttribute(ROOT_ATTRIBUTE)
   const ownerDocument = root.ownerDocument
   const style = ownerDocument.createElement('style')
   style.setAttribute('data-plugin', PLUGIN_ID)
   style.setAttribute('data-plugin-css', `${PLUGIN_ID}/skin`)
   style.textContent = SKIN_CSS
-  const appearance = createAppearanceStore(root)
+  const appearance = createAppearanceStore(root, createFontLayer(theme))
 
   try {
     root.setAttribute(ROOT_ATTRIBUTE, ROOT_VALUE)
@@ -64,7 +65,7 @@ export function installOwnedSkin(ctx: ClientContextLike): InstalledSkin | undefi
   if (typeof document === 'undefined' || !document.documentElement || !document.head) return undefined
 
   const root = document.documentElement
-  const installation = installations.get(root) ?? createInstallation(root)
+  const installation = installations.get(root) ?? createInstallation(root, ctx.theme)
   installations.set(root, installation)
   installation.references += 1
 

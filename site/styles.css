@@ -826,7 +826,7 @@ code {
   border-radius: var(--radius-panel);
   background: var(--paper);
   color: var(--ink);
-  box-shadow: 0 1.5rem 4rem rgb(6 24 26 / 40%);
+  box-shadow: 0 1.5rem 4rem rgb(6 24 26 / 40%); /* taste-skill-ignore: real modal overlay */
   user-select: none;
 }
 

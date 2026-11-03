@@ -56,7 +56,7 @@ DSH 证据与探测方式只在 `scripts/seam-contract.mjs` 维护；本文保�
 | `[aria-pressed]`、`[aria-selected]`、`[aria-checked]`、`[aria-expanded]` | 选中、展开与开关状态（预设卡片、列表项、外观预设、插件开关） | ARIA 状态属性 |
 | `[aria-haspopup]`、`[aria-label]` | 定位菜单触发器与区分带文字控件 | 标准 ARIA 属性；只读语义，不依赖 DOM 位置 |
 
-插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。插件还会在 `<html>` 上写两个自有属性（不是 DSH 接缝，测试里单独归类）：`data-animal-appearance`（外观预设）与 `data-animal-diff-syntax`（`warm` / `native`，控制浅色纸面 diff 的语法配色）。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。Windows 外壳 frame 的例外是 `html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。启动页的受限例外用一次 `[data-dsh-boot]:has([data-dsh-boot-spinner])` 建立样式容器，纸卡、字标和提示在其后代规则中定位；spinner 消失即容器条件整体失配。Windows 标题栏让 `body` 的 sidebar-fill 成为 caption 色，并在 `#root` 恢复应用内奶油 token；暗色另用 `div:has(> nav[aria-label])` 找到侧栏根节点恢复深蓝，只改背景色，不改侧栏布局。以上关系都由 `test/skin.test.mjs` 与桌面夹具锁住。
+插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。插画层与纸纹分别由 `--animal-decor-*`、`--animal-paper-grain` 承载，关闭时只把这些变量设为 `none`，不改背景层的位置/尺寸列表。插件还会在 `<html>` 上写五个自有属性（不是 DSH 接缝，测试里单独归类）：`data-animal-appearance`（外观预设）、`data-animal-diff-syntax`（`warm` / `native`，控制浅色纸面 diff 的语法配色）、`data-animal-decor`（`on` / `off`）、`data-animal-grain`（`on` / `off`）与 `data-animal-font`（`theme` / `system`）。系统字体不写 `!important`，而是由 `dsh-theme-animal-island-ui:appearance` 这个独立 token 层把 `--dsw-font-family` 指向 `var(--animal-system-font-family)`，卸载时随层移除。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。Windows 外壳 frame 的例外是 `html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。启动页的受限例外用一次 `[data-dsh-boot]:has([data-dsh-boot-spinner])` 建立样式容器，纸卡、字标和提示在其后代规则中定位；spinner 消失即容器条件整体失配。Windows 标题栏让 `body` 的 sidebar-fill 成为 caption 色，并在 `#root` 恢复应用内奶油 token；暗色另用 `div:has(> nav[aria-label])` 找到侧栏根节点恢复深蓝，只改背景色，不改侧栏布局。以上关系都由 `test/skin.test.mjs` 与桌面夹具锁住。
 
 ## 插件自有布局
 
@@ -65,6 +65,27 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
 判断口径：只覆盖 DSH 与插件都**没有**给出外观的语义元素；已经自带 CSS 的组件，最多通过 token 影响它的颜色，不改它的几何。
 
 启动等待页是 DSH 在插件加载前预渲染的临时界面，不属于插件自有布局；主题按上表的两个 boot hook 做视觉接管，并且只在进度章存在时启用纸卡几何。失败页回到 DSH 的官方卡片与错误列表，根节点保留滚动，避免长诊断被裁掉。
+
+## 第三方插件与插件市场
+
+主题的责任面是 Harness shell、DSH 官方组件和它们共用的语义元素；第三方插件自绘的页面、卡片和布局不逐个适配。插件只要消费 `--dsw-*` token 就会自动获得配色与字体，主题不为任何插件的 class / hash 写规则。
+
+会主动命中第三方界面的通用层只有三处，都是「全局材质」而不是插件适配：
+
+| 通用层 | 范围 | 约束 |
+| --- | --- | --- |
+| `[role="dialog"]` 纸面 | 所有对话框，含插件/市场弹窗 | 纸纹 + 内缩纸边 + 缝线；不改宽高、内边距与内容布局 |
+| 输入框 3px 立体底边 | 组合式输入外壳与原生 input | 高度、内边距不变，只加描边与底影 |
+| 带文字按钮的胶囊/3D | 排除含 svg/img/video/canvas 与 switch/checkbox/radio/option 角色的控件 | 市场按钮使用自家 primitives，现有规则不覆盖它 |
+
+验收口径（改皮肤或升级 DSH 后跑一遍）：
+
+1. 插件管理页（官方）：已安装、添加插件弹窗、安装源选择；
+2. dshmarket：发现首页、主题页、插件详情与安装弹窗；
+3. 判定标准是「布局不变、文字可读、输入框高度不变、焦点环不被裁切」，不是「和主题长得一样」；
+4. 只有某个插件坏、其它都正常 → 记录为已知不兼容，不为它加选择器；只有主题自身的通用规则误伤才修。
+
+2026-11 对 `dshmarket@1.73.8` + 0.3.35 的 smoke：主题页、安装弹窗与官方「添加插件」弹窗均无布局破坏；安装弹窗继承纸纹与内缩纸边（视觉成立），官方安装输入框保留 40px 高和主题底边。插件页本身不画纸面、卡片浮在画布上，是主题现有的「插件页 = 画布」设计，不是市场兼容问题。
 
 ## 禁止依赖
 

@@ -25,7 +25,7 @@ An Animal Island–inspired community theme plugin for DeepSeek Harness (Web and
 
 - **Day & Night islands**: Polka-dot turf, water ripples, and floating leaves by day; a dedicated starry night island with warm paper surfaces, deep-teal sidebar, moonlight, and fireflies by night;
 - **Public slots & native shell**: Boarding-pass brand masthead (`216×60`), hero card, bubble composer, paper-grain dialogs, and 2px inset mint focus rings that never clip inside scroll views;
-- **In-app appearance tab**: Built into `Settings → Plugins` with three presets (`0.22` / `0.40` / `0.55`), a `0.15–0.60` opacity slider, and a live layered canvas preview;
+- **In-app appearance tab**: Built into `Settings → Plugins` with three presets (`0.52` / `0.40` / `0.28`), a `0.15–0.60` opacity slider, a live layered canvas preview, and detail switches for canvas illustrations, paper grain, and the UI font (bundled Nunito or the system stack);
 - **Self-contained assets**: Bundled Nunito Latin fonts and original SVG artwork with zero runtime network requests;
 - **Verified compatibility**: Contract tests for 118 ThemeRuntime tokens, public slots, ARIA/data hooks, and headless Chrome DOM fixtures.
 
@@ -80,6 +80,7 @@ The detailed technical documentation is currently written in Chinese:
 - [DSH compatibility contract](docs/compatibility.md)
 - [Desktop installation, debugging, and rollback](docs/desktop.md)
 - [Web and Desktop differences](docs/web-vs-desktop.md)
+- [Community theme settings survey](docs/research/theme-settings-survey.md)
 - [Changelog](CHANGELOG.md)
 
 ## Contributing and security

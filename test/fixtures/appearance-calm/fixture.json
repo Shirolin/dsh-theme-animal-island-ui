@@ -1,0 +1,23 @@
+{
+  "title": "动森外观 · 素净画布（无插画 / 无纸纹 / 系统字体，亮暗）",
+  "pluginCss": [],
+  "assertions": [
+    {
+      "message": "画布的前三个装饰层为 none，波点与斜纹底仍在",
+      "expression": "(() => { const layers = getComputedStyle(document.body).backgroundImage; return layers.startsWith('none, none, none') && layers.includes('radial-gradient') && layers.includes('repeating-linear-gradient'); })()"
+    },
+    {
+      "message": "装饰与纸纹变量都被关闭",
+      "expression": "(() => { const style = getComputedStyle(document.body); return ['--animal-decor-horizon', '--animal-decor-leaves', '--animal-decor-wave', '--animal-decor-night-leaves', '--animal-decor-night-horizon', '--animal-decor-night-glow', '--animal-paper-grain'].every((name) => style.getPropertyValue(name).trim() === 'none'); })()"
+    },
+    {
+      "message": "composer 保留叶片水印但移除纸纹层，对话框只剩纯色纸",
+      "expression": "(() => { const composer = document.querySelector('[data-composer-card]'); const dialog = document.querySelector('[role=\"dialog\"]'); if (!composer || !dialog) return false; return /,\\s*none$/.test(getComputedStyle(composer).backgroundImage) && getComputedStyle(dialog).backgroundImage === 'none'; })()"
+    },
+    {
+      "message": "界面字体切到系统栈，组件仍能读到主题 token",
+      "expression": "(() => { const family = getComputedStyle(document.body).fontFamily; return family.includes('system-ui') && family.includes('PingFang SC'); })()"
+    }
+  ],
+  "variants": [{ "id": "light", "mode": "light", "window": "900,620" }, { "id": "dark", "mode": "dark", "window": "900,620" }]
+}

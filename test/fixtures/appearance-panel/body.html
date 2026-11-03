@@ -63,15 +63,7 @@
           <output class="animal-island-appearance__slider-value">0.40</output>
           <input type="range" min="0.15" max="0.60" step="0.01" value="0.40" style="--animal-slider-progress: 55.5556%">
         </label>
-        <div class="animal-island-appearance__custom-actions">
-          <span class="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
-          <button type="button" class="animal-island-appearance__reset">
-            <span class="animal-island-appearance__reset-icon" aria-hidden="true">
-              <svg viewBox="0 0 16 16" fill="none"><path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10"/><path d="M4.7 2.7v3.1h3.1"/></svg>
-            </span>
-            <span class="animal-island-appearance__reset-copy"><span>恢复默认</span><small>均衡 0.40</small></span>
-          </button>
-        </div>
+        <span class="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
       </div>
       <fieldset class="animal-island-appearance__diff" aria-label="diff 语法配色">
         <span class="animal-island-appearance__diff-title">diff 语法配色</span>
@@ -81,6 +73,39 @@
           <button type="button" class="animal-island-appearance__preset">中性<small>DSH 原生</small></button>
         </div>
       </fieldset>
+      <fieldset class="animal-island-appearance__details" aria-label="外观细节">
+        <span class="animal-island-appearance__details-title">细节</span>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">插画装饰</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="插画装饰">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">显示<small>山丘与叶</small></button>
+            <button type="button" class="animal-island-appearance__preset">隐藏<small>只留底纹</small></button>
+          </fieldset>
+        </div>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">纸纹</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="纸纹">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">开<small>纸面颗粒</small></button>
+            <button type="button" class="animal-island-appearance__preset">关<small>纯色纸</small></button>
+          </fieldset>
+        </div>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">界面字体</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="界面字体">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">动森<small>Nunito</small></button>
+            <button type="button" class="animal-island-appearance__preset">系统<small>跟随平台</small></button>
+          </fieldset>
+        </div>
+        <p class="animal-island-appearance__details-hint">隐藏插画只保留波点与斜纹底；纸纹只作用于 composer 与对话框。</p>
+      </fieldset>
+      <div class="animal-island-appearance__actions">
+        <button type="button" class="animal-island-appearance__reset" aria-label="恢复全部外观设置">
+          <span class="animal-island-appearance__reset-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10"/><path d="M4.7 2.7v3.1h3.1"/></svg>
+          </span>
+          <span class="animal-island-appearance__reset-copy"><span>全部恢复默认</span><small>均衡 0.40</small></span>
+        </button>
+      </div>
       <p class="animal-island-appearance__note">偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。</p>
     </section>
   </article>
@@ -101,15 +126,7 @@
           <output class="animal-island-appearance__slider-value">0.40</output>
           <input type="range" min="0.15" max="0.60" step="0.01" value="0.40" style="--animal-slider-progress: 55.5556%">
         </label>
-        <div class="animal-island-appearance__custom-actions">
-          <span class="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
-          <button type="button" class="animal-island-appearance__reset">
-            <span class="animal-island-appearance__reset-icon" aria-hidden="true">
-              <svg viewBox="0 0 16 16" fill="none"><path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10"/><path d="M4.7 2.7v3.1h3.1"/></svg>
-            </span>
-            <span class="animal-island-appearance__reset-copy"><span>恢复默认</span><small>均衡 0.40</small></span>
-          </button>
-        </div>
+        <span class="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
       </div>
       <fieldset class="animal-island-appearance__diff" aria-label="diff 语法配色">
         <span class="animal-island-appearance__diff-title">diff 语法配色</span>
@@ -119,6 +136,39 @@
           <button type="button" class="animal-island-appearance__preset">中性<small>DSH 原生</small></button>
         </div>
       </fieldset>
+      <fieldset class="animal-island-appearance__details" aria-label="外观细节">
+        <span class="animal-island-appearance__details-title">细节</span>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">插画装饰</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="插画装饰">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">显示<small>山丘与叶</small></button>
+            <button type="button" class="animal-island-appearance__preset">隐藏<small>只留底纹</small></button>
+          </fieldset>
+        </div>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">纸纹</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="纸纹">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">开<small>纸面颗粒</small></button>
+            <button type="button" class="animal-island-appearance__preset">关<small>纯色纸</small></button>
+          </fieldset>
+        </div>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">界面字体</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="界面字体">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">动森<small>Nunito</small></button>
+            <button type="button" class="animal-island-appearance__preset">系统<small>跟随平台</small></button>
+          </fieldset>
+        </div>
+        <p class="animal-island-appearance__details-hint">隐藏插画只保留波点与斜纹底。</p>
+      </fieldset>
+      <div class="animal-island-appearance__actions">
+        <button type="button" class="animal-island-appearance__reset" aria-label="恢复全部外观设置">
+          <span class="animal-island-appearance__reset-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10"/><path d="M4.7 2.7v3.1h3.1"/></svg>
+          </span>
+          <span class="animal-island-appearance__reset-copy"><span>全部恢复默认</span><small>均衡 0.40</small></span>
+        </button>
+      </div>
       <p class="animal-island-appearance__note">偏好保存在本机这个客户端。</p>
     </section>
   </article>

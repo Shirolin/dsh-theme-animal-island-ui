@@ -20,6 +20,18 @@ html[data-dsh-animal-island-skin] {
   --animal-canvas-veil: 0.4;
   --animal-font-family: Nunito, "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --animal-code-family: "SFMono-Regular", "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", monospace;
+  --animal-system-font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  /* Canvas illustration layers and paper grain are variables so the appearance
+     panel can remove them without rewriting the background stacks (a `none`
+     layer keeps every position/size slot aligned). The boot screen keeps its
+     own direct URLs: it renders before the plugin and its settings exist. */
+  --animal-decor-horizon: url("__ANIMAL_ISLAND_HORIZON__");
+  --animal-decor-leaves: url("__ANIMAL_ISLAND_LEAVES__");
+  --animal-decor-wave: url("__ANIMAL_ISLAND_WAVE__");
+  --animal-decor-night-leaves: url("__ANIMAL_ISLAND_NIGHT_LEAVES__");
+  --animal-decor-night-horizon: url("__ANIMAL_ISLAND_NIGHT_HORIZON__");
+  --animal-decor-night-glow: radial-gradient(circle at 78% 14%, rgba(255, 238, 190, 0.16) 0 80px, rgba(255, 238, 190, 0.06) 130px, transparent 210px);
+  --animal-paper-grain: url("__ANIMAL_ISLAND_GRAIN__");
   background-color: #8fcaa5;
   background-image:
     radial-gradient(circle, rgba(74, 126, 83, 0.24) 1.25px, transparent 1.4px), radial-gradient(circle, rgba(245, 250, 222, 0.22) 0.85px, transparent 1px),
@@ -42,7 +54,7 @@ html[data-dsh-animal-island-skin] body {
   color: var(--animal-body);
   background-color: #8fcaa5;
   background-image:
-    url("__ANIMAL_ISLAND_HORIZON__"), url("__ANIMAL_ISLAND_LEAVES__"), url("__ANIMAL_ISLAND_WAVE__"),
+    var(--animal-decor-horizon, none), var(--animal-decor-leaves, none), var(--animal-decor-wave, none),
     radial-gradient(circle, rgba(74, 126, 83, 0.28) 1.25px, transparent 1.4px), radial-gradient(circle, rgba(245, 250, 222, 0.26) 0.85px, transparent 1px),
     repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 9px);
   background-position:
@@ -102,10 +114,8 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
   color: var(--animal-body);
   background-color: #14242a;
   background-image:
-    url("__ANIMAL_ISLAND_NIGHT_LEAVES__"),
-    radial-gradient(circle at 78% 14%, rgba(255, 238, 190, 0.16) 0 80px, rgba(255, 238, 190, 0.06) 130px, transparent 210px),
-    url("__ANIMAL_ISLAND_NIGHT_HORIZON__"), radial-gradient(circle, rgba(255, 248, 220, 0.45) 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(160, 230, 220, 0.3) 0.8px, transparent 1.2px),
+    var(--animal-decor-night-leaves, none), var(--animal-decor-night-glow, none), var(--animal-decor-night-horizon, none),
+    radial-gradient(circle, rgba(255, 248, 220, 0.45) 1px, transparent 1.5px), radial-gradient(circle, rgba(160, 230, 220, 0.3) 0.8px, transparent 1.2px),
     repeating-linear-gradient(135deg, rgba(134, 200, 179, 0.025) 0 2px, transparent 2px 9px);
   background-position:
     0 0,
@@ -123,6 +133,26 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] {
     auto;
   background-repeat: repeat, no-repeat, no-repeat, repeat, repeat, repeat;
   background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
+}
+
+/* Appearance preferences owned by the skin. These are plugin-owned root
+   attributes, not DSH seams, and each rule only removes a decorative layer or
+   swaps a font stack — never geometry, spacing or DSH-owned state. */
+html[data-dsh-animal-island-skin][data-animal-decor="off"] {
+  --animal-decor-horizon: none;
+  --animal-decor-leaves: none;
+  --animal-decor-wave: none;
+  --animal-decor-night-leaves: none;
+  --animal-decor-night-horizon: none;
+  --animal-decor-night-glow: none;
+}
+
+html[data-dsh-animal-island-skin][data-animal-grain="off"] {
+  --animal-paper-grain: none;
+}
+
+html[data-dsh-animal-island-skin][data-animal-font="system"] {
+  --animal-font-family: var(--animal-system-font-family);
 }
 
 /* The native Windows caption and sidebar both read
@@ -811,7 +841,7 @@ html[data-dsh-animal-island-skin] [data-composer-card] {
   border: 2px solid var(--animal-border-strong) !important;
   border-radius: 26px !important;
   background-color: #fffbe7 !important;
-  background-image: url("__ANIMAL_ISLAND_LEAF__"), url("__ANIMAL_ISLAND_GRAIN__") !important;
+  background-image: url("__ANIMAL_ISLAND_LEAF__"), var(--animal-paper-grain, none) !important;
   background-position:
     64% 56%,
     0 0 !important;
@@ -876,7 +906,7 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] [data-composer-card]:
    stitched edge. The outline sits inside the card so it never changes
    geometry, and the :not(:focus-visible) guard leaves the focus ring alone. */
 html[data-dsh-animal-island-skin] [role="dialog"] {
-  background-image: url("__ANIMAL_ISLAND_GRAIN__") !important;
+  background-image: var(--animal-paper-grain, none) !important;
   background-size: 180px 180px !important;
   background-repeat: repeat !important;
   box-shadow:
@@ -2227,13 +2257,60 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__slider-value::befor
   background: var(--animal-mint);
 }
 
-html[data-dsh-animal-island-skin] .animal-island-appearance__custom-actions {
+/* 「细节」reuses the plank buttons and diff fieldset rhythm: one label plus a
+   pair of choices per row, wrapping to a second line at 320px. */
+html[data-dsh-animal-island-skin] .animal-island-appearance__details {
+  display: grid;
+  gap: 10px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__details-title {
+  padding: 0;
+  color: var(--animal-ink);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__details-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px 12px;
+  gap: 8px 14px;
   min-inline-size: 0;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__details-label {
+  min-width: 62px;
+  color: var(--animal-ink);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__details-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__details-hint {
+  max-width: 52ch;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 html[data-dsh-animal-island-skin] .animal-island-appearance__custom-hint {
