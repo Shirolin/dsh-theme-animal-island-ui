@@ -6,6 +6,13 @@
 
 export const PLUGIN_ROOT_ATTRIBUTE = 'dsh-animal-island-skin'
 
+/*
+ * Attributes the skin writes on <html> itself. They are plugin-owned (not DSH
+ * seams), but the CSS policy test still requires every data-* selector to be
+ * reviewed, so they live in the same allowlist under a separate category.
+ */
+export const PLUGIN_OWNED_DATA_ATTRIBUTES = ['animal-appearance', 'animal-diff-syntax']
+
 const dshSource = (packageName, file, marker, note) => ({
   kind: 'dsh-source',
   package: packageName,
@@ -117,6 +124,16 @@ export const PUBLIC_DATA_HOOKS = [
     ),
   }),
   publicDataHook({
+    attribute: 'review-view',
+    selector: '[data-review-view]',
+    required: false,
+    purpose: 'Restore a light-surface syntax palette in the deliverables code diff.',
+    evidence: fixtureEvidence(
+      'test/fixtures/deliverables-diff/body.html',
+      'The deliverables review renders this flat diff body on the sidebar paper; the fixture pins its light-surface colours in both palettes.',
+    ),
+  }),
+  publicDataHook({
     attribute: 'open-target',
     selector: '[data-open-target]',
     required: false,
@@ -185,7 +202,7 @@ export const PUBLIC_DATA_HOOKS = [
   }),
 ]
 
-export const ALLOWED_DATA_HOOKS = [PLUGIN_ROOT_ATTRIBUTE, ...PUBLIC_DATA_HOOKS.map(({ attribute }) => attribute)]
+export const ALLOWED_DATA_HOOKS = [PLUGIN_ROOT_ATTRIBUTE, ...PLUGIN_OWNED_DATA_ATTRIBUTES, ...PUBLIC_DATA_HOOKS.map(({ attribute }) => attribute)]
 
 export const PUBLIC_ARIA_ROLES = [
   {

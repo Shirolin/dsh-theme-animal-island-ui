@@ -13,6 +13,7 @@ coverage/
 .dsh/
 .chrome-smoke/
 .tmp/
+.taste-skill/
 *-smoke.png
 artifacts/*
 !artifacts/README.md

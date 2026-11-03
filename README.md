@@ -8,9 +8,9 @@
 [![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-f3c969.svg)](LICENSE)
 
-`Animal Island UI`（一动森）是一个面向 DeepSeek Harness Web GUI 的高还原社区 skin plugin：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创资源与 DSH 公开 Slot，目标是接近 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的岛屿游戏界面，同时保持 DSH 会话、设置、工作区和 composer 的原生行为。
+`Animal Island UI` 是一套面向 DeepSeek Harness（Web 与 Windows 桌面端）的岛屿风社区主题插件：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创画作与 DSH 公开 Slot，还原 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的手账纸感与海岛质感，同时完整保留 DSH 会话、设置、工作区、composer 与快捷键的原生行为。
 
-发布版本、下载与校验值见 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)。当前功能包含 **216×60 的渡岛船票**品牌区（奶油纸面 + 薄荷票根 + 虚线撕口）、气泡 composer、纸纹/木牌、夜岛星空、微交互与木牌选中态，「设置 → 插件 → 动森外观」的透明度调节（含与真实画布同层数的预览）、快捷键搜索框的单一表面与单圈聚焦描边、覆盖全部界面控件的 2px 内嵌键盘聚焦环，以及 Windows 桌面端外壳透明化、圆角归零与会话列表渐隐层色差修正。Windows 只保留一个 parity 分支。
+发布包、下载与 `SHA256SUMS` 校验值见 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)。主题包含 **216×60 渡岛船票**品牌区（奶油纸面 + 薄荷票根 + 虚线撕口）、对话气泡 composer、纸纹面板与木牌选中态、独立配色的夜岛星空、「设置 → 插件 → 动森外观」画布浓度调节（附实时同层数预览）、覆盖全界面控件的 2px 内嵌薄荷焦点环，以及 Windows 桌面端透明标题栏与会话列表渐隐修正。
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 
@@ -23,19 +23,17 @@
 
 </details>
 
-## 视觉范围
+## 视觉与交互
 
-- 绿色双层波点画布 + 底部草/水波纹 + 漂浮叶子；
-- 奶油白侧栏、蓝紫底部波浪、原创叶片标与渡岛船票品牌区；
-- 木质标题绶带、暖棕文字和木牌 active；
-- 白色/奶油色卡片、对话气泡 composer、纸纹 dialog、pill 输入与文字按钮；
-- 奶油色 3D 主按钮和 hover/active 按压反馈；
-- 输入时气泡发光、发送键按压涟漪、叶片 hover 轻摆；
-- Light / Dark 均可读的深棕色代码块与 Shiki 配色；深色画布为「夜岛」星空；
-- 设置 → 插件 → 动森外观：纸白 / 均衡 / 海岛三档预设 + 0.15–0.60 滑杆，默认均衡 0.40，面板内附实时「画布预览」；
-- 内嵌 Nunito Latin 字体，中文回退 Noto Sans SC / 苹方 / 微软雅黑。
+- **海岛画布与夜岛**：日间为绿色双层波点画布、草浪水纹与漂浮叶片；夜间切换为独立配色的星空、月光与萤火，内容区保留暖棕纸面；
+- **侧栏与品牌区**：奶油白侧栏、蓝紫底浪、原创叶片标与渡岛船票品牌区；
+- **木牌与纸面层级**：木质标题绶带、木牌选中态、奶油白卡片、对话气泡 composer、纸纹弹窗与胶囊输入框；
+- **触感与微交互**：奶油色 3D 主按钮按压反馈、输入时气泡呼吸发光、发送键涟漪、叶片悬停轻摆；
+- **全界面键盘焦点**：2px 内嵌薄荷焦点环，快捷键搜索框保持单一表面与单圈聚焦描边，滚动与弹窗边界不裁切；
+- **代码与排版**：Light / Dark 均经对比度校准的深棕代码块与 Shiki 语法配色；内嵌 Nunito Latin 字体，中文回退至苹方 / 微软雅黑 / Noto Sans SC；
+- **应用内外观设置**：「设置 → 插件 → 动森外观」提供纸白 / 均衡 / 海岛三档预设与 `0.15–0.60` 滑杆（默认均衡 `0.40`），面板内实时预览画布层次。
 
-顶部设计图是方向性 specimen；折叠区截图来自真实 DSH CSS/DOM 夹具，用于回归验收，最终观感仍以 DSH 实机为准。
+顶部色板图为设计标本；折叠区截图由真实 DSH CSS/DOM 夹具渲染，用于回归验收，实际观感以 DSH 客户端为准。
 
 ## 文档
 

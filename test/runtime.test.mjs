@@ -126,18 +126,22 @@ test('client factory registers and releases coordinated theme, style, and public
       assert.equal(entry.priority, slot.priority ?? undefined)
     }
     const appearance = slots.registrations.find((entry) => entry.key === 'settings.plugins.tab').inject().appearance
-    appearance.set({ preset: 'island', veil: 0.28 })
+    assert.equal(appearance.getSnapshot().diffSyntax, 'warm')
+    appearance.set({ preset: 'island', veil: 0.28, diffSyntax: 'native' })
     assert.equal(document.documentElement.style.getPropertyValue('--animal-canvas-veil'), '0.28')
     assert.equal(document.documentElement.getAttribute('data-animal-appearance'), 'island')
 
     // The Settings entry receives the installed store and paints the same root.
     assert.equal(appearance.getSnapshot().preset, 'island')
+    assert.equal(appearance.getSnapshot().diffSyntax, 'native')
+    assert.equal(document.documentElement.getAttribute('data-animal-diff-syntax'), 'native')
 
     disposeEffects()
     assert.equal(disposedTheme, 1)
     assert.equal(document.documentElement.hasAttribute('data-dsh-animal-island-skin'), false)
     assert.equal(document.documentElement.style.getPropertyValue('--animal-canvas-veil'), '')
     assert.equal(document.documentElement.hasAttribute('data-animal-appearance'), false)
+    assert.equal(document.documentElement.hasAttribute('data-animal-diff-syntax'), false)
     assert.equal(document.head.querySelectorAll('style[data-plugin="dsh-theme-animal-island-ui"]').length, 0)
     assert.deepEqual(slots.registrations, [])
   })
@@ -209,6 +213,7 @@ test('overlapping installs share one root lifecycle and restore the previous roo
     root.setAttribute('data-dsh-animal-island-skin', 'previous')
     root.style.setProperty('--animal-canvas-veil', '0.33')
     root.setAttribute('data-animal-appearance', 'custom')
+    root.setAttribute('data-animal-diff-syntax', 'native')
 
     const plugin = factory()
     const first = createContext({
@@ -231,6 +236,7 @@ test('overlapping installs share one root lifecycle and restore the previous roo
     assert.equal(root.getAttribute('data-dsh-animal-island-skin'), 'active')
     assert.equal(root.style.getPropertyValue('--animal-canvas-veil'), '0.4')
     assert.equal(root.getAttribute('data-animal-appearance'), 'balanced')
+    assert.equal(root.getAttribute('data-animal-diff-syntax'), 'warm')
     assert.deepEqual(slots.registrations.map((entry) => entry.key).sort(), PUBLIC_SLOTS.map((slot) => slot.name).sort())
 
     first.disposeEffects()
@@ -238,6 +244,7 @@ test('overlapping installs share one root lifecycle and restore the previous roo
     assert.equal(root.getAttribute('data-dsh-animal-island-skin'), 'active')
     assert.equal(root.style.getPropertyValue('--animal-canvas-veil'), '0.4')
     assert.equal(root.getAttribute('data-animal-appearance'), 'balanced')
+    assert.equal(root.getAttribute('data-animal-diff-syntax'), 'warm')
     assert.deepEqual(slots.registrations.map((entry) => entry.key).sort(), PUBLIC_SLOTS.map((slot) => slot.name).sort())
 
     second.disposeEffects()
@@ -245,6 +252,7 @@ test('overlapping installs share one root lifecycle and restore the previous roo
     assert.equal(root.getAttribute('data-dsh-animal-island-skin'), 'previous')
     assert.equal(root.style.getPropertyValue('--animal-canvas-veil'), '0.33')
     assert.equal(root.getAttribute('data-animal-appearance'), 'custom')
+    assert.equal(root.getAttribute('data-animal-diff-syntax'), 'native')
     assert.deepEqual(slots.registrations, [])
   })
 })

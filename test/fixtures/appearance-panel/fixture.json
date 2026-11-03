@@ -17,6 +17,10 @@
     {
       "message": "恢复默认是带图标和副标题的次级按钮",
       "expression": "(() => [...document.querySelectorAll('.animal-island-appearance__reset')].every((button) => { const icon = button.querySelector('.animal-island-appearance__reset-icon svg'); const copy = button.querySelector('.animal-island-appearance__reset-copy'); const subline = copy?.querySelector('small'); if (!icon || !copy || !subline) return false; const rect = button.getBoundingClientRect(); const display = getComputedStyle(button).display; return rect.height >= 36 && button.scrollWidth <= button.clientWidth + 1 && copy.children.length === 2 && subline.textContent.trim() === '均衡 0.40' && (display === 'flex' || display === 'inline-flex'); }))()"
+    },
+    {
+      "message": "diff 语法配色两个选项在宽窄面板内都不溢出，且恰好有一个选中态",
+      "expression": "(() => [...document.querySelectorAll('.animal-island-appearance__diff')].every((group) => { const options = group.querySelector('.animal-island-appearance__diff-options'); const pressed = group.querySelectorAll('.animal-island-appearance__preset[aria-pressed=\"true\"]'); if (!options) return false; return options.getBoundingClientRect().width > 0 && options.scrollWidth <= options.clientWidth + 1 && pressed.length === 1; }))()"
     }
   ],
   "variants": [{ "id": "light", "mode": "light", "window": "980,540" }, { "id": "dark", "mode": "dark", "window": "980,540" }]

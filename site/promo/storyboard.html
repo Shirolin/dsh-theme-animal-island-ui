@@ -3,47 +3,41 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>一动森宣传片分镜</title>
+    <title>Animal Island UI 宣传片分镜</title>
     <style>
       @font-face {
-        font-family: 'Nunito';
-        src: url('../assets/nunito-latin-400-normal.woff2') format('woff2');
+        font-family: "Nunito";
+        src: url("../assets/nunito-latin-400-normal.woff2") format("woff2");
         font-style: normal;
         font-weight: 400;
         font-display: block;
       }
 
       @font-face {
-        font-family: 'Nunito';
-        src: url('../assets/nunito-latin-700-normal.woff2') format('woff2');
+        font-family: "Nunito";
+        src: url("../assets/nunito-latin-700-normal.woff2") format("woff2");
         font-style: normal;
         font-weight: 700;
         font-display: block;
       }
 
       @font-face {
-        font-family: 'Nunito';
-        src: url('../assets/nunito-latin-800-normal.woff2') format('woff2');
+        font-family: "Nunito";
+        src: url("../assets/nunito-latin-800-normal.woff2") format("woff2");
         font-style: normal;
         font-weight: 800;
         font-display: block;
       }
 
       :root {
-        --ground: #8fcaa5;
-        --mint: #19c8b9;
-        --paper: #f4f3f0;
-        --paper-soft: #e9e8e2;
-        --cream: #fffbe7;
-        --ink: #4c321d;
-        --ink-deep: #3b2818;
-        --body: #654a2f;
-        --wood: #8a5a33;
-        --wood-dark: #5a3719;
-        --night: #162f34;
-        --night-soft: #203c40;
-        --night-ink: #f7e7c7;
-        --font: 'Nunito', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        --paper: #f0efeb;
+        --paper-soft: #dfeadd;
+        --mint: #8fcaa5;
+        --night: #102f32;
+        --night-soft: #1c4144;
+        --ink: #3f2a17;
+        --night-ink: #eef2ec;
+        --font: "Nunito", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
       }
 
       * {
@@ -52,992 +46,238 @@
 
       html,
       body {
-        width: 100%;
-        height: 100%;
+        width: 1920px;
+        height: 1080px;
+        margin: 0;
         overflow: hidden;
       }
 
       body {
-        margin: 0;
         background: var(--paper);
         color: var(--ink);
         font-family: var(--font);
       }
 
-      body::after {
-        position: fixed;
-        inset: 0;
-        z-index: 20;
-        background-image: url('../assets/paper-grain.svg');
-        content: '';
-        opacity: 0.1;
-        pointer-events: none;
-      }
-
-      img,
-      svg {
-        display: block;
-      }
-
       h1,
-      h2,
       p,
       figure {
         margin: 0;
       }
 
+      img {
+        display: block;
+      }
+
       .scene {
-        position: fixed;
-        inset: 0;
+        width: 1920px;
+        height: 1080px;
         display: none;
-        overflow: hidden;
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: 22px;
+        padding: 34px 60px 26px;
       }
 
-      html[data-scene='1'] [data-index='1'],
-      html[data-scene='2'] [data-index='2'],
-      html[data-scene='3'] [data-index='3'],
-      html[data-scene='4'] [data-index='4'],
-      html[data-scene='5'] [data-index='5'],
-      html[data-scene='6'] [data-index='6'] {
-        display: block;
+      html[data-scene="1"] [data-index="1"],
+      html[data-scene="2"] [data-index="2"],
+      html[data-scene="3"] [data-index="3"],
+      html[data-scene="4"] [data-index="4"],
+      html[data-scene="5"] [data-index="5"],
+      html[data-scene="6"] [data-index="6"] {
+        display: grid;
       }
 
-      .scene::before {
-        position: absolute;
-        inset: 0;
-        content: '';
-        pointer-events: none;
+      .scene--day {
+        background: var(--mint);
       }
 
-      .island-day {
-        background-color: var(--ground);
-      }
-
-      .island-day::before {
-        background-image: url('../assets/floating-leaves.svg'), url('../assets/island-horizon.svg');
-        background-position: top center, bottom center;
-        background-repeat: repeat, no-repeat;
-        background-size: 900px 900px, 100% auto;
-      }
-
-      .island-night {
-        background-color: var(--night);
-      }
-
-      .island-night::before {
-        background-image: url('../assets/night-leaves.svg'), url('../assets/night-horizon.svg');
-        background-position: top center, bottom center;
-        background-repeat: repeat, no-repeat;
-        background-size: 980px 980px, 100% auto;
-      }
-
-      .paper-field {
+      .scene--paper {
         background: var(--paper);
       }
 
-      .scene-inner {
-        position: relative;
-        z-index: 2;
-        width: 100%;
-        height: 100%;
-        padding: 84px 112px 104px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        font-size: 34px;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-      }
-
-      .brand img {
-        width: 72px;
-        height: 72px;
-      }
-
-      .brand span {
-        display: block;
-      }
-
-      .brand small {
-        display: block;
-        margin-top: 2px;
-        color: var(--body);
-        font-size: 18px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-      }
-
-      .island-night .brand {
-        color: var(--night-ink);
-      }
-
-      .island-night .brand small {
-        color: #d9ceb9;
-      }
-
-      .display {
-        color: var(--ink-deep);
-        font-size: 158px;
-        font-weight: 800;
-        letter-spacing: -0.06em;
-        line-height: 0.9;
-      }
-
-      .heading {
-        color: var(--ink-deep);
-        font-size: 98px;
-        font-weight: 800;
-        letter-spacing: -0.05em;
-        line-height: 0.96;
-      }
-
-      .lead {
-        max-width: 740px;
-        color: var(--ink);
-        font-size: 34px;
-        line-height: 1.48;
-      }
-
-      .meta-line {
-        display: flex;
-        align-items: center;
-        gap: 30px;
-        color: var(--ink);
-        font-size: 24px;
-        font-weight: 700;
-      }
-
-      .meta-line span + span::before {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        margin-right: 30px;
-        border-radius: 50%;
-        background: currentColor;
-        content: '';
-        vertical-align: 0.15em;
-      }
-
-      .ticket {
-        position: relative;
-        padding: 18px;
-        border: 12px solid var(--wood-dark);
-        border-radius: 38px;
-        background: var(--paper);
-      }
-
-      .ticket::before,
-      .ticket::after {
-        position: absolute;
-        top: 50%;
-        z-index: 4;
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        background: var(--ticket-cut, var(--ground));
-        content: '';
-        transform: translateY(-50%);
-      }
-
-      .ticket::before {
-        left: -41px;
-      }
-
-      .ticket::after {
-        right: -41px;
-      }
-
-      .ticket-head,
-      .ticket-foot {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        padding: 10px 12px;
-        color: var(--body);
-        font-size: 21px;
-        font-weight: 800;
-      }
-
-      .ticket-head {
-        padding-bottom: 18px;
-      }
-
-      .ticket-foot {
-        padding-top: 18px;
-        border-top: 4px dashed var(--wood);
-      }
-
-      .ticket-image {
-        overflow: hidden;
-        border-radius: 26px;
+      .scene--mint {
         background: var(--paper-soft);
       }
 
-      .ticket-image img {
+      .scene--night {
+        background: var(--night);
+        color: var(--night-ink);
+      }
+
+      .scene-head {
+        min-height: 72px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 40px;
+        align-items: center;
+      }
+
+      .title-row {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .brand {
+        width: 62px;
+        height: 62px;
+        flex: none;
+      }
+
+      .brand img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
       }
 
-      .s1-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
-        align-items: center;
-        gap: 78px;
-        height: 100%;
-      }
-
-      .s1-copy {
-        align-self: center;
-        padding-bottom: 36px;
-      }
-
-      .s1-copy .display {
-        margin-top: 76px;
-        font-size: 126px;
-        white-space: nowrap;
-      }
-
-      .s1-copy .lead {
-        margin-top: 46px;
-      }
-
-      .s1-copy .meta-line {
-        margin-top: 54px;
-      }
-
-      .s1-stage {
-        position: relative;
-        min-height: 850px;
-      }
-
-      .s1-sun {
-        position: absolute;
-        top: 52%;
-        left: 51%;
-        width: 880px;
-        height: 880px;
-        border-radius: 50%;
-        background: var(--mint);
-        transform: translate(-50%, -50%);
-      }
-
-      .s1-ticket {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 2;
-        width: 900px;
-        transform: translate(-50%, -50%) rotate(1.6deg);
-      }
-
-      .s1-ticket .ticket-image {
-        aspect-ratio: 16 / 9;
-      }
-
-      .scene-2 .scene-inner {
-        display: grid;
-        grid-template-columns: minmax(0, 0.83fr) minmax(0, 1.17fr);
-        align-items: center;
-        gap: 96px;
-      }
-
-      .scene-2 .heading {
-        margin-top: 58px;
-        font-size: 82px;
-        white-space: nowrap;
-      }
-
-      .scene-2 .lead {
-        max-width: 650px;
-        margin-top: 44px;
-      }
-
-      .s2-facts {
-        display: grid;
-        gap: 20px;
-        margin-top: 58px;
-        font-size: 27px;
+      h1 {
+        max-width: 1420px;
+        font-size: 56px;
         font-weight: 800;
-      }
-
-      .s2-facts span {
-        display: flex;
-        align-items: baseline;
-        gap: 14px;
-      }
-
-      .s2-facts strong {
-        min-width: 152px;
-        color: var(--mint-dark, #0b6d64);
-        font-size: 20px;
-      }
-
-      .s2-stage {
-        position: relative;
-        min-height: 900px;
-      }
-
-      .s2-orbit {
-        position: absolute;
-        top: 52%;
-        left: 54%;
-        width: 820px;
-        height: 820px;
-        border-radius: 50%;
-        background: var(--mint);
-        transform: translate(-50%, -50%);
-      }
-
-      .s2-ticket {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 2;
-        width: 660px;
-        transform: translate(-50%, -50%) rotate(-1.2deg);
-      }
-
-      .s2-ticket .ticket-image {
-        aspect-ratio: 4 / 5;
-      }
-
-      .s2-ticket .ticket-image img {
-        object-position: 50% 42%;
-      }
-
-      .scene-3 {
-        background: var(--paper);
-      }
-
-      .scene-3::before {
-        background-image: url('../assets/floating-leaves.svg');
-        background-position: top right;
-        background-repeat: repeat;
-        background-size: 820px 820px;
-        opacity: 0.18;
-      }
-
-      .scene-3 .scene-inner {
-        display: grid;
-        grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
-        align-items: center;
-        gap: 92px;
-      }
-
-      .s3-copy {
-        padding-bottom: 24px;
-      }
-
-      .s3-copy .heading {
-        margin-top: 58px;
-      }
-
-      .s3-copy .lead {
-        max-width: 600px;
-        margin-top: 44px;
-      }
-
-      .s3-notes {
-        display: grid;
-        gap: 32px;
-        margin-top: 68px;
-      }
-
-      .s3-note {
-        display: grid;
-        grid-template-columns: 160px 1fr;
-        align-items: baseline;
-        gap: 24px;
-        padding-top: 24px;
-        border-top: 5px solid var(--paper-soft);
-      }
-
-      .s3-note strong {
-        color: var(--mint-dark, #0b6d64);
-        font-size: 26px;
-      }
-
-      .s3-note span {
-        color: var(--body);
-        font-size: 24px;
-        line-height: 1.4;
-      }
-
-      .s3-stage {
-        position: relative;
-        min-height: 820px;
-      }
-
-      .s3-sun {
-        position: absolute;
-        top: 51%;
-        left: 50%;
-        width: 790px;
-        height: 790px;
-        border-radius: 50%;
-        background: var(--ground);
-        transform: translate(-50%, -50%);
-      }
-
-      .s3-ticket {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 2;
-        width: 1080px;
-        transform: translate(-50%, -50%) rotate(0.8deg);
-        --ticket-cut: var(--paper);
-      }
-
-      .s3-ticket .ticket-image {
-        aspect-ratio: 16 / 9;
-      }
-
-      .scene-4 .scene-inner {
-        padding-top: 70px;
-      }
-
-      .s4-heading {
-        position: relative;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 540px;
-        align-items: flex-end;
-        gap: 60px;
-        padding-top: 78px;
-      }
-
-      .s4-heading h2 {
-        max-width: 1060px;
-        color: var(--night-ink);
-        font-size: 88px;
-        font-weight: 800;
-        letter-spacing: -0.05em;
-        line-height: 0.98;
-        white-space: nowrap;
-      }
-
-      .s4-heading .brand {
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-
-      .s4-heading p {
-        color: #d9ceb9;
-        font-size: 25px;
-        line-height: 1.45;
-        text-align: right;
-      }
-
-      .s4-stage {
-        position: relative;
-        height: 700px;
-        margin-top: 42px;
-      }
-
-      .s4-ticket-boot {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 1000px;
-        transform: rotate(-1.5deg);
-        --ticket-cut: var(--night);
-      }
-
-      .s4-ticket-boot .ticket-image {
-        aspect-ratio: 1600 / 1102;
-      }
-
-      .s4-ticket-keys {
-        position: absolute;
-        top: 16px;
-        right: 0;
-        z-index: 3;
-        width: 610px;
-        transform: rotate(2.2deg);
-        --ticket-cut: var(--night);
-      }
-
-      .s4-ticket-keys .ticket-image {
-        aspect-ratio: 1;
-      }
-
-      .scene-5 .scene-inner {
-        display: grid;
-        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-        align-items: center;
-        gap: 80px;
-      }
-
-      .scene-5 .display {
-        color: var(--night-ink);
-        font-size: 148px;
-      }
-
-      .scene-5 .lead {
-        max-width: 660px;
-        margin-top: 48px;
-        color: #d9ceb9;
-      }
-
-      .s5-facts {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-        margin-top: 58px;
-        color: var(--night-ink);
-        font-size: 24px;
-        font-weight: 700;
-      }
-
-      .s5-facts span + span::before {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        margin-right: 24px;
-        border-radius: 50%;
-        background: var(--mint);
-        content: '';
-        vertical-align: 0.15em;
-      }
-
-      .s5-stage {
-        position: relative;
-        min-height: 950px;
-      }
-
-      .s5-moon {
-        position: absolute;
-        top: 5%;
-        right: 6%;
-        width: 310px;
-        height: 310px;
-        border-radius: 50%;
-        background: #f5e7b7;
-      }
-
-      .s5-ticket {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 2;
-        width: 620px;
-        transform: translate(-50%, -50%) rotate(1.4deg);
-        --ticket-cut: var(--night);
-      }
-
-      .s5-ticket .ticket-image {
-        aspect-ratio: 4 / 5;
-      }
-
-      .s5-ticket .ticket-image img {
-        object-position: 50% 38%;
-      }
-
-      .scene-6 .scene-inner {
-        display: grid;
-        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-        align-items: center;
-        gap: 80px;
-      }
-
-      .scene-6 .display {
-        margin-top: 76px;
-      }
-
-      .scene-6 .lead {
-        max-width: 660px;
-        margin-top: 42px;
-      }
-
-      .s6-actions {
-        display: flex;
-        align-items: center;
-        gap: 34px;
-        margin-top: 54px;
-      }
-
-      .s6-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 78px;
-        padding: 18px 34px;
-        border-radius: 18px;
-        background: var(--ink);
-        color: var(--cream);
-        font-size: 28px;
-        font-weight: 800;
-      }
-
-      .s6-actions span {
-        font-size: 22px;
-        font-weight: 800;
-      }
-
-      .s6-legal {
-        margin-top: 82px;
-        color: var(--body);
-        font-size: 20px;
-      }
-
-      .s6-stage {
-        position: relative;
-        min-height: 820px;
-      }
-
-      .s6-sun {
-        position: absolute;
-        top: 50%;
-        left: 51%;
-        width: 760px;
-        height: 760px;
-        border-radius: 50%;
-        background: var(--mint);
-        transform: translate(-50%, -50%);
-      }
-
-      .s6-ticket {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 2;
-        width: 800px;
-        min-height: 700px;
-        padding: 48px 52px 38px;
-        transform: translate(-50%, -50%) rotate(1.4deg);
-        --ticket-cut: var(--ground);
-      }
-
-      .s6-ticket::before,
-      .s6-ticket::after {
-        top: 72%;
-      }
-
-      .s6-brand {
-        display: flex;
-        align-items: center;
-        gap: 26px;
-        padding-bottom: 34px;
-        border-bottom: 4px dashed var(--wood);
-      }
-
-      .s6-brand img {
-        width: 116px;
-        height: 116px;
-      }
-
-      .s6-brand strong {
-        display: block;
-        color: var(--ink-deep);
-        font-size: 58px;
-        font-weight: 800;
-        letter-spacing: -0.05em;
+        letter-spacing: -0.035em;
         line-height: 1;
       }
 
-      .s6-brand span {
-        display: block;
-        margin-top: 8px;
-        color: var(--body);
-        font-size: 20px;
-        font-weight: 800;
-        letter-spacing: 0.04em;
-      }
-
-      .s6-version {
-        margin-top: 42px;
-        color: var(--mint-dark, #0b6d64);
-        font-size: 116px;
-        font-weight: 800;
-        letter-spacing: -0.06em;
-        line-height: 0.9;
-      }
-
-      .s6-version-label {
-        margin-top: 16px;
-        color: var(--body);
-        font-size: 24px;
-        font-weight: 700;
-      }
-
-      .s6-specs {
+      .scene-meta {
         display: grid;
-        gap: 20px;
-        margin-top: 58px;
-        font-size: 25px;
+        gap: 5px;
+        justify-items: end;
+        font-size: 21px;
         font-weight: 700;
+        line-height: 1.2;
+        opacity: 0.76;
       }
 
-      .s6-specs span {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
+      .scene-meta strong {
+        font-size: 25px;
+        font-weight: 800;
       }
 
-      .s6-specs strong {
-        font-size: 22px;
-      }
-
-      .s6-ticket-foot {
+      .shot {
+        min-height: 0;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        margin-top: 50px;
-        padding-top: 26px;
-        border-top: 4px dashed var(--wood);
-        font-size: 20px;
-        font-weight: 800;
+        justify-content: center;
+      }
+
+      .shot-frame {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        background: rgb(255 255 255 / 18%);
+      }
+
+      .scene--night .shot-frame {
+        background: rgb(255 255 255 / 9%);
+      }
+
+      .shot img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
       }
     </style>
-    <script>
-      const requestedScene = new URLSearchParams(location.search).get('scene')
-      const scene = ['1', '2', '3', '4', '5', '6'].includes(requestedScene) ? requestedScene : '1'
-      document.documentElement.dataset.scene = scene
-    </script>
   </head>
   <body>
     <main>
-      <section class="scene scene-1 island-day" data-index="1" aria-label="第一幕：把 DSH 变成一座岛">
-        <div class="scene-inner s1-grid">
-          <div class="s1-copy">
-            <div class="brand">
-              <img src="../assets/loading-leaf.svg" alt="" />
-              <span>
-                一动森
-                <small>ANIMAL ISLAND</small>
-              </span>
-            </div>
-            <h1 class="display">把 DSH，<br />变成一座岛</h1>
-            <p class="lead">为 DeepSeek Harness 换上一整座岛，原生会话与操作仍然留在原位。</p>
-            <div class="meta-line">
-              <span>亮 / 暗双岛</span>
-              <span>0.3.32</span>
-              <span>开源主题</span>
-            </div>
+      <section class="scene scene--day" data-index="1" aria-label="第一幕：完整工作台">
+        <header class="scene-head">
+          <div class="title-row">
+            <span class="brand"><img src="../assets/loading-leaf.svg" alt="" /></span>
+            <h1>把 DSH 换成一整座岛</h1>
           </div>
-
-          <div class="s1-stage">
-            <div class="s1-sun"></div>
-            <figure class="ticket s1-ticket">
-              <div class="ticket-head">
-                <span>登岛预览</span>
-                <span>日间</span>
-              </div>
-              <div class="ticket-image">
-                <img src="../assets/appearance-light.webp" alt="一动森外观设置面板" />
-              </div>
-              <figcaption class="ticket-foot">
-                <span>真实 DSH 界面</span>
-                <span>画布浓度 0.40</span>
-              </figcaption>
-            </figure>
+          <p class="scene-meta"><strong>完整工作台</strong><span>日间 · 会话、设置与快捷键仍是原生 DSH</span></p>
+        </header>
+        <figure class="shot">
+          <div class="shot-frame">
+            <img src="../assets/workspace-light.webp" width="1600" height="1000" alt="Animal Island UI 日间完整工作台" />
           </div>
-        </div>
+        </figure>
       </section>
 
-      <section class="scene scene-2 island-day" data-index="2" aria-label="第二幕：侧栏是一张渡岛船票">
-        <div class="scene-inner">
-          <div>
-            <div class="brand">
-              <img src="../assets/loading-leaf.svg" alt="" />
-              <span>
-                一动森
-                <small>ANIMAL ISLAND</small>
-              </span>
-            </div>
-            <h2 class="heading">侧栏，<br />是一张真正的船票</h2>
-            <p class="lead">品牌区保留原生侧栏结构，工作区、会话、滚动与键盘操作仍由 DSH 负责。</p>
-            <div class="s2-facts">
-              <span><strong>品牌区</strong>216 × 60 渡岛船票</span>
-              <span><strong>输入区</strong>原生编辑器与对话气泡</span>
-              <span><strong>暗色</strong>独立夜岛，不是反相</span>
-            </div>
+      <section class="scene scene--paper" data-index="2" aria-label="第二幕：完整外观设置">
+        <header class="scene-head">
+          <div class="title-row">
+            <span class="brand"><img src="../assets/loading-leaf.svg" alt="" /></span>
+            <h1>外观设置，仍在原来的路径里</h1>
           </div>
-
-          <div class="s2-stage">
-            <div class="s2-orbit"></div>
-            <figure class="ticket s2-ticket">
-              <div class="ticket-head">
-                <span>真实侧栏</span>
-                <span>DAY / 001</span>
-              </div>
-              <div class="ticket-image">
-                <img src="../assets/sidebar-light.webp" alt="一动森日间侧栏截图" />
-              </div>
-              <figcaption class="ticket-foot">
-                <span>原生 DSH DOM</span>
-                <span>公开样式边界</span>
-              </figcaption>
-            </figure>
+          <p class="scene-meta"><strong>完整设置窗口</strong><span>纸白 · 均衡 · 海岛三档浓度</span></p>
+        </header>
+        <figure class="shot">
+          <div class="shot-frame">
+            <img src="../assets/appearance-light.webp" width="1600" height="1000" alt="Animal Island UI 日间完整外观设置窗口" />
           </div>
-        </div>
+        </figure>
       </section>
 
-      <section class="scene scene-3 paper-field" data-index="3" aria-label="第三幕：可调画布浓度">
-        <div class="scene-inner">
-          <div class="s3-copy">
-            <div class="brand">
-              <img src="../assets/loading-leaf.svg" alt="" />
-              <span>
-                一动森
-                <small>ANIMAL ISLAND</small>
-              </span>
-            </div>
-            <h2 class="heading">画布浓度，<br />从纸白到海岛</h2>
-            <p class="lead">纸白、均衡、海岛三档预设，也可以拖到 0.15–0.60 之间。</p>
-            <div class="s3-notes">
-              <div class="s3-note"><strong>本机记忆</strong><span>设置留在当前客户端，不写入会话或工作区。</span></div>
-              <div class="s3-note"><strong>实时预览</strong><span>与真实画布同层数，调整时所见即所得。</span></div>
-              <div class="s3-note"><strong>高对比回退</strong><span>系统开启高对比时自动回到纸白。</span></div>
-            </div>
+      <section class="scene scene--night" data-index="3" aria-label="第三幕：完整夜间工作台">
+        <header class="scene-head">
+          <div class="title-row">
+            <span class="brand"><img src="../assets/loading-leaf.svg" alt="" /></span>
+            <h1>夜岛，不是反色</h1>
           </div>
-
-          <div class="s3-stage">
-            <div class="s3-sun"></div>
-            <figure class="ticket s3-ticket">
-              <div class="ticket-head">
-                <span>动森外观</span>
-                <span>均衡 0.40</span>
-              </div>
-              <div class="ticket-image">
-                <img src="../assets/appearance-light.webp" alt="画布浓度设置与实时预览" />
-              </div>
-              <figcaption class="ticket-foot">
-                <span>纸白 0.52</span>
-                <span>均衡 0.40</span>
-                <span>海岛 0.28</span>
-              </figcaption>
-            </figure>
+          <p class="scene-meta"><strong>完整工作台</strong><span>夜间 · 暖棕内容面与深蓝侧栏</span></p>
+        </header>
+        <figure class="shot">
+          <div class="shot-frame">
+            <img src="../assets/workspace-dark.webp" width="1600" height="1000" alt="Animal Island UI 夜间完整工作台" />
           </div>
-        </div>
+        </figure>
       </section>
 
-      <section class="scene scene-4 island-night" data-index="4" aria-label="第四幕：从启动到快捷键">
-        <div class="scene-inner">
-          <div class="s4-heading">
-            <div class="brand">
-              <img src="../assets/loading-leaf.svg" alt="" />
-              <span>
-                一动森
-                <small>ANIMAL ISLAND</small>
-              </span>
-            </div>
-            <h2>从启动，到每一次按键</h2>
-            <p>启动等待页、快捷键弹窗与焦点环，都使用同一套岛屿语言。</p>
+      <section class="scene scene--night" data-index="4" aria-label="第四幕：完整夜间外观设置">
+        <header class="scene-head">
+          <div class="title-row">
+            <span class="brand"><img src="../assets/loading-leaf.svg" alt="" /></span>
+            <h1>夜间设置，也有完整的层次</h1>
           </div>
-
-          <div class="s4-stage">
-            <figure class="ticket s4-ticket-boot">
-              <div class="ticket-head">
-                <span>夜岛启动页</span>
-                <span>正在登陆无人岛</span>
-              </div>
-              <div class="ticket-image">
-                <img src="../assets/boot-dark.webp" alt="夜岛启动等待页" />
-              </div>
-            </figure>
-
-            <figure class="ticket s4-ticket-keys">
-              <div class="ticket-head">
-                <span>快捷键</span>
-                <span>焦点可见</span>
-              </div>
-              <div class="ticket-image">
-                <img src="../assets/shortcuts-light.webp" alt="一动森快捷键弹窗与焦点描边" />
-              </div>
-            </figure>
+          <p class="scene-meta"><strong>完整设置窗口</strong><span>夜间 · 纸面、选中态与焦点分别校准</span></p>
+        </header>
+        <figure class="shot">
+          <div class="shot-frame">
+            <img src="../assets/appearance-dark.webp" width="1600" height="1000" alt="Animal Island UI 夜间完整外观设置窗口" />
           </div>
-        </div>
+        </figure>
       </section>
 
-      <section class="scene scene-5 island-night" data-index="5" aria-label="第五幕：夜岛不是反色">
-        <div class="scene-inner">
-          <div>
-            <div class="brand" style="color: var(--night-ink)">
-              <img src="../assets/loading-leaf.svg" alt="" />
-              <span>
-                一动森
-                <small>ANIMAL ISLAND</small>
-              </span>
-            </div>
-            <h2 class="display">夜岛，<br />不是反色</h2>
-            <p class="lead">暖棕内容面、深蓝侧栏、月光与萤火，亮暗各自成立。</p>
-            <div class="s5-facts">
-              <span>独立状态色</span>
-              <span>星空 / 月光</span>
-              <span>原生操作不变</span>
-            </div>
+      <section class="scene scene--mint" data-index="5" aria-label="第五幕：完整快捷键窗口">
+        <header class="scene-head">
+          <div class="title-row">
+            <span class="brand"><img src="../assets/loading-leaf.svg" alt="" /></span>
+            <h1>快捷键与焦点，仍是原生的</h1>
           </div>
-
-          <div class="s5-stage">
-            <div class="s5-moon"></div>
-            <figure class="ticket s5-ticket">
-              <div class="ticket-head">
-                <span>夜间侧栏</span>
-                <span>NIGHT / 002</span>
-              </div>
-              <div class="ticket-image">
-                <img src="../assets/sidebar-dark.webp" alt="一动森夜间侧栏截图" />
-              </div>
-              <figcaption class="ticket-foot">
-                <span>暖棕纸面</span>
-                <span>深蓝侧栏</span>
-              </figcaption>
-            </figure>
+          <p class="scene-meta"><strong>完整快捷键窗口</strong><span>搜索、列表与薄荷焦点环同时可见</span></p>
+        </header>
+        <figure class="shot">
+          <div class="shot-frame">
+            <img src="../assets/shortcuts-light.webp" width="1600" height="1000" alt="Animal Island UI 完整快捷键窗口" />
           </div>
-        </div>
+        </figure>
       </section>
 
-      <section class="scene scene-6 island-day" data-index="6" aria-label="第六幕：下载并安装">
-        <div class="scene-inner">
-          <div>
-            <div class="brand">
-              <img src="../assets/loading-leaf.svg" alt="" />
-              <span>
-                一动森
-                <small>ANIMAL ISLAND</small>
-              </span>
-            </div>
-            <h2 class="display">下一站，<br />无人岛</h2>
-            <p class="lead">下载最新版，核验 SHA-256，然后把主题装进你的 DSH profile。</p>
-            <div class="s6-actions">
-              <span class="s6-button">下载 0.3.32</span>
-              <span>GitHub Releases<br />安装大约一分钟</span>
-            </div>
-            <p class="s6-legal">社区项目，与 DeepSeek 官方无隶属关系。</p>
+      <section class="scene scene--night" data-index="6" aria-label="第六幕：启动画面与安装">
+        <header class="scene-head">
+          <div class="title-row">
+            <span class="brand"><img src="../assets/loading-leaf.svg" alt="" /></span>
+            <h1>装上这座岛</h1>
           </div>
-
-          <div class="s6-stage">
-            <div class="s6-sun"></div>
-            <div class="ticket s6-ticket">
-              <div class="s6-brand">
-                <img src="../assets/loading-leaf.svg" alt="" />
-                <div>
-                  <strong>一动森</strong>
-                  <span>ANIMAL ISLAND UI</span>
-                </div>
-              </div>
-              <div class="s6-version">0.3.32</div>
-              <div class="s6-version-label">登岛凭证 / Open Source</div>
-              <div class="s6-specs">
-                <span>DeepSeek Harness <strong>主题插件</strong></span>
-                <span>Web / Windows <strong>原生 profile</strong></span>
-                <span>License <strong>MIT</strong></span>
-              </div>
-              <div class="s6-ticket-foot">
-                <span>SHA-256 校验</span>
-                <span>完整重启后生效</span>
-              </div>
-            </div>
+          <p class="scene-meta"><strong>下载、校验、重启</strong><span>最新发布 · SHA256SUMS</span></p>
+        </header>
+        <figure class="shot">
+          <div class="shot-frame">
+            <img src="../assets/boot-dark.webp" width="1600" height="1102" alt="Animal Island UI 夜间完整启动画面" />
           </div>
-        </div>
+        </figure>
       </section>
     </main>
+    <script>
+      const scene = new URLSearchParams(window.location.search).get("scene") ?? "1"
+      document.documentElement.dataset.scene = /^[1-6]$/.test(scene) ? scene : "1"
+    </script>
   </body>
 </html>

@@ -5,403 +5,394 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="一动森是一款面向 DeepSeek Harness 的高还原动森主题：保留原生行为，提供亮暗双岛、可调画布透明度和 Windows 桌面端支持。"
+      content="Animal Island UI 是一套面向 DeepSeek Harness 的动森风主题插件：保留原生会话、设置与快捷键，换上渡岛船票、手账纸面、日夜双岛与可调画布浓度。"
     />
     <meta name="theme-color" content="#8fcaa5" />
-    <title>一动森 · 把 DSH 变成一座岛</title>
+    <title>Animal Island UI · 把 DSH 变成一座岛</title>
     <link rel="canonical" href="https://shirolin.github.io/dsh-theme-animal-island-ui/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
-    <meta property="og:site_name" content="一动森" />
-    <meta property="og:title" content="一动森 · 把 DSH 变成一座岛" />
+    <meta property="og:site_name" content="Animal Island UI" />
+    <meta property="og:title" content="Animal Island UI · 把 DSH 变成一座岛" />
     <meta
       property="og:description"
-      content="一动森是一款面向 DeepSeek Harness 的高还原动森主题：保留原生行为，提供亮暗双岛、可调画布透明度和 Windows 桌面端支持。"
+      content="Animal Island UI 是一套面向 DeepSeek Harness 的动森风主题插件：保留原生会话、设置与快捷键，换上渡岛船票、手账纸面、日夜双岛与可调画布浓度。"
     />
     <meta property="og:url" content="https://shirolin.github.io/dsh-theme-animal-island-ui/" />
     <meta property="og:image" content="https://shirolin.github.io/dsh-theme-animal-island-ui/promo/social-card.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="一动森主题字标与真实 DSH 动森外观设置界面" />
+    <meta property="og:image:alt" content="Animal Island UI 字标与完整 DSH 日间工作台界面" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="一动森 · 把 DSH 变成一座岛" />
+    <meta name="twitter:title" content="Animal Island UI · 把 DSH 变成一座岛" />
     <meta
       name="twitter:description"
-      content="一动森是一款面向 DeepSeek Harness 的高还原动森主题：保留原生行为，提供亮暗双岛、可调画布透明度和 Windows 桌面端支持。"
+      content="Animal Island UI 是一套面向 DeepSeek Harness 的动森风主题插件：保留原生会话、设置与快捷键，换上渡岛船票、手账纸面、日夜双岛与可调画布浓度。"
     />
     <meta name="twitter:image" content="https://shirolin.github.io/dsh-theme-animal-island-ui/promo/social-card.png" />
-    <meta name="twitter:image:alt" content="一动森主题字标与真实 DSH 动森外观设置界面" />
+    <meta name="twitter:image:alt" content="Animal Island UI 字标与完整 DSH 日间工作台界面" />
     <link rel="icon" href="assets/loading-leaf.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/nunito-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="styles.css" />
     <script>
-      document.documentElement.classList.add('has-js')
+      document.documentElement.classList.add('js')
     </script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
 
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="一动森首页">
-        <img src="assets/loading-leaf.svg" alt="" width="44" height="44" />
-        <span class="brand-copy">
-          <strong>一动森</strong>
-          <span>Animal Island</span>
+    <header class="site-header page-gutter">
+      <a class="brand" href="#top" aria-label="Animal Island UI for DSH 首页">
+        <img src="assets/loading-leaf.svg" alt="" width="40" height="40" />
+        <span>
+          <strong>Animal Island</strong>
+          <small>UI for DSH</small>
         </span>
       </a>
 
       <nav class="site-nav" aria-label="主导航">
-        <a href="#showcase">界面</a>
-        <a href="#details">细节</a>
+        <a href="#interface">界面</a>
+        <a href="#night">夜岛</a>
         <a href="#film">宣传片</a>
         <a href="#install">安装</a>
-        <a href="https://github.com/Shirolin/dsh-theme-animal-island-ui" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="#faq">FAQ</a>
       </nav>
 
-      <a class="header-action" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/releases/latest" target="_blank" rel="noreferrer">
+      <a class="header-download" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/releases/latest" target="_blank" rel="noreferrer">
         下载主题
       </a>
     </header>
 
     <main id="main">
-      <section class="hero" id="top" data-island-scene="day">
-        <div class="hero-grid">
-          <div class="hero-copy">
-            <h1>
-              <span>把 DSH，</span>
-              <span>变成一座岛</span>
-            </h1>
-            <p class="hero-lede">
-              一动森是一款为 DeepSeek Harness 设计的动森主题，为它换上奶油纸、木牌与渡岛船票。会话、设置、输入和快捷键仍按原生 DSH 工作。
-            </p>
-            <div class="hero-actions">
-              <a class="button button-primary" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/releases/latest" target="_blank" rel="noreferrer">
-                下载主题
-              </a>
-              <a class="text-link" href="#showcase">看真实界面</a>
-              <a class="text-link" href="#film">看 30 秒短片</a>
-            </div>
-
-            <div class="island-switch" role="group" aria-label="预览界面模式">
-              <button type="button" class="island-switch__option is-active" data-island-mode="light" aria-pressed="true">
-                日间
-              </button>
-              <button type="button" class="island-switch__option" data-island-mode="dark" aria-pressed="false">
-                夜间
-              </button>
-              <span class="island-switch__state" aria-live="polite">正在预览日间岛</span>
-            </div>
+      <section class="hero page-gutter" id="top">
+        <div class="hero-copy">
+          <h1 class="display">
+            <span class="line"><span data-line style="--i: 0">DSH</span></span>
+            <span class="line"><span data-line style="--i: 1">动森主题</span></span>
+          </h1>
+          <p class="hero-lede">
+            面向 DeepSeek Harness 的岛屿风主题插件。换上渡岛船票、奶油手账纸与木牌；会话、设置、输入和快捷键依然原封不动。
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/releases/latest" target="_blank" rel="noreferrer">
+              下载主题
+            </a>
+            <a class="text-link" href="#interface">浏览完整界面</a>
+            <a class="text-link" href="#film">看 30 秒短片</a>
           </div>
-
-          <div class="hero-stage">
-            <div class="ticket-sun" aria-hidden="true"></div>
-            <figure class="hero-ticket">
-              <div class="hero-ticket__head">
-                <span>登岛预览</span>
-                <span data-mode-label>日间</span>
-              </div>
-              <div class="hero-ticket__media">
-                <img
-                  src="assets/appearance-light.webp"
-                  data-light-src="assets/appearance-light.webp"
-                  data-dark-src="assets/appearance-dark.webp"
-                  width="1600"
-                  height="882"
-                  alt="一动森主题的动森外观设置面板，展示纸白、均衡、海岛三档画布浓度"
-                  fetchpriority="high"
-                />
-              </div>
-              <figcaption>
-                <span>真实 DSH DOM</span>
-                <span data-mode-label>日间</span>
-              </figcaption>
-            </figure>
-            <p class="hero-footnote">同一个 DSH，两座岛。</p>
+          <div class="mode-switch" role="group" aria-label="切换界面预览">
+            <button type="button" class="mode-button is-active" data-island-mode="light" aria-pressed="true">日间</button>
+            <button type="button" class="mode-button" data-island-mode="dark" aria-pressed="false">夜间</button>
+            <span class="sr-only" aria-live="polite">当前预览：<span data-mode-label>日间</span></span>
           </div>
         </div>
+
+        <figure class="hero-shot shot" data-reveal>
+          <a
+            class="shot-link"
+            href="assets/workspace-light.webp"
+            data-shot
+            data-shot-caption="工作台 · 完整界面"
+            aria-label="打开 Animal Island UI 完整界面图集，当前为日间工作台"
+          >
+            <img
+              src="assets/workspace-light.webp"
+              data-light-src="assets/workspace-light.webp"
+              data-dark-src="assets/workspace-dark.webp"
+              width="1600"
+              height="1000"
+              alt="Animal Island UI 日间工作台完整界面，包含渡岛船票侧栏、工作区、会话列表、原生输入框和模型选择"
+              fetchpriority="high"
+            />
+          </a>
+          <figcaption>
+            <span>工作台 · 完整窗口</span>
+            <span><span data-mode-label>日间</span> · 打开图集</span>
+          </figcaption>
+        </figure>
       </section>
 
-      <section class="showcase section-shell" id="showcase">
-        <div class="section-intro section-intro--split" data-reveal>
-          <h2>界面留在原位，<br />风景全部换掉</h2>
-          <p>
-            主题只改看得见的颜色、材质和装饰，不接管会话逻辑。亮色像午后海岛，暗色则有星空、萤火与深蓝侧栏。
-          </p>
+      <section class="specimens section" id="interface">
+        <div class="section-heading page-gutter" data-reveal>
+          <h2>先看完整界面</h2>
+          <p>从船票侧栏、工作区到设置弹窗，每张都是实机渲染的完整 DSH 窗口。按原始比例平铺陈列，不裁切局部，也不藏进装饰样机里。</p>
         </div>
 
-        <div class="showcase-stage">
-          <div class="showcase-art" data-reveal>
-            <figure class="screenshot-main">
+        <article class="specimen page-gutter">
+          <div class="specimen-copy" data-reveal>
+            <h3>设置长在应用里</h3>
+            <p>
+              「动森外观」直接嵌进 DSH 原生设置面板。纸白、均衡、海岛三档预设与浓度滑杆都在熟悉的路径里，背后的工作台、侧栏和会话一览无余。
+            </p>
+            <a class="text-link" href="assets/appearance-light.webp" data-shot data-shot-caption="外观设置 · 完整界面">查看完整界面</a>
+          </div>
+          <figure class="specimen-shot shot" data-reveal>
+            <a
+              class="shot-link"
+              href="assets/appearance-light.webp"
+              data-shot
+              data-shot-caption="外观设置 · 完整界面"
+              aria-label="打开 Animal Island UI 完整界面图集，当前为日间外观设置"
+            >
               <img
-                src="assets/sidebar-light.webp"
-                data-light-src="assets/sidebar-light.webp"
-                data-dark-src="assets/sidebar-dark.webp"
-                width="1400"
-                height="1366"
+                src="assets/appearance-light.webp"
+                data-light-src="assets/appearance-light.webp"
+                data-dark-src="assets/appearance-dark.webp"
+                width="1600"
+                height="1000"
                 loading="lazy"
-                alt="真实 DSH 侧栏截图，品牌区是一张 216×60 的渡岛船票"
+                alt="Animal Island UI 日间外观设置完整界面，DSH 设置窗口覆盖在完整工作台上，包含纸白、均衡、海岛三档和透明度滑杆"
               />
-              <figcaption>侧栏 / 工作区 / 会话列表</figcaption>
-            </figure>
-            <figure class="screenshot-float">
+            </a>
+            <figcaption>
+              <span>外观设置 · 完整窗口</span>
+              <span><span data-mode-label>日间</span> · 打开图集</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="specimen specimen--reverse page-gutter">
+          <div class="specimen-copy" data-reveal>
+            <h3>快捷键，仍是原生的</h3>
+            <p>
+              搜索框、键位列表与键盘焦点同屏呈现。2px 薄荷焦点环内嵌在控件边缘内侧，无论列表滚动、分栏收缩还是弹窗裁切，都不会断边。
+            </p>
+            <a class="text-link" href="assets/shortcuts-light.webp" data-shot data-shot-caption="快捷键 · 焦点完整">查看完整界面</a>
+          </div>
+          <figure class="specimen-shot shot" data-reveal>
+            <a
+              class="shot-link"
+              href="assets/shortcuts-light.webp"
+              data-shot
+              data-shot-caption="快捷键 · 焦点完整"
+              aria-label="打开 Animal Island UI 完整界面图集，当前为快捷键"
+            >
               <img
-                src="assets/boot-light.webp"
-                data-light-src="assets/boot-light.webp"
-                data-dark-src="assets/boot-dark.webp"
+                src="assets/shortcuts-light.webp"
+                data-light-src="assets/shortcuts-light.webp"
+                data-dark-src="assets/shortcuts-dark.webp"
+                width="1600"
+                height="1000"
+                loading="lazy"
+                alt="Animal Island UI 快捷键弹窗完整界面，包含搜索框、快捷键列表和分栏控件上的薄荷焦点环"
+              />
+            </a>
+            <figcaption>
+              <span>快捷键 · 完整窗口</span>
+              <span><span data-mode-label>日间</span> · 打开图集</span>
+            </figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <section class="night section" id="night">
+        <div class="night-layout page-gutter">
+          <figure class="night-shot shot" data-reveal>
+            <a class="shot-link" href="assets/boot-dark.webp" data-shot data-shot-caption="夜间启动页 · 完整画面" aria-label="打开 Animal Island UI 完整界面图集，当前为夜间启动页">
+              <img
+                src="assets/boot-dark.webp"
                 width="1600"
                 height="1102"
                 loading="lazy"
-                alt="一动森主题的启动等待页，纸卡位于绿色波点画布与海浪之间"
+                alt="Animal Island UI 夜间启动等待页完整画面，月光、星空、海浪与中央的登岛纸卡同时可见"
               />
-              <figcaption>启动等待页</figcaption>
-            </figure>
-          </div>
+            </a>
+          </figure>
 
-          <div class="showcase-notes">
-            <article data-reveal>
-              <h3>侧栏是一张渡岛船票</h3>
-              <p>品牌区保留官方侧栏结构。工作区、会话、滚动和键盘操作仍由 DSH 原生组件负责。</p>
-            </article>
-            <article data-reveal>
-              <h3>输入是一颗对话气泡</h3>
-              <p>边框、尾巴、纸纹和发送反馈都收在公开样式边界内，不挤压编辑器，也不重写布局。</p>
-            </article>
-            <article data-reveal>
-              <h3>暗色不是反相</h3>
-              <p>夜间岛单独配色：暖棕纸面留在内容区，侧栏、星空和萤火换成另一套夜岛光影。</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="detail-board section-shell" id="details">
-        <div class="section-intro section-intro--stack" data-reveal>
-          <h2>一眼是岛，<br />用起来还是 DSH</h2>
-          <p>产品页里的画面都来自真实 DSH CSS/DOM 夹具。按钮、焦点、快捷键和滚动规则，仍按原生界面工作。</p>
-        </div>
-
-        <div class="detail-grid">
-          <article class="detail-tile detail-tile--wide detail-tile--modes" data-reveal data-ui>
-            <div class="split-preview" aria-hidden="true">
-              <img src="assets/sidebar-light.webp" width="1400" height="1366" loading="lazy" alt="" />
-              <img src="assets/sidebar-dark.webp" width="1400" height="1366" loading="lazy" alt="" />
-            </div>
-            <div class="detail-copy">
-              <h3>日间 / 夜间</h3>
-              <p>两套独立配色。不是给亮色加上一层黑。</p>
-            </div>
-          </article>
-
-          <article class="detail-tile detail-tile--appearance" data-reveal>
-            <img
-              src="assets/appearance-light.webp"
-              data-light-src="assets/appearance-light.webp"
-              data-dark-src="assets/appearance-dark.webp"
-              width="1600"
-              height="882"
-              loading="lazy"
-              alt="画布透明度设置面板与实时预览"
-            />
-            <div class="detail-copy">
-              <h3>画布浓度</h3>
-              <p>纸白、均衡、海岛三档预设，也可以拖到 0.15–0.60 之间。</p>
-            </div>
-          </article>
-
-          <article class="detail-tile detail-tile--keys" data-reveal>
-            <img
-              src="assets/shortcuts-light.webp"
-              data-light-src="assets/shortcuts-light.webp"
-              data-dark-src="assets/shortcuts-dark.webp"
-              width="1280"
-              height="1280"
-              loading="lazy"
-              alt="真实 DSH 快捷键弹窗与单圈薄荷焦点描边"
-            />
-            <div class="detail-copy">
-              <h3>焦点不失踪</h3>
-              <p>2px 内嵌薄荷环，在滚动与裁切容器里也完整可见。</p>
-            </div>
-          </article>
-
-          <article class="detail-tile detail-tile--boot" data-reveal>
-            <img
-              src="assets/boot-dark.webp"
-              data-light-src="assets/boot-light.webp"
-              data-dark-src="assets/boot-dark.webp"
-              width="1600"
-              height="1102"
-              loading="lazy"
-              alt="夜岛启动等待页，月光、星空与海浪环绕着纸卡"
-            />
-            <div class="detail-copy">
-              <h3>从启动开始</h3>
-              <p>等待页和失败页也共享同一套岛屿场景，不再像系统默认页。</p>
-            </div>
-          </article>
-
-          <article class="detail-tile detail-tile--statement" data-reveal>
-            <h3>不碰私有实现</h3>
-            <p>不写 DSH hash class，不扫描 DOM，不合成点击。能力缺失时安全降级，原生界面继续工作。</p>
-            <a class="text-link" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/blob/main/docs/compatibility.md" target="_blank" rel="noreferrer">查看兼容边界</a>
-          </article>
-        </div>
-      </section>
-
-      <section class="architecture" id="architecture">
-        <div class="architecture-inner section-shell">
-          <div class="architecture-copy" data-reveal>
-            <h2>只有三层，<br />接上整座岛</h2>
-            <p>主题坐在 DSH 公开接口上。色彩、自有画面和官方 Slot 各做一件事，没有私有补丁。</p>
-          </div>
-
-          <div class="layer-stack" data-reveal>
-            <article class="layer-card">
-              <span>色彩层</span>
-              <h3>ThemeRuntime</h3>
-              <p>118 个语义 token 映射亮暗主题，并跟随系统主题切换。</p>
-            </article>
-            <article class="layer-card">
-              <span>自有画面</span>
-              <h3>CSS · 字体 · SVG</h3>
-              <p>样式、Nunito 与原创岛屿资源由插件创建，也能成对清理。</p>
-            </article>
-            <article class="layer-card">
-              <span>官方接缝</span>
-              <h3>Public Slots</h3>
-              <p>只替换公开品牌和 Hero 区，官方侧栏根组件与行为保持原位。</p>
-            </article>
-            <div class="layer-ticket" aria-hidden="true">
-              <svg class="layer-ticket__mark" viewBox="0 0 190 64" role="presentation">
-                <text x="0" y="50">DSH</text>
-              </svg>
-              <span>原生界面</span>
-            </div>
+          <div class="night-copy" data-reveal>
+            <h2>夜岛，不是反色</h2>
+            <p>内容区保留温润的暖棕纸面，侧栏、星空、月光与萤火采用独立夜间色板。日与夜各自成景，长时间夜间编码也不刺眼。</p>
+            <dl class="night-facts">
+              <div>
+                <dt>深海蓝侧栏</dt>
+                <dd>与暖棕内容面自然拉开层级，不必把整座界面压成纯黑。</dd>
+              </div>
+              <div>
+                <dt>逐项校准状态色</dt>
+                <dd>文字对比度、选中木牌与薄荷焦点环独立调校，不靠简单反相。</dd>
+              </div>
+              <div>
+                <dt>同景启动画面</dt>
+                <dd>连接等待与异常重试共用同一片夜岛星空与登岛纸卡。</dd>
+              </div>
+            </dl>
           </div>
         </div>
       </section>
 
-      <section class="film section-shell" id="film">
-        <div class="film-copy" data-reveal>
-          <h2>三十秒，<br />看完整座岛</h2>
-          <p>从亮色船票到夜岛星空，再到安装和启动。视频只使用真实界面画面。</p>
+      <section class="principles section" id="details">
+        <div class="section-heading page-gutter" data-reveal>
+          <h2>只接公开接口</h2>
+          <p>不耦合 DSH 的构建哈希类名，不轮询扫描 DOM，也不劫持点击与焦点。一切视觉表现只走 ThemeRuntime、公开 Slot 与插件自有样式表。</p>
         </div>
-        <div class="film-media">
-          <div class="film-frame" data-reveal>
-            <video
-              src="promo/animal-island-promo.mp4"
-              poster="promo/animal-island-promo-poster.webp"
-              controls
-              muted
-              loop
-              playsinline
-              preload="metadata"
-              aria-label="一动森主题宣传视频"
-            ></video>
+
+        <dl class="principle-list page-gutter">
+          <div data-reveal>
+            <dt>ThemeRuntime</dt>
+            <dd>完整映射 118 个语义色彩 token，原生支持日间、夜间与跟随系统切换。</dd>
           </div>
-          <details class="film-transcript" data-reveal>
-            <summary>宣传片文字稿 <span>无对白 · 六幕</span></summary>
-            <ol>
-              <li>
-                <span class="film-transcript__cue">00:00–00:05 · 把 DSH 变成一座岛：亮色登岛预览、主题字标与原生 DSH 会话界面依次出现。</span>
-              </li>
-              <li>
-                <span class="film-transcript__cue">00:05–00:10 · 侧栏是一张渡岛船票，工作区、会话列表、滚动与键盘操作仍由 DSH 原生组件负责。</span>
-              </li>
-              <li>
-                <span class="film-transcript__cue">00:10–00:15 · 可在纸白、均衡、海岛三档间切换，也可以拖动滑杆，并在本机记住选择。</span>
-              </li>
-              <li>
-                <span class="film-transcript__cue">00:15–00:20 · 从夜岛启动等待页到快捷键弹窗，焦点描边在滚动区域中也始终完整可见。</span>
-              </li>
-              <li>
-                <span class="film-transcript__cue">00:20–00:25 · 夜岛不是反色：暖棕内容面、深蓝侧栏、月光与萤火分别配色，两套主题都独立成立。</span>
-              </li>
-              <li>
-                <span class="film-transcript__cue">00:25–00:30 · 下载最新发布，核对 .tgz 与 SHA256SUMS，安装到目标 profile 后完整重启 DSH。</span>
-              </li>
-            </ol>
-          </details>
+          <div data-reveal>
+            <dt>Public Slots</dt>
+            <dd>仅挂载官方开放的品牌区、Hero 与插件设置页，侧栏骨架和交互逻辑原位保留。</dd>
+          </div>
+          <div data-reveal>
+            <dt>Owned CSS</dt>
+            <dd>样式表、内嵌字体与原创 SVG 由插件成对注入与卸载，DSH 升级时安全降级。</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="film section" id="film">
+        <div class="film-layout page-gutter">
+          <div class="film-copy" data-reveal>
+            <h2>三十秒，<br class="film-break" />看完整变化</h2>
+            <p>六幕短片全部取自完整 DSH 窗口，按原始比例平放呈现——从日间工作台、外观浓度调节，一路切入夜岛、快捷键焦点与登岛画面。</p>
+            <a
+              class="text-link"
+              href="https://github.com/Shirolin/dsh-theme-animal-island-ui/releases/latest"
+              target="_blank"
+              rel="noreferrer"
+            >
+              前往最新发布
+            </a>
+          </div>
+
+          <div class="film-media" data-reveal>
+            <div class="film-frame">
+              <video
+                src="promo/animal-island-promo.mp4"
+                poster="promo/animal-island-promo-poster.webp"
+                controls
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                aria-label="Animal Island UI 主题宣传视频"
+              ></video>
+            </div>
+            <details class="film-transcript">
+              <summary>宣传片文字稿 <span>无对白 · 六幕</span></summary>
+              <ol>
+                <li><span class="film-transcript__cue">00:00–00:05 · 日间工作台：渡岛船票侧栏、工作区、会话列表、气泡输入框与模型选择完整同屏。</span></li>
+                <li><span class="film-transcript__cue">00:05–00:10 · 外观设置：嵌在 DSH 原生设置路径中，提供纸白、均衡、海岛三档预设与自定义浓度滑杆。</span></li>
+                <li><span class="film-transcript__cue">00:10–00:15 · 夜间工作台：夜岛并非简单反色，保留暖棕纸面、深海蓝侧栏与独立状态色。</span></li>
+                <li><span class="film-transcript__cue">00:15–00:20 · 夜间外观设置：沿用同一套视觉层级，实时画布预览、选中木牌与焦点环清晰可辨。</span></li>
+                <li><span class="film-transcript__cue">00:20–00:25 · 快捷键弹窗：搜索框、键位列表与内嵌薄荷焦点环同屏展示，原生键盘流保持不变。</span></li>
+                <li><span class="film-transcript__cue">00:25–00:30 · 夜间启动页与安装：下载最新发布包，校验 SHA256SUMS，装入目标 profile 后重启 DSH 即可登岛。</span></li>
+              </ol>
+            </details>
+          </div>
         </div>
       </section>
 
-      <section class="faq section-shell" id="faq">
-        <div class="faq-intro" data-reveal>
-          <h2>登岛之前</h2>
-          <p>主题是插件，不是 DSH 分叉。你仍然在原来的客户端里工作，只是换了一套界面。</p>
-        </div>
-
-        <div class="faq-list">
-          <details name="faq" data-reveal>
-            <summary>会改坏 DSH 的原生行为吗？</summary>
-            <p>不会主动接管。主题只使用 ThemeRuntime、公开 Slot 和自己的 CSS；缺失能力时会安全退出这一层，不阻塞原生 GUI。</p>
-          </details>
-          <details name="faq" data-reveal>
-            <summary>支持 Web 和 Windows 桌面端吗？</summary>
-            <p>支持，但两端使用不同的 DSH profile。Web 和桌面端需要各自安装，桌面端的透明标题栏与截图调试见仓库文档。</p>
-          </details>
-          <details name="faq" data-reveal>
-            <summary>暗色只是把亮色反相吗？</summary>
-            <p>不是。夜间岛有独立的暖棕内容面、深蓝侧栏、月光和萤火层，文本与状态色也分别校准。</p>
-          </details>
-          <details name="faq" data-reveal>
-            <summary>外观设置存在哪里？</summary>
-            <p>画布浓度保存在当前客户端的 <code>localStorage</code>。它不会写入会话或工作区，Web 与桌面端各自记忆。</p>
-          </details>
-          <details name="faq" data-reveal>
-            <summary>怎么安装和升级？</summary>
-            <p>从 GitHub Releases 下载 <code>.tgz</code> 和 <code>SHA256SUMS</code>，校验后通过 <code>pnpm add file:</code> 安装到目标 profile，再完整重启 DSH。</p>
-          </details>
-        </div>
-      </section>
-
-      <section class="install" id="install">
-        <div class="install-inner section-shell">
+      <section class="install section" id="install">
+        <div class="install-layout page-gutter">
           <div class="install-copy" data-reveal>
-            <h2>下一站，<br />无人岛</h2>
-            <p>下载最新版，核验 SHA-256，然后把主题装进你的 DSH profile。第一次登岛大约只需要一分钟。</p>
-            <a class="button button-primary" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/releases/latest" target="_blank" rel="noreferrer">
+            <h2>装上这座岛</h2>
+            <p>从 GitHub Releases 下载最新 <code>.tgz</code> 与 <code>SHA256SUMS</code>，校验哈希后安装到目标 DSH profile，完整重启客户端即可生效。</p>
+            <a class="button" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/releases/latest" target="_blank" rel="noreferrer">
               打开最新发布
             </a>
           </div>
 
-          <aside class="install-ticket" aria-labelledby="boarding-title" data-reveal>
-            <header>
-              <span id="boarding-title">登岛凭证</span>
-              <strong>最新版</strong>
-            </header>
+          <div class="install-command" data-reveal>
             <ol>
-              <li>下载 <code>.tgz</code> 与 <code>SHA256SUMS</code></li>
-              <li>核验文件哈希</li>
-              <li>安装到目标 DSH profile</li>
-              <li>完整重启客户端</li>
+              <li>下载 Release 中的 <code>.tgz</code> 与 <code>SHA256SUMS</code></li>
+              <li>核对文件名、版本号与 SHA-256 校验值</li>
+              <li>在目标 profile 目录执行安装命令</li>
+              <li>完整重启 DSH 客户端</li>
             </ol>
             <pre><code>pnpm add file:&lt;下载目录&gt;/dsh-theme-animal-island-ui-&lt;version&gt;.tgz</code></pre>
-            <a class="ticket-link" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/blob/main/README.md#安装到-dsh-profile" target="_blank" rel="noreferrer">
+            <a class="text-link" href="https://github.com/Shirolin/dsh-theme-animal-island-ui/blob/main/README.md#安装到-dsh-profile" target="_blank" rel="noreferrer">
               查看完整安装说明
             </a>
-          </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq section" id="faq">
+        <div class="section-heading page-gutter" data-reveal>
+          <h2>登岛之前</h2>
+          <p>这是一枚标准主题插件，而非 DSH 修改版分叉。你依然在熟悉的客户端里工作，只是把日常桌面换成了海岛。</p>
+        </div>
+
+        <div class="faq-grid page-gutter">
+          <article data-reveal>
+            <h3>会改动或破坏 DSH 的原生功能吗？</h3>
+            <p>不会。插件只通过 ThemeRuntime、公开 Slot 和自有样式表渲染外观；遇到上游接口变更时只做安全降级，绝不阻塞原生界面。</p>
+          </article>
+          <article data-reveal>
+            <h3>支持 Web 端与 Windows 桌面端吗？</h3>
+            <p>均支持。两端使用各自独立的 DSH profile，需分别安装；Windows 桌面端的透明标题栏适配与调试方式详见仓库桌面端文档。</p>
+          </article>
+          <article data-reveal>
+            <h3>夜间模式只是把日间颜色反相吗？</h3>
+            <p>不是。夜岛拥有独立的暖棕纸面、深海蓝侧栏、星空月光与萤火背景层，正文字重、代码块与状态色均单独校准。</p>
+          </article>
+          <article data-reveal>
+            <h3>外观浓度设置保存在哪里？</h3>
+            <p>画布浓度仅保存在当前客户端的 <code>localStorage</code> 中，不写入会话数据或工程目录，Web 与桌面端各自独立记忆。</p>
+          </article>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-brand">
-        <img src="assets/loading-leaf.svg" alt="" width="38" height="38" />
-        <div>
-          <strong>一动森</strong>
-          <span>Animal Island UI for DeepSeek Harness</span>
-        </div>
+    <footer class="site-footer page-gutter">
+      <div class="footer-top">
+        <a class="brand brand--footer" href="#top" aria-label="回到 Animal Island UI for DSH 首页">
+          <img src="assets/loading-leaf.svg" alt="" width="40" height="40" />
+          <span>
+            <strong>Animal Island</strong>
+            <small>UI for DSH</small>
+          </span>
+        </a>
+        <a class="back-to-top" href="#top">回到顶部</a>
       </div>
+
+      <p class="footer-wordmark">DSH 动森主题</p>
+
       <div class="footer-links">
         <a href="https://github.com/Shirolin/dsh-theme-animal-island-ui" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://github.com/Shirolin/dsh-theme-animal-island-ui/blob/main/docs/desktop.md" target="_blank" rel="noreferrer">桌面端文档</a>
         <a href="https://github.com/Shirolin/dsh-theme-animal-island-ui/blob/main/LICENSE" target="_blank" rel="noreferrer">MIT License</a>
         <a href="https://github.com/Shirolin/dsh-theme-animal-island-ui/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noreferrer">第三方声明</a>
       </div>
-      <p>社区项目，与 DeepSeek 官方无隶属关系。参考基线许可见第三方声明。</p>
+      <p class="footer-legal">社区项目，与 DeepSeek 官方无隶属关系。参考基线许可见第三方声明。</p>
     </footer>
+
+    <dialog class="shot-dialog" id="shot-dialog" aria-labelledby="shot-dialog__title" tabindex="-1">
+      <div class="shot-dialog__bar">
+        <div class="shot-dialog__heading" aria-live="polite">
+          <h2 id="shot-dialog__title">完整界面</h2>
+          <span class="shot-dialog__count" data-shot-count>1 / 4</span>
+        </div>
+        <div class="shot-dialog__controls">
+          <button type="button" class="shot-dialog__control" data-shot-prev aria-label="上一张" title="上一张">
+            <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true" focusable="false">
+              <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button type="button" class="shot-dialog__control" data-shot-next aria-label="下一张" title="下一张">
+            <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true" focusable="false">
+              <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button type="button" class="shot-dialog__control shot-dialog__close" aria-label="关闭图集" title="关闭">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="shot-dialog__viewport">
+        <img src="assets/workspace-light.webp" width="1600" height="1000" alt="Animal Island UI 产品界面完整原图" draggable="false" />
+      </div>
+      <div class="shot-dialog__footer">
+        <a class="shot-dialog__original" href="assets/workspace-light.webp" target="_blank" rel="noreferrer">在新标签页打开原图</a>
+        <span class="shot-dialog__hint">← → 切换 · Esc 关闭</span>
+      </div>
+    </dialog>
 
     <script defer src="app.js"></script>
   </body>

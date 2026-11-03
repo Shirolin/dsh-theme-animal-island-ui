@@ -1,0 +1,15 @@
+{
+  "title": "deliverables diff 切到 DSH 原生语法色",
+  "pluginCss": ["@deepseek-ai/dsh-client-ui-deliverables"],
+  "variants": [{ "id": "light", "mode": "light", "window": "700,300" }, { "id": "dark", "mode": "dark", "window": "700,300" }],
+  "assertions": [
+    {
+      "message": "「DSH 原生」在亮色下把关键字换成 #d6336c；暗色仍用代码岛亮色 #f0a1c0",
+      "expression": "document.body.hasAttribute('data-ds-dark-theme') ? getComputedStyle(document.querySelector('[data-review-view] .kw')).color === 'rgb(240, 161, 192)' : getComputedStyle(document.querySelector('[data-review-view] .kw')).color === 'rgb(214, 51, 108)'"
+    },
+    {
+      "message": "「DSH 原生」在亮色下把字符串换成 #2f9e44",
+      "expression": "document.body.hasAttribute('data-ds-dark-theme') ? getComputedStyle(document.querySelector('[data-review-view] .str')).color === 'rgb(139, 214, 148)' : getComputedStyle(document.querySelector('[data-review-view] .str')).color === 'rgb(47, 158, 68)'"
+    }
+  ]
+}

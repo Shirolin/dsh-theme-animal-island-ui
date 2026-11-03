@@ -8,8 +8,7 @@
 [![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-f3c969.svg)](LICENSE)
 
-A community-built Animal Island-inspired theme for DeepSeek Harness Web and Desktop. It composes DSH
-ThemeRuntime tokens, plugin-owned CSS/assets, and public DSH slots without patching DSH internals.
+An Animal Island–inspired community theme plugin for DeepSeek Harness (Web and Windows Desktop). It layers DSH ThemeRuntime tokens, plugin-owned CSS/artwork, and public DSH slots—bringing warm paper surfaces, wooden badges, and a boarding-pass masthead to DSH while keeping native sessions, settings, workspaces, composer, and shortcuts intact.
 
 ![Animal Island DSH skin preview](docs/palette-preview.svg)
 
@@ -22,13 +21,13 @@ ThemeRuntime tokens, plugin-owned CSS/assets, and public DSH slots without patch
 
 </details>
 
-## What it includes
+## Highlights
 
-- Light and dark color systems with readable semantics and original island artwork;
-- Public brand, hero, composer, dialog, settings, and keyboard-focus treatments;
-- An in-client appearance tab with presets and a canvas-opacity control;
-- Embedded Nunito Latin and original local SVG assets with no runtime network requests;
-- Contract tests for public DSH tokens, slots, ARIA seams, and visual fixtures.
+- **Day & Night islands**: Polka-dot turf, water ripples, and floating leaves by day; a dedicated starry night island with warm paper surfaces, deep-teal sidebar, moonlight, and fireflies by night;
+- **Public slots & native shell**: Boarding-pass brand masthead (`216×60`), hero card, bubble composer, paper-grain dialogs, and 2px inset mint focus rings that never clip inside scroll views;
+- **In-app appearance tab**: Built into `Settings → Plugins` with three presets (`0.22` / `0.40` / `0.55`), a `0.15–0.60` opacity slider, and a live layered canvas preview;
+- **Self-contained assets**: Bundled Nunito Latin fonts and original SVG artwork with zero runtime network requests;
+- **Verified compatibility**: Contract tests for 118 ThemeRuntime tokens, public slots, ARIA/data hooks, and headless Chrome DOM fixtures.
 
 The visual language is inspired by Animal Island UI. No upstream code, logo, illustration, font, or
 complete stylesheet is copied. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

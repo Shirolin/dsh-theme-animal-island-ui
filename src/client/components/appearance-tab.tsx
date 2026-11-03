@@ -172,6 +172,33 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
         </div>
       </div>
 
+      <fieldset className="animal-island-appearance__diff" aria-label="diff 语法配色">
+        <span className="animal-island-appearance__diff-title">diff 语法配色</span>
+        <p className="animal-island-appearance__diff-hint">
+          只影响右侧栏中画在纸面上的代码 diff（深色模式始终使用深色代码岛的配色）。「暖色」与整套动森纸面更统一，「DSH 原生」则是 DSH 自带的中性亮色语法色。
+        </p>
+        <div className="animal-island-appearance__diff-options">
+          <button
+            type="button"
+            className="animal-island-appearance__preset"
+            aria-pressed={state.diffSyntax === 'warm'}
+            onClick={() => set({ diffSyntax: 'warm' })}
+          >
+            暖色
+            <small>跟随纸面</small>
+          </button>
+          <button
+            type="button"
+            className="animal-island-appearance__preset"
+            aria-pressed={state.diffSyntax === 'native'}
+            onClick={() => set({ diffSyntax: 'native' })}
+          >
+            中性
+            <small>DSH 原生</small>
+          </button>
+        </div>
+      </fieldset>
+
       <p className="animal-island-appearance__note">
         设置卡片本身是固定纸面，滑杆调整的是它背后的画布，上方「画布预览」会实时同步；偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。
       </p>

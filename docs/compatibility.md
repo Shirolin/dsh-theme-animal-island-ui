@@ -39,6 +39,7 @@ DSH 证据与探测方式只在 `scripts/seam-contract.mjs` 维护；本文保�
 | `[data-trigger-menu]` | composer 的 `/`｜`@` 触发面板：排除胶囊与弹出层装饰，并给面板底边加渐隐（其 `::after` 未被 DSH 占用；高度是内联 `max-height`，不去改） | DSH 自己的 pointerdown 关闭逻辑依赖它 |
 | `[data-code-block-banner]` | 代码块 banner（语言标签 + 复制按钮）的文字颜色 —— 它继承 `label-primary`，亮色下压在深色代码岛上不可读 | 代码块 banner 的标记；只改颜色不动几何，且必须连 banner 的直接子元素一起改：语言标签自己声明了 `label-primary`，元素自身声明赢过继承 |
 | `[data-code-preview]`、`[data-textpreview-plain]` | 右侧栏「文档」预览的两条平面视图（高亮代码体 / 纯文本页）：把它们的 `<pre>` 从主题代码排版规则里排除，保留 DSH 自己的内边距与文字颜色 | 预览 `CodeBody` / `TextBody` 自己渲染的属性；纯文本视图**不是** `CodeBlock` 那条路径，单独用 `data-textpreview-plain` 才命中 |
+| `[data-review-view]` | 右侧栏 deliverables 的代码 diff（split / unified）：它是画在浅色纸面上的**平面**代码视图，不是深色代码岛。皮肤全局 `--shiki-*` 是深色代码块用的亮语法色，落到浅色面板上只剩约 1.4:1；只在这个 diff 内把 `--shiki-*` 换成浅面可读的暖色语法色，几何（行高、gutter、分栏）完全由组件自己决定，暗色分支不动 | deliverables 的 `FileDiff` 渲染该 `data-review-view` 平面 diff body；`test/fixtures/deliverables-diff/` 用真实 CSS 锁定亮/暗两套计算色 |
 | `[data-open-target]` | 分裂式「打开方式」控件在亮色模式下的外框与中缝：DSH 原生的 faint border 在画布上几乎不可见，只增强这两条功能性边界；中缝用其内部 `button[aria-haspopup="menu"]` 定位 | OpenTargetButton 为用户打开动作写出的语义标记，下拉按钮保留标准 menu 语义；不依赖组件 CSS module hash，暗色分支和 DSH 的几何保持原样 |
 | `[data-plugin-item]`、`[data-plugin-package]` | 插件管理列表行在亮色模式下的轻纸面：固定画布波浪会穿过透明行的描述文字；只改背景色，不碰列表的 padding、margin、圆角、阴影或排列 | Plugin Manager 为内置配置行和已安装插件行写出的身份标记，供它自己的行操作使用；不依赖 `V7pFBG_*` CSS module hash |
 | `[data-dsh-boot]` | 全屏启动等待页：昼夜岛屿背景；纸卡只在公开进度章存在时启用，失败页允许官方错误列表滚动 | DSH WebBootPage 在插件加载前自己写出的根标记；主题不接管启动状态，结构消失时自动退回 DSH 原样式 |
@@ -55,7 +56,7 @@ DSH 证据与探测方式只在 `scripts/seam-contract.mjs` 维护；本文保�
 | `[aria-pressed]`、`[aria-selected]`、`[aria-checked]`、`[aria-expanded]` | 选中、展开与开关状态（预设卡片、列表项、外观预设、插件开关） | ARIA 状态属性 |
 | `[aria-haspopup]`、`[aria-label]` | 定位菜单触发器与区分带文字控件 | 标准 ARIA 属性；只读语义，不依赖 DOM 位置 |
 
-插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。Windows 外壳 frame 的例外是 `html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。启动页的受限例外用一次 `[data-dsh-boot]:has([data-dsh-boot-spinner])` 建立样式容器，纸卡、字标和提示在其后代规则中定位；spinner 消失即容器条件整体失配。Windows 标题栏让 `body` 的 sidebar-fill 成为 caption 色，并在 `#root` 恢复应用内奶油 token；暗色另用 `div:has(> nav[aria-label])` 找到侧栏根节点恢复深蓝，只改背景色，不改侧栏布局。以上关系都由 `test/skin.test.mjs` 与桌面夹具锁住。
+插件自有变量 `--animal-canvas-veil`（默认 .4）只驱动自家画布奶油面的透明度；它由「动森外观」页写入，`prefers-contrast: more` 时强制 .52。插件还会在 `<html>` 上写两个自有属性（不是 DSH 接缝，测试里单独归类）：`data-animal-appearance`（外观预设）与 `data-animal-diff-syntax`（`warm` / `native`，控制浅色纸面 diff 的语法配色）。不得使用：hash class、`data-slot`、固定祖先深度、`nth-child`/`first-child`/`last-child`（测试会拒绝）。Windows 外壳 frame 的例外是 `html[data-windows-titlebar] #root > div > div` —— root slot wrapper 是 `display: contents`，frame 是它唯一的子元素；这条规则只为把 DSH 的 AppFrame 清成透明（见上表与 #9490）。启动页的受限例外用一次 `[data-dsh-boot]:has([data-dsh-boot-spinner])` 建立样式容器，纸卡、字标和提示在其后代规则中定位；spinner 消失即容器条件整体失配。Windows 标题栏让 `body` 的 sidebar-fill 成为 caption 色，并在 `#root` 恢复应用内奶油 token；暗色另用 `div:has(> nav[aria-label])` 找到侧栏根节点恢复深蓝，只改背景色，不改侧栏布局。以上关系都由 `test/skin.test.mjs` 与桌面夹具锁住。
 
 ## 插件自有布局
 
@@ -105,6 +106,9 @@ DSH 生态里的设置页常常由插件自带布局（例如 `dsh-opencode-go` 
 - 启动页夹具是 `test/fixtures/boot-loading/` 与 `test/fixtures/boot-failure/`：前者覆盖昼夜进度卡，
   后者用官方失败 DOM 和长诊断验证根节点滚动；两者都引入真实 DSH CSS，并在浏览器内断言结构、
   computed style 与可滚动性，失败时命令非零退出；
+- 右侧栏 deliverables 代码 diff 夹具是 `test/fixtures/deliverables-diff/`：用 `dsh-client-ui-deliverables`
+  真实的 `FileDiff.module.css` 与 split DOM，在亮/暗两套里锁住关键字、字符串计算色，以及亮色下
+  diff 仍是浅色纸面（不被改成深色代码岛）；
 - 夹具会连同**插件自己内嵌的 Nunito** 一起渲染。只渲染 `src/client/skin.css` 的话文字全部走回退字体，凡是与字宽、换行、裁切有关的回归都看不出来；
 - 侧栏品牌区的夹具是 `test/fixtures/sidebar-masthead/`：按 0.2.1-rc.5 的 `[data-windows-titlebar]` 结构还原真实侧栏（`wtg9ga_*` 模块 class、logoRow、新会话、面板行），并在 280 / 240 / 180 三个宽度下同时看浅色与深色。它跑的是**桌面客户端的 runtime**，所以要显式指定：
 

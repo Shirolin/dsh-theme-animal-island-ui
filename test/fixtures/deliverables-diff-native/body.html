@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- Regression fixture: the 「动森外观 → diff 语法配色 = 中性(DSH 原生)」 branch.
+     The root attribute switches the flat deliverables diff from the skin's warm
+     light-surface palette to DSH's built-in light syntax colours; dark mode must
+     keep the theme's dark-island palette. -->
+<html lang="zh-CN" data-dsh-animal-island-skin="active" data-animal-diff-syntax="native">
+<head>
+<meta charset="utf-8">
+<title>deliverables diff — DSH native syntax</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  body { margin: 0; padding: 16px; font-family: var(--dsw-font-family); background: var(--dsw-alias-bg-base); }
+  .paper { width: 620px; border-radius: 14px; background: var(--dsw-alias-bg-base); overflow: hidden; }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{BODY_STYLE}} {{TOKENS}}">
+<div class="paper">
+  <div class="_0cITKW_root">
+    <div class="_0cITKW_body" data-review-view="unified">
+      <section class="_0cITKW_hunk">
+        <div class="_0cITKW_hunkHeader" data-diff-hunk-header>@@ -1,3 +1,3 @@</div>
+        <div class="_0cITKW_line _0cITKW_context" data-diff-line="context">
+          <span class="_0cITKW_number">1</span>
+          <span class="_0cITKW_number">1</span>
+          <span class="_0cITKW_sign"> </span>
+          <span class="_0cITKW_text" data-diff-code><span class="kw" style="color:var(--shiki-token-keyword)">const</span> label = <span class="str" style="color:var(--shiki-token-string)">'island'</span></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</body>
+</html>

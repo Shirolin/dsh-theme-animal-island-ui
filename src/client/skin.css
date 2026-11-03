@@ -1017,6 +1017,45 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] :not(pre) > code:not(
   color: #ead9bd;
 }
 
+/* The deliverables review (right sidebar / turn-tail preview) is a FLAT code
+   comparison painted on the light paper surface, not on a dark code island: its
+   own FileDiff.module.css leaves the body transparent and only tints added and
+   deleted rows through --dsw-alias-file-diff-*. The skin's global --shiki-*
+   tokens are the dark code palette (bright pastels) chosen for the dark code
+   blocks, so on this light surface the syntax washes out to ~1.4:1 — the exact
+   failure the document preview had. Restore a light-surface syntax palette
+   inside the diff only, scoped to DSH's own semantic `data-review-view` hook;
+   dark mode keeps the theme palette on its dark surface. Colours only — the
+   component owns its line, gutter and column geometry. */
+html[data-dsh-animal-island-skin] body:not([data-ds-dark-theme]) [data-review-view] {
+  --shiki-foreground: var(--dsw-alias-label-primary);
+  --shiki-token-comment: #7d6b52;
+  --shiki-token-keyword: #a13d7a;
+  --shiki-token-string: #3f7d2a;
+  --shiki-token-string-expression: #3f7d2a;
+  --shiki-token-constant: #9a6412;
+  --shiki-token-function: #1f6f8b;
+  --shiki-token-parameter: #a8451a;
+  --shiki-token-punctuation: #5f4d3a;
+  --shiki-token-link: #0b6d64;
+}
+
+/* 「动森外观」→ diff 语法配色 = DSH 原生：同一块浅色纸面 diff，换回 DSH 自带的
+   中性亮色语法色。只在亮色分支生效；暗色模式继续使用深色代码岛的亮色语法。
+   这是用户可选的替代配色，不是默认值。 */
+html[data-dsh-animal-island-skin][data-animal-diff-syntax="native"] body:not([data-ds-dark-theme]) [data-review-view] {
+  --shiki-foreground: var(--dsw-alias-label-primary);
+  --shiki-token-comment: #868e96;
+  --shiki-token-keyword: #d6336c;
+  --shiki-token-string: #2f9e44;
+  --shiki-token-string-expression: #2b8a3e;
+  --shiki-token-constant: #1c7ed6;
+  --shiki-token-function: #6741d9;
+  --shiki-token-parameter: #e8590c;
+  --shiki-token-punctuation: #495057;
+  --shiki-token-link: #1971c2;
+}
+
 /* Keep the sticky conversation header separate from scrolling content without
    turning the full-width divider into a competing control border. */
 html[data-dsh-animal-island-skin] body:not([data-ds-dark-theme]) header:has([data-conversation-header-corner]) {
@@ -2007,6 +2046,37 @@ html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-appear
 
 html[data-dsh-animal-island-skin] body[data-ds-dark-theme] .animal-island-appearance__preset[aria-pressed="true"] small {
   color: #d8c2a0;
+}
+
+/* 「diff 语法配色」reuses the preset plank buttons so the two visual choices
+   read as one family; the fieldset only lays out its own legend and options. */
+html[data-dsh-animal-island-skin] .animal-island-appearance__diff {
+  display: grid;
+  gap: 8px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__diff-title {
+  padding: 0;
+  color: var(--animal-ink);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__diff-hint {
+  max-width: 52ch;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__diff-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 html[data-dsh-animal-island-skin] .animal-island-appearance__custom {

@@ -1,4 +1,4 @@
-# 一动森设计映射（0.3.x）
+# Animal Island UI 设计映射（0.3.x）
 
 ## 参考基线
 
@@ -80,7 +80,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - 侧栏叶片 hover 轻摆 `rotate(-6deg) scale(1.06)`；选区为半透明薄荷；以上都在 `prefers-reduced-motion` 下关闭；
 - 画布：波点 + 45° 斜纹 + 底部草/水双波纹 + 低透明度漂浮叶子/花/星；深色换成「夜岛」深青天空 + 星点 + 右上月晕 + 夜叶/萤火虫与深青山影；
 - 启动等待页：延伸到全屏的昼夜岛屿背景 + 渡岛船票纸卡；顶部叶片票章、`动森岛` 字标、中心叶片进度章和环绕萤火点共同显示「正在登陆无人岛」。进度环只消费 DSH 写出的 `--dsh-boot-arc`，不覆盖加载状态；纸卡只在公开进度章存在时启用，失败时自动退回官方卡片，并让错误列表在主题背景上安全居中、可横向与纵向滚动；
-- 画布透明度：主内容的奶油面由 `--animal-canvas-veil`（默认 .4）驱动；「设置 → 插件 → 动森外观」提供纸白 .52 / 均衡 .40 / 海岛 .28 三档 + .15–.60 滑杆，面板内用同一变量渲染「画布预览」（绿色波点画布 + 同透明度奶油层），设置弹层本身保持固定纸面，选择存本机 `localStorage`；深色纸面同样跟随该变量（.40 落在原 .84，默认观感不变）；`prefers-contrast: more` 强制 .52；Windows 桌面外壳的 AppFrame 默认用不透明 sidebar-fill 盖住画布，皮肤在 `html[data-windows-titlebar]` 下把 frame 清成透明，并在 **frame 元素**上把外壳自带的 16px 内容圆角设为 0px，与 web 一样是直角（变量必须写在 frame 上，写在 `<html>` 上会被 DSH 的 `.frame` 声明覆盖；见 [web-vs-desktop.md](web-vs-desktop.md) 与 #9490）；40px 标题栏条是 native titleBarOverlay，皮肤不能直接写 CSS，但亮色通过上报色 `#e7efe5`、暗色通过 `#1f3034`，配合 `#root`/侧栏底色保留“标题栏 / 侧栏 / 画布”三层关系；
+- 画布透明度：主内容的奶油面由 `--animal-canvas-veil`（默认 .4）驱动；「设置 → 插件 → 动森外观」提供纸白 .52 / 均衡 .40 / 海岛 .28 三档 + .15–.60 滑杆，面板内用同一变量渲染「画布预览」（绿色波点画布 + 同透明度奶油层），设置弹层本身保持固定纸面，选择存本机 `localStorage`；深色纸面同样跟随该变量（.40 落在原 .84，默认观感不变）；`prefers-contrast: more` 强制 .52；同一页还提供「diff 语法配色」的粗粒度二选一（默认「暖色」= 浅面暖色语法色，「中性」= DSH 原生亮色语法色），只影响浅色纸面上的 deliverables 代码 diff，暗色模式不变；Windows 桌面外壳的 AppFrame 默认用不透明 sidebar-fill 盖住画布，皮肤在 `html[data-windows-titlebar]` 下把 frame 清成透明，并在 **frame 元素**上把外壳自带的 16px 内容圆角设为 0px，与 web 一样是直角（变量必须写在 frame 上，写在 `<html>` 上会被 DSH 的 `.frame` 声明覆盖；见 [web-vs-desktop.md](web-vs-desktop.md) 与 #9490）；40px 标题栏条是 native titleBarOverlay，皮肤不能直接写 CSS，但亮色通过上报色 `#e7efe5`、暗色通过 `#1f3034`，配合 `#root`/侧栏底色保留“标题栏 / 侧栏 / 画布”三层关系；
 - Sidebar：18px 圆角、2px 白边、暖色 soft shadow；
 - Header ribbon：木质告示牌 —— 暖木正面（`::after`，竖向木纹 + 两枚铆钉）+ 深木燕尾与折角三角（`::before`：燕尾走 `clip-path`，折角用两枚渐变三角）；奶油字 `#fff3d6`（深色 `#f6e6c8`）；三层全部收在 `nav` 盒内，因为 DSH 的 `.crumbs` 是 `overflow: hidden`；
 - 文本按钮：pill、2px 暖边、4px 立体底边；
@@ -91,7 +91,7 @@ Dark 是 DSH 派生方案，不声称复刻参考项目未公开的 Dark：
 - 插件管理页：亮色开关用暖奶油轨道与 `#8f765e` 内描边建立边界，开启态换深薄荷轨道与浅色滑块；插件行只加一层很淡的奶油阅读面，避免底部波浪穿过描述文字，不改列表布局；
 - 弹出层行列高亮（`[role='option'|'menuitem']` 的 hover / `aria-selected`）用薄荷 `--dsw-alias-interactive-bg-hover-accent`；通用的 `--dsw-alias-interactive-bg-hover` 是暖木色，因为侧栏会话行与它共用；
 - 命令面板（`/`、`@`）的滚动高度由组件按可用空间内联算出，主题只给面板底边加 16px 渐隐（`[data-trigger-menu]::after`，颜色取面板自身表面），让被裁掉的半行读作「下面还有」—— 不改高度，短列表不滚动时不受影响；
-- Code block：圆角/底色跟随 DSH 的代码块变量（圆角 12px，不另立数值 —— 容器变量一旦在容器上覆写，会连带顶掉文档预览刻意设的 `0px` 平面样式）；`pre` 只保留 20/24px padding 与排版，不自己画边框/圆角/底色；banner 文字（语言标签 + 复制按钮）用代码前景色：标签自己声明了 `label-primary`、复制按钮只是 `inherit`，所以 banner 本身与它的直接子元素都要覆盖 —— 否则会出现「右边改好了、左边还是看不清」；右侧栏「文档」预览（`data-code-preview`）是**平面**代码视图，那里必须让文字回到 DSH 自己的颜色：深色代码岛的前景/配色落到浅色面板上只有 1.35:1，灰成一片（高亮的「代码」视图不受影响）；
+- Code block：圆角/底色跟随 DSH 的代码块变量（圆角 12px，不另立数值 —— 容器变量一旦在容器上覆写，会连带顶掉文档预览刻意设的 `0px` 平面样式）；`pre` 只保留 20/24px padding 与排版，不自己画边框/圆角/底色；banner 文字（语言标签 + 复制按钮）用代码前景色：标签自己声明了 `label-primary`、复制按钮只是 `inherit`，所以 banner 本身与它的直接子元素都要覆盖 —— 否则会出现「右边改好了、左边还是看不清」；右侧栏「文档」预览（`data-code-preview`）是**平面**代码视图，那里必须让文字回到 DSH 自己的颜色：深色代码岛的前景/配色落到浅色面板上只有 1.35:1，灰成一片（高亮的「代码」视图不受影响）；右侧栏 deliverables 的代码 diff（`data-review-view`）同理 —— 它也是画在浅色纸面上的平面代码视图，亮色下把 `--shiki-*` 换成浅面可读的暖色语法色，暗色仍用深色代码岛的亮配色；
 - Code：inline code chip 只作用于无 class 的 `<code>`，自带样式的组件（预设 id 之类）保留原生外观；
 - Hover 上浮 1px，active 下沉 2px；
 - `prefers-reduced-motion` 禁用非必要位移。

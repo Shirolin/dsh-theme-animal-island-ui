@@ -552,6 +552,25 @@ test('appearance custom control keeps its label, value, slider and reset in one 
   assert.match(appearanceTab, /className="animal-island-appearance__reset-copy"/)
 })
 
+test('diff syntax setting keeps a warm default and offers a DSH-native alternative on light paper', () => {
+  const warm = ruleQuery.find(
+    (rule) =>
+      rule.selector.includes('[data-review-view]') &&
+      !rule.selector.includes('data-animal-diff-syntax') &&
+      rule.declaration('--shiki-token-keyword')?.value === '#a13d7a',
+  )
+  const native = ruleQuery.find(
+    (rule) => rule.selector.includes('[data-animal-diff-syntax="native"]') && rule.declaration('--shiki-token-keyword')?.value === '#d6336c',
+  )
+
+  assert.ok(warm, 'the default warm diff palette is missing')
+  assert.ok(native, 'the DSH-native diff palette is missing')
+  assert.ok(native.selector.includes('body:not([data-ds-dark-theme])'), 'the native alternative must stay light-mode only')
+  assert.match(appearanceTab, /diff 语法配色/)
+  assert.match(appearanceTab, /set\(\{ diffSyntax: 'warm' \}\)/)
+  assert.match(appearanceTab, /set\(\{ diffSyntax: 'native' \}\)/)
+})
+
 test('wave artwork is an original local SVG rather than a reference asset', () => {
   assert.match(wave, /viewBox="0 0 240 130"/)
   assert.match(wave, /C28 42 58 40 90 62/)

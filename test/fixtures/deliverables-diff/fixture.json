@@ -1,0 +1,19 @@
+{
+  "title": "右侧栏 deliverables diff 的语法配色（浅色面板）",
+  "pluginCss": ["@deepseek-ai/dsh-client-ui-deliverables"],
+  "variants": [{ "id": "light", "mode": "light", "window": "760,520" }, { "id": "dark", "mode": "dark", "window": "760,520" }],
+  "assertions": [
+    {
+      "message": "关键字色：亮色用浅面暖语法色 #a13d7a，暗色保留代码岛亮语法色 #f0a1c0",
+      "expression": "document.body.hasAttribute('data-ds-dark-theme') ? getComputedStyle(document.querySelector('[data-review-view] .kw')).color === 'rgb(240, 161, 192)' : getComputedStyle(document.querySelector('[data-review-view] .kw')).color === 'rgb(161, 61, 122)'"
+    },
+    {
+      "message": "字符串色：亮色用 #3f7d2a，暗色保留代码岛亮语法色 #8bd694",
+      "expression": "document.body.hasAttribute('data-ds-dark-theme') ? getComputedStyle(document.querySelector('[data-review-view] .str')).color === 'rgb(139, 214, 148)' : getComputedStyle(document.querySelector('[data-review-view] .str')).color === 'rgb(63, 125, 42)'"
+    },
+    {
+      "message": "diff 体自身不画底色，仍是浅色纸面（未被改成深色代码岛）",
+      "expression": "getComputedStyle(document.querySelector('[data-review-view]')).backgroundColor === 'rgba(0, 0, 0, 0)'"
+    }
+  ]
+}
