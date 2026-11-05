@@ -75,7 +75,7 @@ jobs:
         run: pnpm pack --pack-destination "$RUNNER_TEMP/release"
 
       - name: Upload the tarball
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dsh-theme-animal-island-ui-tarball
           path: ${{ runner.temp }}/release/*.tgz
