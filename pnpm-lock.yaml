@@ -24,8 +24,8 @@ importers:
         specifier: 0.1.5-rc.3
         version: 0.1.5-rc.3(@deepseek-ai/cordis@4.0.2)
       '@fontsource/nunito':
-        specifier: 5.2.7
-        version: 5.2.7
+        specifier: 5.3.0
+        version: 5.3.0
       '@types/react':
         specifier: 18.3.18
         version: 18.3.18
@@ -185,6 +185,9 @@ packages:
 
   '@deepseek-ai/cosmokit@1.8.5':
     resolution: {integrity: sha512-LXsrlem9z8dq4sLflj2yuCuYX7KqhdzF5hZly3eZyuTo8d6oDSOXuEgC5DbQWKW+lksm6zmOutQLsP/ma6wR6A==}
+
+  '@deepseek-ai/cosmokit@1.8.6':
+    resolution: {integrity: sha512-ZSD/fN52L498LBIOYwjIOlaLv5veY6ZEwI2yzvZUKQtctn0QAPqu8tKdJ+OF5+Tv6NBq1U+wJWH+QI6OGy5EvQ==}
 
   '@deepseek-ai/dsh-client-ui-conversation@0.1.5-rc.3':
     resolution: {integrity: sha512-XXqq+wvSZT35PFlLLz1QI/vblTsYLkAI2ddq5l3xJDytm26LZoh/rGupZWQFtLHiqLmKGODeUqgX/ZejUNuepw==}
@@ -374,8 +377,8 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@fontsource/nunito@5.2.7':
-    resolution: {integrity: sha512-pmtBq0H9ex9nk+RtJYEJOD9pag393iHETnl/PVKleF4i06cd0ttngK5ZCTgYb5eOqR3Xdlrjtev8m7bmgYprew==}
+  '@fontsource/nunito@5.3.0':
+    resolution: {integrity: sha512-vw9TaTQJ/zpEpKrsODuPmOvaVjXgdda6B+xXA4YqjrdeJ62MLgVoDerdRXFQHyBnSCt2yQ2nHKCHPP/Pv7Xq4Q==}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -682,10 +685,12 @@ snapshots:
 
   '@deepseek-ai/cordis@4.0.2':
     dependencies:
-      '@deepseek-ai/cosmokit': 1.8.5
+      '@deepseek-ai/cosmokit': 1.8.6
       '@standard-schema/spec': 1.1.0
 
   '@deepseek-ai/cosmokit@1.8.5': {}
+
+  '@deepseek-ai/cosmokit@1.8.6': {}
 
   '@deepseek-ai/dsh-client-ui-conversation@0.1.5-rc.3(@deepseek-ai/cordis@4.0.2)':
     dependencies:
@@ -790,7 +795,7 @@ snapshots:
 
   '@exodus/bytes@1.16.0': {}
 
-  '@fontsource/nunito@5.2.7': {}
+  '@fontsource/nunito@5.3.0': {}
 
   '@standard-schema/spec@1.1.0': {}
 
