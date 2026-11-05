@@ -1,39 +1,40 @@
-# DSH Animal Island UI Theme
+# DSH 动森主题 · Animal Island UI
 
-[English](README.en.md)
+[English](README.en.md) · 作者：[Shirolin](https://github.com/Shirolin)
 
-[产品页](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30 秒宣传片：从船票撕口登入完整 DSH](https://shirolin.github.io/dsh-theme-animal-island-ui/#film)
+[产品页](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30 秒实机短片：开启海岛工作台](https://shirolin.github.io/dsh-theme-animal-island-ui/#film)
 
 [![check](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml)
 [![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-f3c969.svg)](LICENSE)
 
-`Animal Island UI` 是一套面向 DeepSeek Harness（Web 与 Windows 桌面端）的岛屿风社区主题插件：在 ThemeRuntime 色彩层之上叠加插件自有 CSS、原创画作与 DSH 公开 Slot，还原 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的手账纸感与海岛质感，同时完整保留 DSH 会话、设置、工作区、composer 与快捷键的原生行为。
+`Animal Island UI` 是一个给 DeepSeek Harness（Web 与 Windows 桌面端）用的动森风主题插件，由 Shirolin 制作。它把渡岛船票、奶油手账纸、木牌选中态与夜岛星空搬进工作台，还原 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的手账质感，同时完整保留 DSH 的会话、设置、工作区、输入框与快捷键。
 
-发布包、下载与 `SHA256SUMS` 校验值见 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)。主题包含 **216×60 渡岛船票**品牌区（奶油纸面 + 薄荷票根 + 虚线撕口）、对话气泡 composer、纸纹面板与木牌选中态、独立配色的夜岛星空、「设置 → 插件 → 动森外观」画布浓度调节（附实时同层数预览）、覆盖全界面控件的 2px 内嵌薄荷焦点环，以及 Windows 桌面端透明标题栏与会话列表渐隐修正。
+安装后，你会看到 **216×60 渡岛船票**品牌区（奶油纸面 + 薄荷票根 + 虚线撕口）、对话气泡输入框、木牌选中态与独立配色的夜岛星空；「设置 → 插件 → 动森外观」里可以调画布浓度（附实时预览），并单独开关插画装饰、纸纹与界面字体；桌面端另带透明标题栏与会话列表渐隐修正。下载包与 `SHA256SUMS` 校验值见 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)。
 
-![Animal Island DSH skin preview](docs/palette-preview.svg)
+![DSH 动森主题 · by Shirolin](docs/screenshots/theme-poster.webp)
 
 <details>
-<summary>真实 DSH DOM 夹具：亮色 / 暗色侧栏</summary>
+<summary>真实 DSH DOM 夹具：日间 / 夜间</summary>
 
-| Light | Dark |
+| 日间工作台 | 夜间工作台 |
 | --- | --- |
-| ![Light sidebar](docs/screenshots/sidebar-light.png) | ![Dark sidebar](docs/screenshots/sidebar-dark.png) |
+| ![日间工作台](docs/screenshots/workspace-light.webp) | ![夜间工作台](docs/screenshots/workspace-dark.webp) |
+| ![日间侧栏](docs/screenshots/sidebar-light.webp) | ![夜间侧栏](docs/screenshots/sidebar-dark.webp) |
 
 </details>
 
 ## 视觉与交互
 
-- **海岛画布与夜岛**：日间为绿色双层波点画布、草浪水纹与漂浮叶片；夜间切换为独立配色的星空、月光与萤火，内容区保留暖棕纸面；
+- **日岛与夜岛**：白天是绿色双层波点画布、草浪水纹与漂浮叶片；入夜换成独立绘制的星空、月光与萤火，内容区保留暖棕纸面；
 - **侧栏与品牌区**：奶油白侧栏、蓝紫底浪、原创叶片标与渡岛船票品牌区；
-- **木牌与纸面层级**：木质标题绶带、木牌选中态、奶油白卡片、对话气泡 composer、纸纹弹窗与胶囊输入框；
+- **木牌与纸面层级**：木质标题绶带、木牌选中态、奶油白卡片、对话气泡输入框、纸纹弹窗与胶囊输入框；
 - **触感与微交互**：奶油色 3D 主按钮按压反馈、输入时气泡呼吸发光、发送键涟漪、叶片悬停轻摆；
 - **全界面键盘焦点**：2px 内嵌薄荷焦点环，快捷键搜索框保持单一表面与单圈聚焦描边，滚动与弹窗边界不裁切；
-- **代码与排版**：Light / Dark 均经对比度校准的深棕代码块与 Shiki 语法配色；内嵌 Nunito Latin 字体，中文回退至苹方 / 微软雅黑 / Noto Sans SC；
+- **代码与排版**：深色、浅色都经对比度校准的深棕代码块与 Shiki 语法配色；内嵌 Nunito Latin 字体，中文回退至苹方 / 微软雅黑 / Noto Sans SC；
 - **应用内外观设置**：「设置 → 插件 → 动森外观」提供纸白 / 均衡 / 海岛三档预设与 `0.15–0.60` 滑杆（默认均衡 `0.40`），面板内实时预览画布层次；同一页还有插画装饰、纸纹与界面字体三组细节开关。
 
-顶部色板图为设计标本；折叠区截图由真实 DSH CSS/DOM 夹具渲染，用于回归验收，实际观感以 DSH 客户端为准。
+上面的封面与折叠区截图都来自真实 DSH CSS/DOM 夹具，用于回归验收；实际观感以 DSH 客户端为准。
 
 ## 文档
 
@@ -162,6 +163,7 @@ node scripts/check-compat.mjs --dsh-package "C:\path\to\@deepseek-ai\dsh-client-
 
 ## 许可证与来源
 
+- 作者：Shirolin（[GitHub](https://github.com/Shirolin)），本插件为开源社区项目，与 DeepSeek 官方无隶属关系。
 - 本插件代码：MIT，见 `LICENSE`。
 - Nunito：SIL OFL 1.1，见 `licenses/Nunito-OFL.txt`。
 - Animal Island UI：只参考视觉语言；没有复制其代码、组件、Logo、字体、插画或完整 CSS。参考基线与许可证见 `THIRD_PARTY_NOTICES.md`。
