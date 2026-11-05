@@ -47,6 +47,10 @@ jobs:
       - name: Verify release metadata
         run: node scripts/verify-release.mjs "$GITHUB_REF_NAME" "$RUNNER_TEMP"/release/*.tgz
 
+      - name: Stage generic release assets
+        run: |
+          cp "$RUNNER_TEMP"/release/dsh-theme-animal-island-ui-*.tgz "$RUNNER_TEMP"/release/dsh-theme-animal-island-ui.tgz
+
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
