@@ -2480,14 +2480,33 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__about-links {
 }
 
 html[data-dsh-animal-island-skin] .animal-island-appearance__about-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--animal-muted);
   text-decoration: none;
   font-weight: 700;
-  padding: 2px 6px;
+  padding: 3px 8px;
   border-radius: 6px;
   background: var(--animal-cream);
   border: 1px solid var(--animal-border);
   transition: all 0.15s ease;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-icon {
+  flex: none;
+  opacity: 0.8;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-icon--afdian {
+  color: #ff4070;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-icon--kofi {
+  color: #ff5e5b;
 }
 
 html[data-dsh-animal-island-skin] .animal-island-appearance__about-link:hover {
@@ -2495,6 +2514,11 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__about-link:hover {
   border-color: var(--animal-mint);
   background: var(--animal-cream-deep);
   text-decoration: none;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-link:hover .animal-island-appearance__about-icon {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 html[data-dsh-animal-island-skin] .animal-island-appearance__about-dot {
