@@ -243,6 +243,35 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
       <p className="animal-island-appearance__note">
         设置卡片本身是固定纸面，滑杆调整的是它背后的画布，上方「画布预览」会实时同步；偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。
       </p>
+
+      <footer className="animal-island-appearance__about">
+        <div className="animal-island-appearance__about-meta">
+          <span className="animal-island-appearance__about-title">Animal Island UI</span>
+          <span className="animal-island-appearance__about-author">
+            作者：
+            <a href="https://github.com/Shirolin" target="_blank" rel="noreferrer">
+              Shirolin
+            </a>
+          </span>
+        </div>
+        <div className="animal-island-appearance__about-links">
+          <a href="https://github.com/Shirolin/dsh-theme-animal-island-ui" target="_blank" rel="noreferrer" className="animal-island-appearance__about-link">
+            GitHub
+          </a>
+          <span className="animal-island-appearance__about-dot" aria-hidden="true">
+            ·
+          </span>
+          <a href="https://ifdian.net/a/shirolin" target="_blank" rel="noreferrer" className="animal-island-appearance__about-link">
+            ❤️ 爱发电
+          </a>
+          <span className="animal-island-appearance__about-dot" aria-hidden="true">
+            ·
+          </span>
+          <a href="https://ko-fi.com/shirolin" target="_blank" rel="noreferrer" className="animal-island-appearance__about-link">
+            ☕ Ko-fi
+          </a>
+        </div>
+      </footer>
     </section>
   )
 }

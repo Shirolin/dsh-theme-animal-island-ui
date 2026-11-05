@@ -2394,6 +2394,64 @@ html[data-dsh-animal-island-skin] .animal-island-appearance__note {
   font-size: 11px;
 }
 
+html[data-dsh-animal-island-skin] .animal-island-appearance__about {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--animal-border);
+  font-size: 11px;
+  color: var(--animal-muted);
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-title {
+  font-weight: 800;
+  color: var(--animal-ink);
+  letter-spacing: 0.02em;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-author {
+  font-weight: 600;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-link {
+  color: var(--animal-muted);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--animal-cream);
+  border: 1px solid var(--animal-border);
+  transition: all 0.15s ease;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-link:hover {
+  color: var(--animal-mint-deep);
+  border-color: var(--animal-mint);
+  background: var(--animal-cream-deep);
+  text-decoration: none;
+}
+
+html[data-dsh-animal-island-skin] .animal-island-appearance__about-dot {
+  color: var(--animal-border);
+  font-weight: 900;
+}
+
 /* Accessibility: a system request for more contrast wins over the slider. */
 @media (prefers-contrast: more) {
   html[data-dsh-animal-island-skin] {
