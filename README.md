@@ -1,175 +1,149 @@
 # DSH 动森主题 · Animal Island UI
 
-[English](README.en.md) · 作者：[Shirolin](https://github.com/Shirolin)
-
-[产品页](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30 秒实机短片：开启海岛工作台](https://shirolin.github.io/dsh-theme-animal-island-ui/#film)
+[English](README.en.md) · [官方宣传站](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30 秒实机短片](https://shirolin.github.io/dsh-theme-animal-island-ui/#film) · 作者：[Shirolin](https://github.com/Shirolin)
 
 [![check](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml)
 [![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-f3c969.svg)](LICENSE)
 
-`Animal Island UI` 是一个给 DeepSeek Harness（Web 与 Windows 桌面端）用的动森风主题插件，由 Shirolin 制作。它把渡岛船票、奶油手账纸、木牌选中态与夜岛星空搬进工作台，还原 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的手账质感，同时完整保留 DSH 的会话、设置、工作区、输入框与快捷键。
+`Animal Island UI` 是为 DeepSeek Harness（Web 与 Windows 桌面端）打造的动森风主题插件。它将渡岛船票品牌区、奶油手账纸、木牌选中态与夜岛星空带入工作台，还原 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的手账质感，同时完整保留 DSH 的所有原生交互、布局与快捷键。
 
-安装后，你会看到 **216×60 渡岛船票**品牌区（奶油纸面 + 薄荷票根 + 虚线撕口）、对话气泡输入框、木牌选中态与独立配色的夜岛星空；「设置 → 插件 → 动森外观」里可以调画布浓度（附实时预览），并单独开关插画装饰、纸纹与界面字体；桌面端另带透明标题栏与会话列表渐隐修正。下载包与 `SHA256SUMS` 校验值见 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)。
+> [!NOTE]
+> 本项目为开源社区插件，与 DeepSeek 官方无隶属、授权或背书关系。主题仅作用于 DSH 公开的 ThemeRuntime Token 与 Slot 接缝，不劫持私有组件，DSH 升级后可安全降级。
+
+---
+
+## 界面预览
 
 ![DSH 动森主题 · by Shirolin](docs/screenshots/theme-poster.webp)
 
 <details>
-<summary>真实 DSH DOM 夹具：日间 / 夜间</summary>
+<summary>展开查看：日间 / 夜间工作台与侧栏实拍（真实 DSH DOM 夹具）</summary>
 
-| 日间工作台 | 夜间工作台 |
+| 日间模式 (Light) | 夜间模式 (Dark) |
 | --- | --- |
 | ![日间工作台](docs/screenshots/workspace-light.webp) | ![夜间工作台](docs/screenshots/workspace-dark.webp) |
 | ![日间侧栏](docs/screenshots/sidebar-light.webp) | ![夜间侧栏](docs/screenshots/sidebar-dark.webp) |
 
 </details>
 
-## 视觉与交互
+---
 
-- **日岛与夜岛**：白天是绿色双层波点画布、草浪水纹与漂浮叶片；入夜换成独立绘制的星空、月光与萤火，内容区保留暖棕纸面；
-- **侧栏与品牌区**：奶油白侧栏、蓝紫底浪、原创叶片标与渡岛船票品牌区；
-- **木牌与纸面层级**：木质标题绶带、木牌选中态、奶油白卡片、对话气泡输入框、纸纹弹窗与胶囊输入框；
-- **触感与微交互**：奶油色 3D 主按钮按压反馈、输入时气泡呼吸发光、发送键涟漪、叶片悬停轻摆；
-- **全界面键盘焦点**：2px 内嵌薄荷焦点环，快捷键搜索框保持单一表面与单圈聚焦描边，滚动与弹窗边界不裁切；
-- **代码与排版**：深色、浅色都经对比度校准的深棕代码块与 Shiki 语法配色；内嵌 Nunito Latin 字体，中文回退至苹方 / 微软雅黑 / Noto Sans SC；
-- **应用内外观设置**：「设置 → 插件 → 动森外观」提供纸白 / 均衡 / 海岛三档预设与 `0.15–0.60` 滑杆（默认均衡 `0.40`），面板内实时预览画布层次；同一页还有插画装饰、纸纹与界面字体三组细节开关。
+## 核心特性
 
-上面的封面与折叠区截图都来自真实 DSH CSS/DOM 夹具，用于回归验收；实际观感以 DSH 客户端为准。
+- 🏝️ **昼夜双岛画布**
+  - **日间**：双层波点草坪、水纹底浪与漂浮叶片，搭配高可读性的奶油白纸面。
+  - **夜间**：独立绘制的星空、月光与萤火虫微光，深青侧栏配暖棕内容纸面，久看不刺眼。
+- 🎫 **手账质感与微交互**
+  - **渡岛船票品牌区**：`216×60` 奶油纸面 + 薄荷票根 + 虚线撕口，替代单调顶栏。
+  - **木牌与气泡容器**：木质标题绶带、木牌选中态、对话气泡输入框与纸纹弹窗。
+  - **触感反馈**：3D 奶油主按钮按压回弹、输入气泡呼吸发光、2px 内嵌薄荷键盘焦点环（滚动容器内不裁切）。
+- 🎛️ **应用内外观设置**
+  - 在「**设置 → 插件 → 动森外观**」中提供「纸白 / 均衡 / 海岛」三档预设与 `0.15–0.60` 画布浓度滑杆，支持面板内实时分层预览。
+  - 支持独立开关**插画装饰**、**纸纹质感**与**界面字体**（内嵌 Nunito Latin 字体或系统原生字体栈），配置按客户端独立保存在本地。
+- 🛡️ **零侵入与离线自包含**
+  - 字体（Nunito WOFF2）与原创 SVG 插画均在构建时内嵌，运行时零外部网络请求。
+  - 严格遵循 DSH 公开契约（覆盖 118 项 ThemeRuntime Token），不触碰私有模块或 DOM Observer，不改写其他插件的自身布局。
 
-## 文档
+---
 
-| 文件 | 内容 |
-| --- | --- |
-| [CHANGELOG.md](CHANGELOG.md) | 各版本对用户可见的变化 |
-| [docs/design.md](docs/design.md) | 色板、形状与反馈、暗色派生、**样式边界**（不得越界的地方） |
-| [docs/compatibility.md](docs/compatibility.md) | DSH 接缝、已审阅属性/变量、工程约束、离屏验收夹具 |
-| [docs/session-list-blank.md](docs/session-list-blank.md) | 侧栏会话区空白一次误判的排查记录（结论：DSH 侧） |
-| [docs/research/theme-settings-survey.md](docs/research/theme-settings-survey.md) | 社区 DSH 主题的设置项调研：常见设置面、面板落位与本主题的取舍 |
-| [docs/desktop.md](docs/desktop.md) | 桌面客户端（Electron）：profile 隔离、安装/验证/回滚、截图与远程调试（CDP/DWM）、何时要重启、怎么对着桌面 runtime 跑夹具 |
-| [docs/web-vs-desktop.md](docs/web-vs-desktop.md) | Web / Windows 桌面端样式差异清单：平台分支、版本差异、历史问题归类与待定项 |
-| [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | 参考项目基线与许可证 |
+## 快速安装
 
-## 稳定边界
+### 1. 下载发行包
 
-插件只使用：
+前往 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases) 下载最新版本的 `.tgz` 安装包与 `SHA256SUMS` 校验文件。
 
-1. `ctx.theme.overrideTokens()` 管理 Light / Dark / System token；
-2. DSH `dsh.client` Module Loader；
-3. `ctx.slots` 的公开品牌 / hero Slot，以及 Plugins 设置区的 `settings.plugins.tab` 入口，同时保留 DSH 官方 Sidebar 根组件；
-4. 插件自己创建并清理的 `<style>`、根属性和原创资源；
-5. 少量有版本测试的语义 `data-*` / ARIA 增强（清单见 [docs/compatibility.md](docs/compatibility.md)）。
+### 2. 安装到 DSH Web Profile
 
-不使用 DSH hash class、私有 `lib/*`、React 私有符号、DOM 扫描、MutationObserver、合成点击或焦点劫持，**也不改写插件自带的布局与几何**（只通过 token 影响颜色）。DSH 升级后缺失的能力只会安全降级，不会阻塞 GUI。
+进入你的 DSH profile 目录，将依赖指向下载的 `.tgz` 包（确保后续 `pnpm install` 不会回退版本）：
 
-## 架构
-
-```text
-ThemeRuntime token layer
-        +
-plugin-owned CSS / fonts / original SVG
-        +
-official Sidebar + public Brand/Hero slots
+```sh
+cd <DSH_Profile_目录>
+pnpm add file:<下载目录>/dsh-theme-animal-island-ui-<version>.tgz
 ```
 
-主题仍叠加在 DSH Light / Dark / System 之上；外观偏好（纸面浓度、diff 配色、插画装饰、纸纹、界面字体）保存在本机 `localStorage`（不同 web/desktop 客户端各自记忆）。
+安装完成后，**完整重启 DSH Web 服务并刷新浏览器页面**。建议同一 profile 下仅启用一个主题插件。
 
-### Host helpers
+### 3. Windows 桌面端（Electron）
 
-需要复用色板或 token 派生逻辑时，可以使用包的独立子路径：
+DSH 桌面客户端使用独立的 `desktop` profile，且需通过客户端内置的 Electron Node 运行时安装。完整安装、HMR 热更新与回滚命令请参阅 **[桌面客户端指南 (docs/desktop.md)](docs/desktop.md)**。
+
+如果是克隆本仓库进行本地构建体验，可直接运行一键同步脚本（同时写入 `web` 与 `desktop` profile）：
+
+```sh
+pnpm install
+pnpm run install:local
+```
+
+---
+
+## 开发与验证
+
+需要 **Node.js ≥ 22.13** 与 **pnpm 11.1.2**。
+
+```sh
+pnpm install
+pnpm run build          # 构建客户端 bundle（lib/）
+pnpm run check          # 统一门禁：站点检查 + 类型 + 构建 + 契约测试 + DSH 兼容性检查
+pnpm run format         # Biome 代码格式化
+pnpm run lint           # Biome 静态检查
+```
+
+**视觉与离屏夹具验收**：
+
+```sh
+pnpm run fixture sidebar-masthead            # 使用真实 DSH CSS 渲染指定夹具（产物位于 artifacts/smoke/）
+pnpm run fixture boot-loading --desktop      # 自动解包桌面端 app.asar 并渲染桌面夹具
+pnpm run check:visual                        # 运行侧栏船票真实 DOM 视觉门禁
+```
+
+作为 NPM 包复用色板或 Token 派生逻辑时，可从独立子路径导入：
 
 ```ts
 import { ANIMAL_ISLAND_PALETTES } from 'dsh-theme-animal-island-ui/palette'
 import { buildTokenOverrides, contrastRatio } from 'dsh-theme-animal-island-ui/tokens'
 ```
 
-## 开发
+---
 
-需要 Node.js 22.13 或更高版本，以及 pnpm 11.1.2。
+## 文档索引
 
-```sh
-pnpm install
-pnpm run format
-pnpm run lint
-pnpm run typecheck
-pnpm run build
-pnpm run install:local   # 当前版本 tarball 同步到 desktop + web profile
-pnpm test
-pnpm run check:compat
-```
+详细的设计规范、兼容契约与排障记录均保存在仓库文档中：
 
-`format` 与 `lint` 使用 Biome，独立执行；统一门禁仍只包含类型、构建、测试和兼容性检查：
+- 🎨 **[设计语言与样式边界 (docs/design.md)](docs/design.md)**：色板规范、明暗派生、组件形状及不可越界的样式禁区
+- 🔌 **[DSH 兼容性契约 (docs/compatibility.md)](docs/compatibility.md)**：已审阅的公开 Slot、`data-*` / ARIA 接缝清单与离屏验收夹具说明
+- 🖥️ **[桌面客户端指南 (docs/desktop.md)](docs/desktop.md)**：Electron profile 隔离机制、安装/回滚、CDP/DWM 截图与远程调试
+- ⚖️ **[Web 与桌面端差异清单 (docs/web-vs-desktop.md)](docs/web-vs-desktop.md)**：跨平台标题栏、折叠侧栏与历史适配问题归档
+- 🔍 **[侧栏会话列表空白排查 (docs/session-list-blank.md)](docs/session-list-blank.md)**：DSH 侧槽位错误边界与快照问题的诊断路径
+- 📊 **[社区主题设置项调研 (docs/research/theme-settings-survey.md)](docs/research/theme-settings-survey.md)**：主题配置面设计与取舍依据
+- 📝 **[版本变更日志 (CHANGELOG.md)](CHANGELOG.md)**：各版本功能演进与修复记录
 
-```sh
-pnpm run check
-```
+---
 
-构建使用 esbuild 生成适配 DSH `factory(require)` 的客户端 bundle，React 由 DSH 平台模块表提供，Nunito WOFF2 与原创 SVG 在构建时内嵌。
+## 贡献与反馈
 
-改动皮肤规则时的验收方式见 [docs/compatibility.md](docs/compatibility.md) 的「离屏验收夹具」：用真实 DSH/插件 CSS 渲染最小夹具，先看 computed style 探针、再看截图。
+非常欢迎提交 Issue 或 Pull Request！
 
-```sh
-pnpm run fixture document-preview-plain    # 渲染 test/fixtures/<名称>，产物在 artifacts/smoke/
-pnpm run fixture document-preview-plain --dsh "C:\path\to\.dsh\app"
-pnpm run fixture boot-loading --desktop    # 自动准备桌面 runtime
-pnpm run check:visual                      # 侧栏船票真实 DOM 视觉门禁
-```
+- 提交代码前请阅读 **[贡献指南 (CONTRIBUTING.md)](CONTRIBUTING.md)**，了解接缝契约登记、离屏夹具验证与发版流程。
+- 参与社区交流请遵守 **[行为准则 (CODE_OF_CONDUCT.md)](CODE_OF_CONDUCT.md)**。
+- 如发现安全隐患，请按 **[安全策略 (SECURITY.md)](SECURITY.md)** 通过私有渠道报告，勿在公开 Issue 中披露。
 
-夹具定义在 `test/fixtures/`，runner 是 `scripts/fixture.mjs`（默认读 `~/.dsh/app`，可用 `DSH_APP`
-覆盖）。桌面夹具可用 `--desktop` 自动准备 runtime，或用 `--asar` 指定 `app.asar`；`fixture.json`
-的 `assertions` 在 headless Chrome 中执行，失败时命令非零退出。
+---
 
-## 贡献
+## 许可证与致谢
 
-- 改动前请读 [CONTRIBUTING.md](CONTRIBUTING.md)：边界约束、验证方式、提交与发布流程；
-- 参与即适用 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)；
-- 安全问题请走 [SECURITY.md](SECURITY.md) 的私有渠道，不要开公开 issue。
+本项目基于 **[MIT License](LICENSE)** 开源发布。
 
-## 安装到 DSH profile
+- **视觉致谢**：设计灵感源自 [guokaigdg/animal-island-ui](https://github.com/guokaigdg/animal-island-ui)（MIT）。本插件未复制其源代码、组件、Logo、字体、插画或完整样式表，所有 DSH Token 映射、React 品牌组件与 SVG 资源均为独立实现。
+- **字体许可**：内嵌的 Nunito 字体遵循 [SIL Open Font License 1.1](licenses/Nunito-OFL.txt)。
+- 完整第三方声明请参阅 **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**。
 
-1. 从 [Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases) 下载最新 `.tgz` 与 `SHA256SUMS`；
-2. 对照 `SHA256SUMS` 校验下载文件；
-3. 把 `.tgz` 装进目标 profile，并让 profile 的依赖指向它（否则下一次 `pnpm install` 会退回旧版）。
+---
 
-```sh
-cd <profile 目录>
-pnpm add file:<下载目录>/dsh-theme-animal-island-ui-<version>.tgz
-```
+## 赞助与支持
 
-之后完整重启 DSH Web 并刷新页面。当前 profile 应只启用一个主题层；Ember Dusk 可保留安装但禁用，用于回滚。
+如果你觉得 `Animal Island UI` 让你的日常工作台更加舒适愉悦，欢迎支持开发者的持续创作与维护：
 
-桌面客户端（Electron）用的是独立的 `desktop` profile，插件不会跨 profile 生效，安装方式也不同 —— 见 [docs/desktop.md](docs/desktop.md)。
-
-## 维护者发布
-
-发布步骤与验证要求见 [CONTRIBUTING.md](CONTRIBUTING.md#发布)。推送 `v<version>` tag 后，GitHub Actions 会重新运行完整门禁、打包、核对版本/CHANGELOG/tarball SHA，并创建 GitHub Release。维护者的本地产物与哈希记录在仓库内 `artifacts/README.md`，不随 tgz 打包；公开下载以 GitHub Release 附件及其 `SHA256SUMS` 为准。**同一版本号不要重复出包。**
-
-## 兼容性
-
-默认检查仓库锁定的 DSH `0.1.5-rc.3`：
-
-```sh
-pnpm run check:compat
-```
-
-检查其他 DSH 安装时显式指定 ThemeRuntime 包目录：
-
-```sh
-node scripts/check-compat.mjs --dsh-package "C:\path\to\@deepseek-ai\dsh-client-ui-theme"
-```
-
-也可设置 `DSH_THEME_PACKAGE`。检查覆盖 ThemeRuntime disposer、全部 token、服务/Provider 顺序、公开 Slot 类型、DOM fallback、Observer 和私有导入。详见 [docs/compatibility.md](docs/compatibility.md) 与 [docs/design.md](docs/design.md)。
-
-侧栏「会话列表」整块空白但有品牌和 `新会话` 时，先按 [docs/session-list-blank.md](docs/session-list-blank.md) 的判定点走一遍：那种现象来自 DSH 自身的槽错误边界与持久化快照形状，不属于皮肤的作用面。
-
-## 许可证与来源
-
-- 作者：Shirolin（[GitHub](https://github.com/Shirolin)），本插件为开源社区项目，与 DeepSeek 官方无隶属关系。
-- 本插件代码：MIT，见 `LICENSE`。
-- Nunito：SIL OFL 1.1，见 `licenses/Nunito-OFL.txt`。
-- Animal Island UI：只参考视觉语言；没有复制其代码、组件、Logo、字体、插画或完整 CSS。参考基线与许可证见 `THIRD_PARTY_NOTICES.md`。
-
-
-
-
-
-
+- ❤️ **爱发电 (Afdian)**：[https://ifdian.net/a/shirolin](https://ifdian.net/a/shirolin)
+- ☕ **Ko-fi**：[https://ko-fi.com/shirolin](https://ko-fi.com/shirolin)
+- ⭐ 也欢迎为本仓库点亮一颗 **Star**，或体验作者的另一个开源项目 **[S1er](https://github.com/Shirolin/s1er)**！

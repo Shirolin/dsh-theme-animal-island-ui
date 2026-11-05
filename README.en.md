@@ -1,98 +1,145 @@
 # DSH Animal Island Theme
 
-[简体中文](README.md) · by [Shirolin](https://github.com/Shirolin)
-
-[Product site](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30-second film: open the island workspace](https://shirolin.github.io/dsh-theme-animal-island-ui/#film)
+[简体中文](README.md) · [Official Site](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30-Second Film](https://shirolin.github.io/dsh-theme-animal-island-ui/#film) · by [Shirolin](https://github.com/Shirolin)
 
 [![check](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml)
 [![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-f3c969.svg)](LICENSE)
 
-An Animal Island–inspired theme plugin for DeepSeek Harness (Web and Windows Desktop), made by Shirolin. It brings a boarding-pass masthead, cream notebook paper, wooden sign badges, and a starry night island into DSH—while keeping every session, setting, workspace, composer, and shortcut working exactly as before.
+`Animal Island UI` is an Animal Island–inspired theme plugin for DeepSeek Harness (Web and Windows Desktop). It brings a boarding-pass masthead, cream notebook paper, wooden sign badges, and a starry night island into your workspace—while keeping every DSH session, setting, composer, layout, and shortcut working as expected.
+
+> [!NOTE]
+> This is an independent community project with no official affiliation with DeepSeek. The theme builds strictly on public ThemeRuntime tokens and slots so DSH upgrades degrade gracefully without breaking the UI.
+
+---
+
+## Preview
 
 ![DSH Animal Island Theme · by Shirolin](docs/screenshots/theme-poster.webp)
 
 <details>
-<summary>Real DSH DOM fixture: day and night</summary>
+<summary>Expand: Day & Night workspace and sidebar (rendered from real DSH DOM fixtures)</summary>
 
-| Day workspace | Night workspace |
+| Day Mode (Light) | Night Mode (Dark) |
 | --- | --- |
 | ![Day workspace](docs/screenshots/workspace-light.webp) | ![Night workspace](docs/screenshots/workspace-dark.webp) |
 | ![Day sidebar](docs/screenshots/sidebar-light.webp) | ![Night sidebar](docs/screenshots/sidebar-dark.webp) |
 
 </details>
 
+---
+
 ## Highlights
 
-- **Day & Night islands**: Polka-dot turf, water ripples, and floating leaves by day; a separately drawn starry night island with moonlight, fireflies, and a deep-teal sidebar after dark;
-- **Public slots & native shell**: A `216×60` boarding-pass masthead, bubble composer, paper-grain dialogs, wooden selection states, and 2px inset mint focus rings that never clip inside scroll views;
-- **In-app appearance tab**: Built into `Settings → Plugins` with three presets (`0.52` / `0.40` / `0.28`), a `0.15–0.60` canvas-strength slider, a live layered preview, and detail switches for canvas illustrations, paper grain, and the UI font (bundled Nunito or the system stack);
-- **Self-contained assets**: Bundled Nunito Latin fonts and original SVG artwork with zero runtime network requests;
-- **Verified compatibility**: Contract tests for 118 ThemeRuntime tokens, public slots, ARIA/data hooks, and headless Chrome DOM fixtures.
+- 🏝️ **Day & Night Islands**
+  - **Daytime**: Polka-dot turf, water ripples, and floating leaves paired with warm, high-contrast cream notebook paper.
+  - **Nighttime**: A custom-drawn starry sky, moonlight, and fireflies with a deep-teal sidebar and warm-brown reading surfaces.
+- 🎫 **Tactile Notebook Craft & Micro-interactions**
+  - **Boarding-Pass Masthead**: A `216×60` cream-and-mint boarding pass with a perforated stub in the public brand slot.
+  - **Wooden Signs & Bubble Composer**: Wooden ribbon headers, sign-badge active states, speech-bubble composer, and paper-grain dialogs.
+  - **Keyboard & Press Feedback**: 3D cream primary buttons, breathing composer glow, and 2px inset mint focus rings that never clip inside scroll views.
+- 🎛️ **In-App Appearance Settings**
+  - Built into **Settings → Plugins → Animal Island Appearance** with three presets (`0.52` / `0.40` / `0.28`), a `0.15–0.60` canvas-strength slider, and a live layered preview.
+  - Individual toggles for **canvas illustrations**, **paper grain**, and **UI font** (bundled Nunito Latin or native system stack), stored locally per client.
+- 🛡️ **Non-Intrusive & Self-Contained**
+  - Bundled Nunito WOFF2 fonts and original SVG artwork with zero runtime network requests.
+  - Verified by contract tests across 118 ThemeRuntime tokens, public slots, ARIA/data hooks, and headless Chrome DOM fixtures.
 
-The poster and fixture screenshots above are rendered from real DSH CSS/DOM fixtures for regression
-checks; the live client is the final word on how it looks. The visual language is inspired by Animal
-Island UI—no upstream code, logo, illustration, font, or complete stylesheet is copied. See
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+---
 
-## Compatibility
+## Quick Start
 
-The development baseline is DSH `0.1.5-rc.3`. The theme deliberately fails soft when a public
-ThemeRuntime capability is unavailable. Compatibility details and the reviewed seam list live in
-[docs/compatibility.md](docs/compatibility.md).
+### 1. Download the Release Tarball
 
-## Install
+Download the latest `.tgz` package and `SHA256SUMS` from [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases) and verify the checksum.
 
-1. Download the latest `.tgz` and `SHA256SUMS` from
-   [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases).
-2. Verify the tarball against `SHA256SUMS`.
-3. Install it into the target DSH profile:
+### 2. Install into DSH Web Profile
+
+Install the tarball into your target DSH profile directory:
 
 ```sh
-cd <profile-directory>
+cd <dsh-profile-directory>
 pnpm add file:<download-directory>/dsh-theme-animal-island-ui-<version>.tgz
 ```
 
-Restart DSH completely after installation. Web and Desktop use different profiles; Desktop setup is
-documented in [docs/desktop.md](docs/desktop.md).
+Restart DSH Web completely and refresh the browser. Only one theme plugin should be active in a profile at a time.
 
-## Development
+### 3. Windows Desktop (Electron)
 
-Requirements: Node.js 22.13 or newer and pnpm 11.1.2.
+DSH Desktop uses an isolated `desktop` profile managed by its bundled Electron runtime. See **[docs/desktop.md](docs/desktop.md)** for full desktop installation, HMR update, and rollback instructions.
+
+If you have cloned this repository locally, you can install into both `web` and `desktop` profiles with one command:
 
 ```sh
 pnpm install
-pnpm run format:check
-pnpm run lint
-pnpm run check
+pnpm run install:local
 ```
 
-`pnpm run check` covers type checking, build, contract tests, and the pinned DSH compatibility
-check. Visual fixtures use real DSH CSS and DOM shapes:
+---
+
+## Development
+
+Requires **Node.js ≥ 22.13** and **pnpm 11.1.2**.
 
 ```sh
-pnpm run fixture sidebar-masthead
-pnpm run fixture boot-loading --desktop
+pnpm install
+pnpm run build          # Build client bundle into lib/
+pnpm run check          # Full gate: site check + typecheck + build + tests + DSH compat check
+pnpm run format:check   # Biome formatting check
+pnpm run lint           # Biome static analysis
 ```
+
+**Visual & DOM Fixture Verification**:
+
+```sh
+pnpm run fixture sidebar-masthead            # Render fixture with real DSH CSS into artifacts/smoke/
+pnpm run fixture boot-loading --desktop      # Unpack desktop app.asar automatically and run fixture
+pnpm run check:visual                        # Visual regression gate for the boarding-pass masthead
+```
+
+Host helpers for palette and token derivation are exported via subpath imports:
+
+```ts
+import { ANIMAL_ISLAND_PALETTES } from 'dsh-theme-animal-island-ui/palette'
+import { buildTokenOverrides, contrastRatio } from 'dsh-theme-animal-island-ui/tokens'
+```
+
+---
 
 ## Documentation
 
-The detailed technical documentation is currently written in Chinese:
+Detailed technical documentation (written in Chinese):
 
-- [Design language and style boundaries](docs/design.md)
-- [DSH compatibility contract](docs/compatibility.md)
-- [Desktop installation, debugging, and rollback](docs/desktop.md)
-- [Web and Desktop differences](docs/web-vs-desktop.md)
-- [Community theme settings survey](docs/research/theme-settings-survey.md)
-- [Changelog](CHANGELOG.md)
+- 🎨 **[Design Language & Style Boundaries](docs/design.md)** (`docs/design.md`)
+- 🔌 **[DSH Compatibility Contract](docs/compatibility.md)** (`docs/compatibility.md`)
+- 🖥️ **[Desktop Installation, Debugging & Rollback](docs/desktop.md)** (`docs/desktop.md`)
+- ⚖️ **[Web vs. Desktop Differences](docs/web-vs-desktop.md)** (`docs/web-vs-desktop.md`)
+- 🔍 **[Sidebar Blank Session List Troubleshooting](docs/session-list-blank.md)** (`docs/session-list-blank.md`)
+- 📊 **[Community Theme Settings Survey](docs/research/theme-settings-survey.md)** (`docs/research/theme-settings-survey.md`)
+- 📝 **[Changelog](CHANGELOG.md)** (`CHANGELOG.md`)
 
-## Contributing and security
+---
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Report security
-issues privately through [SECURITY.md](SECURITY.md), not in a public issue.
+## Contributing & Security
 
-## License
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** and **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)**. Please report security vulnerabilities privately through **[SECURITY.md](SECURITY.md)** rather than in public issues.
 
-MIT. Made by [Shirolin](https://github.com/Shirolin); this is a community project with no official
-affiliation with DeepSeek. Bundled Nunito font files remain under SIL OFL 1.1 as recorded in
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+---
+
+## License & Credits
+
+Released under the **[MIT License](LICENSE)**.
+
+- **Visual Inspiration**: Inspired by [guokaigdg/animal-island-ui](https://github.com/guokaigdg/animal-island-ui) (MIT). No upstream code, logo, illustration, font, or stylesheet was copied.
+- **Bundled Font**: Nunito is licensed under the [SIL Open Font License 1.1](licenses/Nunito-OFL.txt).
+- See **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)** for complete attribution details.
+
+---
+
+## Sponsor & Support
+
+If `Animal Island UI` makes your daily workspace more enjoyable, consider supporting ongoing maintenance:
+
+- ❤️ **Afdian (爱发电)**: [https://ifdian.net/a/shirolin](https://ifdian.net/a/shirolin)
+- ☕ **Ko-fi**: [https://ko-fi.com/shirolin](https://ko-fi.com/shirolin)
+- ⭐ Star this repository on GitHub, or check out the author's other project **[S1er](https://github.com/Shirolin/s1er)**!
