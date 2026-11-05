@@ -815,6 +815,18 @@ code {
   font-weight: 700;
 }
 
+.footer-credits {
+  margin-top: 1rem;
+  color: var(--night-ink);
+  font-size: var(--font-small);
+  font-weight: 700;
+}
+
+.footer-credits a {
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.24em;
+}
+
 .footer-legal {
   margin-top: 1rem;
   color: var(--night-muted);

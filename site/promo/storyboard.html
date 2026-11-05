@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Animal Island UI 30 秒产品宣传片制作分镜：撕票、完整工作台、外观、夜岛、代码与登岛收束。"
+      content="Animal Island UI 30 秒实机宣传片的制作与分镜解析：撕票登岛、完整工作台、外观微调、夜岛与代码阅读，作者 Shirolin。"
     />
+    <meta name="author" content="Shirolin" />
     <meta name="theme-color" content="#dcebdc" />
-    <title>Animal Island UI · 30 秒宣传片分镜</title>
+    <title>Animal Island UI · 30 秒实机宣传片分镜（by Shirolin）</title>
     <link rel="icon" href="../assets/loading-leaf.svg" type="image/svg+xml" />
     <style>
       @font-face {
@@ -115,10 +116,10 @@
 
       h1 {
         margin: 0;
-        font-size: clamp(58px, 7vw, 108px);
+        font-size: clamp(42px, 4.6vw, 62px);
         font-weight: 900;
-        letter-spacing: -0.075em;
-        line-height: 0.98;
+        letter-spacing: -0.06em;
+        line-height: 1.04;
       }
 
       .lede {
@@ -481,7 +482,7 @@
     <header class="page">
       <a class="brand" href="../index.html" aria-label="返回 Animal Island UI 产品页">
         <img src="../assets/loading-leaf.svg" alt="" />
-        <span>Animal Island UI</span>
+        <span>Animal Island UI · by Shirolin</span>
       </a>
       <nav aria-label="分镜页导航">
         <a href="../index.html#film">产品页短片</a>
@@ -492,9 +493,9 @@
     <main>
       <section class="hero page">
         <div class="reveal">
-          <h1>从一张船票<br />登上工作台</h1>
+          <h1>30 秒实机宣传片<br />制作与分镜解析</h1>
           <p class="lede">
-            不是六张截图的自动轮播。整支片只讲一次连续登岛：撕口打开真实 DSH，镜头从完整窗口进入细节，再从日间切到夜岛。每一帧由代码生成，界面保持原比例。
+            拒绝拿几张静态截图拼凑轮播。整支短片按真实使用流程一镜到底：撕开渡岛船票进入 DSH，从日常提问、调节外观浓度，一路拍到夜间星空与代码高亮。每一帧均由真实 DSH 界面 4K 超采样渲染。
           </p>
           <a class="primary-action" href="#timeline-title">看七个连续节拍</a>
         </div>
@@ -525,11 +526,11 @@
           <li class="beat reveal">
             <div class="beat-index"><span>00:00–00:03</span></div>
             <figure>
-              <img src="storyboard/01-boarding.webp" alt="撕纸微距与渡岛船票上的“把 DSH 变成一座岛”标题" />
+              <img src="storyboard/01-boarding.webp" alt="开场标题「DSH 动森主题」与渡岛船票同框" />
             </figure>
             <div class="beat-copy">
-              <h3>船票</h3>
-              <p>以纸纤维、侧光和细小尘埃建立触感。标题从左下方进入，船票作为真正的登岛物件，而不是装饰卡片。</p>
+              <h3>开场</h3>
+              <p>开场三秒直接点明身份：巨大的「DSH 动森主题」标题与渡岛船票同时出现，奶油手账纸、日夜双景与原生无损一次性说清，不让观众猜。</p>
             </div>
           </li>
 
@@ -551,7 +552,7 @@
             </figure>
             <div class="beat-copy">
               <h3>工作台</h3>
-              <p>先给完整窗口，再推近原生输入区：点进输入框逐字输入问题并点击发送，等“深度求索中”走完，完整回答落回同一个会话。界面只在裁剪与平移里运动，不做倾斜或透视。</p>
+              <p>先给完整窗口，再推近原生输入区：点进输入框逐字输入问题并点击发送，等“深度求索中”走完，完整回答落回同一个会话。熟悉的操作全在原位，只是换上了温柔的手账纸感。</p>
             </div>
           </li>
 
@@ -562,7 +563,7 @@
             </figure>
             <div class="beat-copy">
               <h3>外观</h3>
-              <p>三档预设和浓度滑杆成为绝对主角：滑杆被真实拖拽到 0.28。镜头从整组设置推进到控件细节，强调主题生长在 DSH 原生路径里。</p>
+              <p>三档预设和浓度滑杆成为绝对主角：滑杆被真实拖拽到 0.28。纸白、均衡、海岛三档随手切换，背景浓度与纸纹插画都能在设置里微调。</p>
             </div>
           </li>
 
@@ -573,7 +574,7 @@
             </figure>
             <div class="beat-copy">
               <h3>夜岛</h3>
-              <p>纸叶完成日夜匹配剪辑。夜间不是反色，而是另一套材质、月光与状态色；再从动森外观点进插件列表，换肤覆盖整个设置页，而不只是一个面板。</p>
+              <p>纸叶完成日夜匹配剪辑。夜间不是反色，而是独立绘制的星空与流萤；深海蓝侧栏配暖棕纸面，再从动森外观点进插件列表，换肤覆盖整个设置页。</p>
             </div>
           </li>
 
@@ -584,18 +585,18 @@
             </figure>
             <div class="beat-copy">
               <h3>代码</h3>
-              <p>夜色里的真实会话：表格、行内代码与大段 TypeScript 代码块同样保留清晰对比。推近后语法色与纸面纹理同时成立，读代码不靠反色硬撑。</p>
+              <p>夜色里的真实会话：表格、行内代码与大段 TypeScript 代码块同样保留清晰对比。深棕代码块单独校准高亮，长对话与大段代码日夜都好读。</p>
             </div>
           </li>
 
           <li class="beat reveal">
             <div class="beat-index"><span>00:24.5–00:30</span></div>
             <figure>
-              <img src="storyboard/07-arrival.webp" alt="日岛在暮色中转为夜岛，并显示“把工作台，变成一座岛”" />
+              <img src="storyboard/07-arrival.webp" alt="日岛在暮色中转为夜岛，并显示「DSH 动森主题 · by Shirolin」" />
             </figure>
             <div class="beat-copy">
               <h3>上岸</h3>
-              <p>界面淡出，日夜双岛接棒。最后五秒只留标题、品牌、开源仓库地址与余韵，不放安装步骤，让成片有完整的结束感。</p>
+              <p>界面淡出，日夜双岛接棒。最后五秒定格「DSH 动森主题 · by Shirolin」、MIT 许可证与开源仓库地址，不放安装步骤，让成片有完整的结束感。</p>
             </div>
           </li>
         </ol>
@@ -607,7 +608,7 @@
       </section>
     </main>
 
-    <footer class="page">Interface rendered from project-owned DSH fixtures · Paper atmosphere generated and art-directed for this project · Score directed for this film, effects from CC0 recordings</footer>
+    <footer class="page">作者：Shirolin · 界面由本项目真实 DSH 夹具实机渲染 · 海岛纸艺氛围为本项目原创绘制 · 配乐为短片定制编曲，音效来自 CC0 录音素材</footer>
     <script>
       const revealItems = [...document.querySelectorAll(".reveal")];
       const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
