@@ -226,23 +226,27 @@ export function AppearanceTab({ appearance }: AppearanceTabProps): React.JSX.Ele
       </fieldset>
 
       <div className="animal-island-appearance__actions">
-        <button type="button" className="animal-island-appearance__reset" aria-label="恢复全部外观设置" onClick={resetAll}>
-          <span className="animal-island-appearance__reset-icon" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10" />
-              <path d="M4.7 2.7v3.1h3.1" />
-            </svg>
-          </span>
-          <span className="animal-island-appearance__reset-copy">
-            <span>全部恢复默认</span>
-            <small>均衡 0.40</small>
-          </span>
-        </button>
+        <div className="animal-island-appearance__reset-card">
+          <div className="animal-island-appearance__reset-info">
+            <span className="animal-island-appearance__reset-title">重置所有外观偏好</span>
+            <p className="animal-island-appearance__note">
+              设置卡片本身是固定纸面，滑杆调整的是它背后的画布；偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。
+            </p>
+          </div>
+          <button type="button" className="animal-island-appearance__reset" aria-label="恢复全部外观设置" onClick={resetAll}>
+            <span className="animal-island-appearance__reset-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10" />
+                <path d="M4.7 2.7v3.1h3.1" />
+              </svg>
+            </span>
+            <span className="animal-island-appearance__reset-copy">
+              <span>全部恢复默认</span>
+              <small>均衡 0.40</small>
+            </span>
+          </button>
+        </div>
       </div>
-
-      <p className="animal-island-appearance__note">
-        设置卡片本身是固定纸面，滑杆调整的是它背后的画布，上方「画布预览」会实时同步；偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。
-      </p>
 
       <footer className="animal-island-appearance__about">
         <div className="animal-island-appearance__about-meta">
