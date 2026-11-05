@@ -4,7 +4,7 @@
 
 ```text
 release-v0.3.35/dsh-theme-animal-island-ui-0.3.35.tgz
-SHA-256: 2828496BFEB65C48938720BA7EB9D867B73C7DBAED4DD2C66903C936FCF0576D
+SHA-256: DD0BF964B113A3A1DB50018B1E2ED30F364AA0D9077CDA150A299A22F7FB47E5
 ```
 
 规范产物由 `pnpm pack --pack-destination artifacts/release-v0.3.35` 生成，`prepack` 会先清空并重建 `lib`。重新出包后请同步更新上面的 SHA；同一版本号不要重复出包。
