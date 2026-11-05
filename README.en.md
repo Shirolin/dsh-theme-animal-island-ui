@@ -130,9 +130,9 @@ See **[CONTRIBUTING.md](CONTRIBUTING.md)** and **[CODE_OF_CONDUCT.md](CODE_OF_CO
 
 Released under the **[MIT License](LICENSE)**.
 
-- **Visual Inspiration**: Inspired by [guokaigdg/animal-island-ui](https://github.com/guokaigdg/animal-island-ui) (MIT). No upstream code, logo, illustration, font, or stylesheet was copied.
-- **Bundled Font**: Nunito is licensed under the [SIL Open Font License 1.1](licenses/Nunito-OFL.txt).
-- See **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)** for complete attribution details.
+- 🎨 **Visual Attribution & Thanks**: Special thanks to [@guokaigdg](https://github.com/guokaigdg) for creating the wonderful open-source library [animal-island-ui](https://github.com/guokaigdg/animal-island-ui) (MIT)! This theme is deeply inspired by its Animal Island stationery visual language and tactile micro-interactions.
+- 🔤 **Bundled Font**: Nunito is licensed under the [SIL Open Font License 1.1](licenses/Nunito-OFL.txt).
+- ⚖️ **Independent Implementation**: This project is built independently from scratch using DSH public ThemeRuntime tokens and slots without copying upstream project code or proprietary assets. Full attribution details live in **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**.
 
 ---
 

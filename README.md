@@ -134,9 +134,9 @@ import { buildTokenOverrides, contrastRatio } from 'dsh-theme-animal-island-ui/t
 
 本项目基于 **[MIT License](LICENSE)** 开源发布。
 
-- **视觉致谢**：设计灵感源自 [guokaigdg/animal-island-ui](https://github.com/guokaigdg/animal-island-ui)（MIT）。本插件未复制其源代码、组件、Logo、字体、插画或完整样式表，所有 DSH Token 映射、React 品牌组件与 SVG 资源均为独立实现。
-- **字体许可**：内嵌的 Nunito 字体遵循 [SIL Open Font License 1.1](licenses/Nunito-OFL.txt)。
-- 完整第三方声明请参阅 **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**。
+- 🎨 **视觉致谢**：衷心感谢 [@guokaigdg](https://github.com/guokaigdg) 创作的优秀开源组件库 [animal-island-ui](https://github.com/guokaigdg/animal-island-ui)（MIT）！本项目深受其动森手账设计语言与精致交互节奏的启发。
+- 🔤 **字体许可**：内嵌的 Nunito 字体遵循 [SIL Open Font License 1.1](licenses/Nunito-OFL.txt)。
+- ⚖️ **独立实现说明**：本项目基于 DeepSeek Harness 的公开扩展机制独立编码构建，未复制上游工程代码与专有资产，完整第三方声明详见 **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**。
 
 ---
 
