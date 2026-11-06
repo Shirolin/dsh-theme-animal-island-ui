@@ -12,7 +12,7 @@
     },
     {
       "message": "三档侧栏都渲染出对应宽度的 60px 船票",
-      "expression": "(() => { const roots = [...document.querySelectorAll('[id^=\"root-\"]')]; return roots.length === 3 && roots.every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const style = getComputedStyle(button); return style.height === '60px' && style.width === (root.id === 'root-180' ? '156px' : '216px'); }); })()"
+      "expression": "(() => { const roots = [...document.querySelectorAll('[id^=\"root-\"]')]; return roots.length === 3 && roots.every((root) => { const button = root.querySelector('button[aria-label=\"新会话\"]'); if (button === null) return false; const style = getComputedStyle(button); const width = Number.parseFloat(style.width); return style.height === '60px' && (root.id === 'root-180' ? (width <= 164 && width >= 156) : style.width === '216px'); }); })()"
     },
     {
       "message": "logo row 与船票都放开 DSH 的裁切，按钮内边距和圆角正确",

@@ -1,15 +1,18 @@
 # DSH 动森主题 · Animal Island UI
 
-[English](README.en.md) · [官方宣传站](https://shirolin.github.io/dsh-theme-animal-island-ui/) · [30 秒实机短片](https://shirolin.github.io/dsh-theme-animal-island-ui/#film) · 作者：[Shirolin](https://github.com/Shirolin)
+[English](README.en.md) · [宣传页与实机演示](https://shirolin.github.io/dsh-theme-animal-island-ui/) · 作者：[Shirolin](https://github.com/Shirolin)
 
 [![check](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/Shirolin/dsh-theme-animal-island-ui/actions/workflows/check.yml)
+[![npm](https://img.shields.io/npm/v/dsh-theme-animal-island-ui)](https://www.npmjs.com/package/dsh-theme-animal-island-ui)
 [![release](https://img.shields.io/github/v/release/Shirolin/dsh-theme-animal-island-ui?display_name=tag)](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-f3c969.svg)](LICENSE)
 
-`Animal Island UI` 是为 DeepSeek Harness（Web 与 Windows 桌面端）打造的动森风主题插件。它将渡岛船票品牌区、奶油手账纸、木牌选中态与夜岛星空带入工作台，还原 [animal-island-ui](https://guokaigdg.github.io/animal-island-ui/#/skill) 的手账质感，同时完整保留 DSH 的所有原生交互、布局与快捷键。
+`Animal Island UI` 是 DeepSeek Harness（Web 与 Windows 桌面端）的主题插件，视觉参考自开源组件库 [animal-island-ui](https://github.com/guokaigdg/animal-island-ui)。
+
+编码工作台需要长时间盯屏读代码、看 diff，直接照搬高饱和度的游戏配色很容易视觉疲劳。因此这套主题把重心放在了「纸面」与「边界」上：对话区与代码区采用低对比的奶油手账纸和暖棕木色，让阅读面安静下来；而在侧栏船票、标题木牌、输入框气泡这些外围界面上，保留一点手账与海岛的小巧思。所有改动都停留在样式与公开插槽层，不改动 DSH 原有的布局、快捷键和交互习惯。
 
 > [!NOTE]
-> 本项目为开源社区插件，与 DeepSeek 官方无隶属、授权或背书关系。主题仅作用于 DSH 公开的 ThemeRuntime Token 与 Slot 接缝，不劫持私有组件，DSH 升级后可安全降级。
+> 本项目为开源社区插件，与 DeepSeek 官方及 Nintendo（任天堂）无任何隶属、授权或背书关系。主题仅消费 DSH 公开的 ThemeRuntime Token 与 Slot 接缝，不包含任何受版权保护的游戏专有资产；DSH 升级后若接缝变更可自动回退到原生界面。
 
 ---
 
@@ -18,7 +21,7 @@
 ![DSH 动森主题 · by Shirolin](docs/screenshots/theme-poster.webp)
 
 <details>
-<summary>展开查看：日间 / 夜间工作台与侧栏实拍（真实 DSH DOM 夹具）</summary>
+<summary>展开查看：日间 / 夜间工作台与侧栏实拍（基于真实 DSH DOM 夹具渲染）</summary>
 
 | 日间模式 (Light) | 夜间模式 (Dark) |
 | --- | --- |
@@ -29,46 +32,57 @@
 
 ---
 
-## 核心特性
+## 设计与实现机制
 
-- 🏝️ **昼夜双岛画布**
-  - **日间**：双层波点草坪、水纹底浪与漂浮叶片，搭配高可读性的奶油白纸面。
-  - **夜间**：独立绘制的星空、月光与萤火虫微光，深青侧栏配暖棕内容纸面，久看不刺眼。
-- 🎫 **手账质感与微交互**
-  - **渡岛船票品牌区**：`216×60` 奶油纸面 + 薄荷票根 + 虚线撕口，替代单调顶栏。
-  - **木牌与气泡容器**：木质标题绶带、木牌选中态、对话气泡输入框与纸纹弹窗。
-  - **触感反馈**：3D 奶油主按钮按压回弹、输入气泡呼吸发光、2px 内嵌薄荷键盘焦点环（滚动容器内不裁切）。
-- 🎛️ **应用内外观设置**
-  - 在「**设置 → 插件 → 动森外观**」中提供「纸白 / 均衡 / 海岛」三档预设与 `0.15–0.60` 画布浓度滑杆，支持面板内实时分层预览。
-  - 支持独立开关**插画装饰**、**纸纹质感**与**界面字体**（内嵌 Nunito Latin 字体或系统原生字体栈），配置按客户端独立保存在本地。
-- 🛡️ **零侵入与离线自包含**
-  - 字体（Nunito WOFF2）与原创 SVG 插画均在构建时内嵌，运行时零外部网络请求。
-  - 严格遵循 DSH 公开契约（覆盖 118 项 ThemeRuntime Token），不触碰私有模块或 DOM Observer，不改写其他插件的自身布局。
+- **昼夜两套画布**
+  - **日间**：双层波点草坪、底部波浪与低透明度漂浮叶片，主内容区铺设半透明奶油白纸面。
+  - **夜间**：独立调校的深色方案。深青色夜空与星点画布，配冷色侧栏与暖棕内容纸面，代码块采用深棕底色。
+- **手账部件与交互细节**
+  - **渡岛船票品牌区**：将侧栏顶部 `24px` 的新会话入口扩展为 `216×60` 的船票样式（奶油纸面、薄荷票根与打孔撕口）。
+  - **木牌与对话气泡**：顶部路径采用木质绶带，侧栏选中项改为竖向木纹牌，底部输入框加了对话气泡尾标与纸纹。
+  - **焦点与按压反馈**：主按钮带实体底边与按压位移；键盘焦点环改为 `2px` 内嵌薄荷环，避免在 DSH 的滚动容器边缘被裁切。
+- **应用内外观设置**
+  - 在「**设置 → 插件 → 动森外观**」中提供「纸白 / 均衡 / 海岛」三档预设与 `0.15–0.60` 画布浓度滑杆，带实时分层预览。
+  - 可单独开关**插画装饰**、**纸纹颗粒**、**浅色 Diff 语法配色**（暖色 / DSH 原生）与**界面字体**（Nunito 拉丁字体 / 系统默认字体）。偏好保存在当前客户端的 `localStorage` 中。
+- **实现边界**
+  - 覆盖 118 项 `ThemeRuntime` Token 与 4 个公开 Slot，不使用 DOM 轮询、`MutationObserver` 或构建期随机哈希类名。
+  - 字体（Nunito WOFF2）与原创 SVG 插画在构建期直接内嵌进 bundle，运行时不发起外部网络请求。
 
 ---
 
-## 快速安装
+## 安装
 
-### 1. 下载发行包
+建议同一 profile 下只启用一个主题插件。
 
-前往 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases) 下载最新版本的 `.tgz` 安装包与 `SHA256SUMS` 校验文件。
+### 方式一：插件市场安装
 
-### 2. 安装到 DSH Web Profile
+在 DSH 内打开「**设置 → 插件**」，搜索 **`Animal Island UI`** 或 **`动森`** 安装，重启应用生效。
 
-进入你的 DSH profile 目录，将依赖指向下载的 `.tgz` 包（确保后续 `pnpm install` 不会回退版本）：
+### 方式二：通过 NPM 安装到 Profile
+
+进入你的 DSH profile 目录直接安装：
+
+```sh
+cd <DSH_Profile_目录>
+pnpm add dsh-theme-animal-island-ui
+```
+
+安装后**完整重启 DSH 服务并刷新页面**。
+
+### 方式三：离线 `.tgz` 安装包
+
+从 [GitHub Releases](https://github.com/Shirolin/dsh-theme-animal-island-ui/releases) 下载对应版本的 `.tgz` 与 `SHA256SUMS`：
 
 ```sh
 cd <DSH_Profile_目录>
 pnpm add file:<下载目录>/dsh-theme-animal-island-ui-<version>.tgz
 ```
 
-安装完成后，**完整重启 DSH Web 服务并刷新浏览器页面**。建议同一 profile 下仅启用一个主题插件。
+### Windows 桌面端（Electron）
 
-### 3. Windows 桌面端（Electron）
+DSH 桌面客户端使用独立的 `desktop` profile，并依赖客户端内置的 Electron Node 运行时执行安装。详细步骤、热更新与回滚方式见 [桌面客户端指南 (docs/desktop.md)](docs/desktop.md)。
 
-DSH 桌面客户端使用独立的 `desktop` profile，且需通过客户端内置的 Electron Node 运行时安装。完整安装、HMR 热更新与回滚命令请参阅 **[桌面客户端指南 (docs/desktop.md)](docs/desktop.md)**。
-
-如果是克隆本仓库进行本地构建体验，可直接运行一键同步脚本（同时写入 `web` 与 `desktop` profile）：
+如果已克隆本仓库，可用脚本一键打包并同步到本机的 `web` 与 `desktop` 两个 profile：
 
 ```sh
 pnpm install
@@ -79,25 +93,25 @@ pnpm run install:local
 
 ## 开发与验证
 
-需要 **Node.js ≥ 22.13** 与 **pnpm 11.1.2**。
+环境要求：**Node.js ≥ 22.13**，**pnpm 11.1.2**。
 
 ```sh
 pnpm install
-pnpm run build          # 构建客户端 bundle（lib/）
-pnpm run check          # 统一门禁：站点检查 + 类型 + 构建 + 契约测试 + DSH 兼容性检查
-pnpm run format         # Biome 代码格式化
+pnpm run build          # 构建客户端 bundle 与类型声明（输出至 lib/）
+pnpm run check          # 完整门禁：站点检查 + 类型 + 构建 + 单元/契约测试 + DSH 兼容性核对
+pnpm run format         # Biome 格式化
 pnpm run lint           # Biome 静态检查
 ```
 
-**视觉与离屏夹具验收**：
+**离屏夹具与视觉验证**（抽取本机 DSH 真实 CSS 渲染 DOM 并执行浏览器内断言，截图输出至 `artifacts/smoke/`）：
 
 ```sh
-pnpm run fixture sidebar-masthead            # 使用真实 DSH CSS 渲染指定夹具（产物位于 artifacts/smoke/）
-pnpm run fixture boot-loading --desktop      # 自动解包桌面端 app.asar 并渲染桌面夹具
-pnpm run check:visual                        # 运行侧栏船票真实 DOM 视觉门禁
+pnpm run fixture sidebar-masthead            # 渲染指定夹具（自动探测本机 Web 或桌面端 DSH 运行时）
+pnpm run fixture boot-loading --desktop      # 显式使用桌面端 app.asar 运行时渲染
+pnpm run check:visual                        # 运行侧栏船票的 DOM 几何与样式门禁
 ```
 
-作为 NPM 包复用色板或 Token 派生逻辑时，可从独立子路径导入：
+**子路径导出**（供外部脚本或工具直接复用色板与对比度计算）：
 
 ```ts
 import { ANIMAL_ISLAND_PALETTES } from 'dsh-theme-animal-island-ui/palette'
@@ -106,44 +120,42 @@ import { buildTokenOverrides, contrastRatio } from 'dsh-theme-animal-island-ui/t
 
 ---
 
-## 文档索引
+## 文档导航
 
-详细的设计规范、兼容契约与排障记录均保存在仓库文档中：
+仓库内维护了完整的设计约束、接缝契约与排障记录：
 
-- 🎨 **[设计语言与样式边界 (docs/design.md)](docs/design.md)**：色板规范、明暗派生、组件形状及不可越界的样式禁区
-- 🔌 **[DSH 兼容性契约 (docs/compatibility.md)](docs/compatibility.md)**：已审阅的公开 Slot、`data-*` / ARIA 接缝清单与离屏验收夹具说明
-- 🖥️ **[桌面客户端指南 (docs/desktop.md)](docs/desktop.md)**：Electron profile 隔离机制、安装/回滚、CDP/DWM 截图与远程调试
-- ⚖️ **[Web 与桌面端差异清单 (docs/web-vs-desktop.md)](docs/web-vs-desktop.md)**：跨平台标题栏、折叠侧栏与历史适配问题归档
-- 🔍 **[侧栏会话列表空白排查 (docs/session-list-blank.md)](docs/session-list-blank.md)**：DSH 侧槽位错误边界与快照问题的诊断路径
-- 📊 **[社区主题设置项调研 (docs/research/theme-settings-survey.md)](docs/research/theme-settings-survey.md)**：主题配置面设计与取舍依据
-- 📝 **[版本变更日志 (CHANGELOG.md)](CHANGELOG.md)**：各版本功能演进与修复记录
+- [设计语言与样式边界 (docs/design.md)](docs/design.md)：色板表、明暗派生关系、组件造型与越界案例归档
+- [DSH 兼容性契约 (docs/compatibility.md)](docs/compatibility.md)：公开 Slot、`data-*` / ARIA 接缝清单与离屏夹具用法
+- [桌面客户端指南 (docs/desktop.md)](docs/desktop.md)：Electron profile 隔离机制、安装回滚、CDP / DWM 截图方案
+- [Web 与桌面端差异清单 (docs/web-vs-desktop.md)](docs/web-vs-desktop.md)：跨平台标题栏、折叠侧栏与历史适配问题对照
+- [侧栏会话列表空白排查 (docs/session-list-blank.md)](docs/session-list-blank.md)：一次 DSH 侧持久化快照引发槽位崩溃的诊断记录
+- [社区主题设置项调研 (docs/research/theme-settings-survey.md)](docs/research/theme-settings-survey.md)：12 款社区主题的配置面梳理与本项目的取舍依据
+- [版本变更日志 (CHANGELOG.md)](CHANGELOG.md)：各版本演进与修复记录
 
 ---
 
-## 贡献与反馈
+## 贡献与问题反馈
 
-非常欢迎提交 Issue 或 Pull Request！
-
-- 提交代码前请阅读 **[贡献指南 (CONTRIBUTING.md)](CONTRIBUTING.md)**，了解接缝契约登记、离屏夹具验证与发版流程。
-- 参与社区交流请遵守 **[行为准则 (CODE_OF_CONDUCT.md)](CODE_OF_CONDUCT.md)**。
-- 如发现安全隐患，请按 **[安全策略 (SECURITY.md)](SECURITY.md)** 通过私有渠道报告，勿在公开 Issue 中披露。
+- 参与开发前请先阅读 [贡献指南 (CONTRIBUTING.md)](CONTRIBUTING.md)，了解样式禁区、接缝契约登记与发版流程。
+- 社区交流请遵守 [行为准则 (CODE_OF_CONDUCT.md)](CODE_OF_CONDUCT.md)。
+- 发现安全问题请按 [安全策略 (SECURITY.md)](SECURITY.md) 通过私有渠道联系，勿在公开 Issue 中披露。
 
 ---
 
 ## 许可证与致谢
 
-本项目基于 **[MIT License](LICENSE)** 开源发布。
+本项目采用 [MIT License](LICENSE) 许可发布。
 
-- 🎨 **视觉致谢**：衷心感谢 [@guokaigdg](https://github.com/guokaigdg) 创作的优秀开源组件库 [animal-island-ui](https://github.com/guokaigdg/animal-island-ui)（MIT）！本项目深受其动森手账设计语言与精致交互节奏的启发。
-- 🔤 **字体许可**：内嵌的 Nunito 字体遵循 [SIL Open Font License 1.1](licenses/Nunito-OFL.txt)。
-- ⚖️ **独立实现说明**：本项目基于 DeepSeek Harness 的公开扩展机制独立编码构建，未复制上游工程代码与专有资产，完整第三方声明详见 **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**。
+- **视觉启发**：感谢 [@guokaigdg](https://github.com/guokaigdg) 开源的 [animal-island-ui](https://github.com/guokaigdg/animal-island-ui)（MIT），本主题的色彩关系与手账组件造型受其启发。
+- **字体许可**：内嵌的 Nunito 字体遵循 [SIL Open Font License 1.1](licenses/Nunito-OFL.txt)。
+- **资产声明**：本项目所有代码、SVG 矢量图形与音效均基于 DSH 公开扩展接口独立编写，未复制上游代码或第三方专有资产，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ---
 
-## 赞助与支持
+## 支持与相关项目
 
-如果你觉得 `Animal Island UI` 让你的日常工作台更加舒适愉悦，欢迎支持开发者的持续创作与维护：
+如果这个主题让你的日常编码环境顺眼了一些，欢迎点亮一颗 **Star**，或通过以下方式支持维护：
 
-- ❤️ **爱发电 (Afdian)**：[https://ifdian.net/a/shirolin](https://ifdian.net/a/shirolin)
-- ☕ **Ko-fi**：[https://ko-fi.com/shirolin](https://ko-fi.com/shirolin)
-- ⭐ 也欢迎为本仓库点亮一颗 **Star**，或体验作者的另一个开源项目 **[S1er](https://github.com/Shirolin/s1er)**！
+- **爱发电 (Afdian)**：[https://ifdian.net/a/shirolin](https://ifdian.net/a/shirolin)
+- **Ko-fi**：[https://ko-fi.com/shirolin](https://ko-fi.com/shirolin)
+- **作者的其他开源项目**：[PostPress（印推）](https://github.com/Shirolin/postpress) —— 将 X（Twitter）推文与长串排版为纸质卡片的浏览器扩展。

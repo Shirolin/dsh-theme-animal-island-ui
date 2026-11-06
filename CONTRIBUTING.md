@@ -1,111 +1,81 @@
 # 贡献指南
 
-感谢你愿意改进这个主题。本文件说明本项目的开发方式、不可越界的约束，以及改动如何被验证。
+感谢你参与改进这个主题。本文说明项目的本地开发流程、样式边界约束以及改动验证方式。
 
-## 环境
+## 开发环境
 
-- Node.js ≥ 22.13（`package.json` 的 `engines`），包管理用 pnpm 11.1.2；
-- 本机装有 DSH（默认 `~/.dsh/app`，也可用 `DSH_APP` 环境变量或 `--dsh` 参数指定）；
-- 桌面夹具可自动从官方客户端的 `app.asar` 准备 runtime；
-- headless Chrome（用于离屏夹具截图与断言，可选；不装也能跑门禁）。
+- **Node.js ≥ 22.13**（见 `package.json` 的 `engines`），包管理器固定为 **pnpm 11.1.2**；
+- **DSH 客户端**（可选，用于运行离屏 DOM 夹具）：支持直接读取 `~/.dsh/app`（或 `DSH_APP` 环境变量），或自动从 Windows / macOS 桌面客户端的 `app.asar` 解包提取运行时；
+- **Headless Chrome**（可选，用于执行离屏夹具的浏览器断言与截图；未安装时仍可运行常规门禁）。
 
 ```sh
 pnpm install
-pnpm run check          # typecheck + build + 测试 + 兼容性检查
+pnpm run check          # 完整门禁：站点检查 + typecheck + build + 单元测试 + 兼容性检查
 ```
 
-单项：
+单项命令：
 
 ```sh
 pnpm run typecheck      # tsc --noEmit
-pnpm run format         # Biome：格式化源码、脚本、测试与 JSON/CSS
+pnpm run format         # Biome：格式化源码、脚本、测试与 JSON / CSS
 pnpm run lint           # Biome：静态检查
-pnpm run build          # 生成 lib/（含 lib/client.js 与类型声明）
+pnpm run build          # 构建客户端 bundle 与类型声明至 lib/
 pnpm test               # build + node test/run.mjs
-pnpm run check:compat   # 对照锁定的 DSH 版本检查接缝与 token
+pnpm run check:compat   # 对照锁定的 DSH 版本核对公开接缝与 Token 覆盖率
 ```
 
-`format` 与 `lint` 是独立命令，不并入默认的 `pnpm run check`。提交前至少运行一次
-`pnpm run format` 和 `pnpm run lint`。
+提交代码前请确保 `pnpm run check`、`pnpm run format:check` 与 `pnpm run lint` 全部通过。
 
-## 改动的边界
+## 样式改动的边界
 
-本项目是叠加在 DSH 上的皮肤，**只在 DSH 的公开面上作画**。完整清单见
-[docs/compatibility.md](docs/compatibility.md)（已审阅接缝表 + 禁止依赖）与
-[docs/design.md](docs/design.md)（样式边界表，逐条写明越界后的现象）。三条最容易踩的：
+本主题作为叠加在 DSH 上的外观扩展，**只在 DSH 的公开接缝上着色**。完整规范见 [docs/compatibility.md](docs/compatibility.md) 与 [docs/design.md](docs/design.md)。日常改动中最常遇到的三条禁区：
 
-1. 不重画 DSH 已经画好的容器内部（代码块的 `pre`、输入框的内层 `input`）—— 会出现两层边框、两套圆角错位；
-2. 不改写插件自带布局（设置页的网格、行内 flex、滚动、行高）—— 最多用 token 影响颜色；
-3. 不用「事后清零几何」压制自己的规则，改成让规则一开始就不匹配（`:not()` 挂在**主语**上，不要挂在选择器中段）。
+1. **不重画已封装容器的内部节点**（如代码块内的 `pre`、组合输入框内的 `input`）—— 否则会出现双层边框与圆角错位；
+2. **不改写插件的自有布局**（如设置页的自定义网格、行内 flex、滚动容器与行高）—— 仅通过公开 Token 影响配色；
+3. **不用「事后清零几何」去抵消过宽的规则** —— 应在选择器主语上用 `:not()` 提前排除不该命中的控件。
 
-新增任何 `data-*` / ARIA 接缝，必须先在 `scripts/seam-contract.mjs` 登记用途、DSH 证据和探测方式；
-CSS 策略测试、兼容性检查与文档覆盖测试都从这份契约读取，不要在文档里再维护一份事实副本。
+若需新增任何 `data-*` 或 ARIA 选择器接缝，必须先在 `scripts/seam-contract.mjs` 中登记用途、DSH 源码证据与探针决策；策略测试、兼容性检查与文档覆盖测试均以该文件为单一事实源。
 
 ## 验证方式
 
-单元与契约测试覆盖 token 完整性、bundle 形状、skin 规则约束和降级路径。**视觉问题**（本项目的
-历史问题几乎都是这一类）用离屏夹具验证：从已安装的 DSH 与插件里抽取**真实 CSS**，配真实 DOM
-形状渲染，先看 computed style、再看截图。
+针对 CSS 选择器、圆角、阴影或布局边界的改动，请使用离屏夹具从真实 DSH 运行时提取 CSS 进行渲染验证：
 
 ```sh
-node scripts/fixture.mjs document-preview-plain          # 渲染 test/fixtures/<name>
-node scripts/fixture.mjs document-preview-plain --dsh "C:\path\to\.dsh\app"
-pnpm run fixture boot-loading --desktop                  # 自动准备桌面 runtime
-pnpm run check:visual                                    # 侧栏船票 fixture 的独立视觉门禁
+pnpm run fixture sidebar-masthead                        # 自动探测本机 Web 或桌面端 DSH 运行时
+pnpm run fixture document-preview-plain --dsh <app_dir>  # 显式指定 Web 端 DSH 目录
+pnpm run fixture boot-loading --desktop                  # 显式解包桌面端 app.asar 运行时
+pnpm run check:visual                                    # 侧栏船票真实 DOM 视觉门禁
 ```
 
-- `--desktop` 自动查找官方客户端；装在非默认位置时用 `--asar "C:\path\app.asar"`。runtime
-  按 `app.asar` 的 size + mtime 缓存在 `.tmp/dsh-runtime/`，重复运行直接复用；
-- 夹具定义在 `test/fixtures/<name>/`：`fixture.json`（真实 CSS、变体与浏览器断言）+
-  `body.html`（DOM 片段，可用 `{{TOKENS}}`、`{{SKIN_CSS}}` 等占位符）；
-- `assertions` 中每条 `{ message, expression }` 的 `expression` 必须返回 `true`；任一失败时命令
-  非零退出；
-- 产物写在 `artifacts/smoke/`（被 git 忽略），PR 里贴出前后对照即可；
-- 新增夹具时，优先挑**最小可复现**的 DOM，不要整页复制 DSH。
+- 夹具位于 `test/fixtures/<name>/`，由 `fixture.json`（依赖的插件 CSS、窗口尺寸与浏览器断言）和 `body.html`（最小可复现 DOM 片段）组成；
+- `assertions` 中的每条 `{ message, expression }` 在真实 Chromium 中求值，返回非 `true` 时命令以非零状态码退出；
+- 渲染截图输出在 `artifacts/smoke/`（已被 git 忽略），提交涉及视觉变化的 PR 时请附上前后对比图。
 
-## 提交与 PR
+## 提交与 Pull Request
 
-- 提交信息用 `type: subject`（`feat` / `fix` / `docs` / `release` …），正文说明**为什么**改，以及
-  这样改为什么不会越界；一次提交只做一件事；
-- PR 请附：改动说明、验证命令与结果、涉及视觉的附前后截图；
-- 面向用户的可见变化要写进 [CHANGELOG.md](CHANGELOG.md)；
-- 破坏既有接缝的改动（重命名 token、改 Slot 契约）请先开 issue 讨论。
+- 提交信息遵循 `type: subject` 格式（如 `feat:`、`fix:`、`docs:`、`release:`），一次提交只聚焦一件事；
+- PR 描述请写明改动原因、执行的验证命令，涉及界面变化时附上截图对照；
+- 面向用户的可见变更请同步记录到 [CHANGELOG.md](CHANGELOG.md)；
+- 涉及破坏性接缝变更（如增删公开 Slot 或调整外观持久化结构）请先提交 Issue 讨论。
 
 ## 发布
 
-```sh
-pnpm run release <version>  # 打包 + 计算 SHA-256 + 回写 artifacts/README.md
-```
+1. 在 [CHANGELOG.md](CHANGELOG.md) 中补齐新版本变更说明；
+2. 执行打包与产物清单更新脚本：
+   ```sh
+   pnpm run release <version>
+   ```
+   该脚本会更新 `package.json` 版本号、生成 `artifacts/release-v<version>/` 下的 `.tgz` 包，并将 SHA-256 写入 `artifacts/README.md`；
+3. 运行 `pnpm run check`、`pnpm run format:check` 和 `pnpm run lint`；
+4. 如本机装有客户端，可运行 `pnpm run install:local` 将新产物同步至本机 `web` 与 `desktop` profile 进行实机核对；
+5. 提交变更并推送带 `v` 前缀的标签：
+   ```sh
+   git tag v<version>
+   git push origin main v<version>
+   ```
 
-脚本会：改 `package.json` 版本 → `pnpm pack --pack-destination artifacts/release-v<版本>` →
-把新 SHA-256 写进 `artifacts/README.md` → 打印摘要。
-
-发布前：
-
-1. 在 `CHANGELOG.md` 增加对应版本小节；
-2. 运行 `pnpm run check`、`pnpm run format:check` 和 `pnpm run lint`；
-3. 运行 `pnpm run install:local` 把新产物同步到本机 desktop / web 两个 profile（只装一个用
-   `--only web`），并在客户端里点一遍设置入口；
-4. 检查 `git status`，确认版本号、产物路径与 SHA 同步更新；
-5. 提交并推送 `main`。
-
-然后推送与包版本一致的 tag：
-
-```sh
-git tag v<version>
-git push origin v<version>
-```
-
-`release` workflow 会重新运行门禁，核对 tag、`package.json`、CHANGELOG、产物清单与 tarball SHA，并把 `.tgz`、`SHA256SUMS` 发布到 GitHub Release。本地验收安装：
-
-```sh
-cd <profile 目录>
-pnpm add file:<仓库>/artifacts/release-v<version>/dsh-theme-animal-island-ui-<version>.tgz
-```
-
-**同一版本号不要重复出包**；每次发布都使用新的版本号。
+推送标签后，GitHub Actions 的 `release` 工作流会重新运行完整门禁，校验版本号与构建产物一致性，通过 OIDC Trusted Publishing 自动将包发布至 npm（附带 Sigstore Provenance 签名），并创建附带 `.tgz` 与 `SHA256SUMS` 的 GitHub Release。
 
 ## 许可证
 
-提交即表示你同意以仓库的 MIT 许可证（见 [LICENSE](LICENSE)）发布你的贡献；涉及第三方素材时，
-请同时更新 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与 `licenses/`。
+提交代码即表示你同意以本仓库的 [MIT License](LICENSE) 授权你的贡献；若引入第三方字体或素材，请同步更新 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与 `licenses/` 目录。

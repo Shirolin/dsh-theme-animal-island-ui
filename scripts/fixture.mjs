@@ -53,12 +53,23 @@ if (explicitDsh !== undefined && (useDesktop || explicitAsar !== undefined)) {
   process.exit(1)
 }
 
-const dsh =
-  useDesktop || explicitAsar !== undefined
-    ? prepareDshRuntime({ asarPath: explicitAsar })
-    : resolve(explicitDsh ?? process.env.DSH_APP ?? join(homedir(), '.dsh', 'app'))
+const candidateDsh = resolve(explicitDsh ?? process.env.DSH_APP ?? join(homedir(), '.dsh', 'app'))
+let dsh
+if (useDesktop || explicitAsar !== undefined) {
+  dsh = prepareDshRuntime({ asarPath: explicitAsar })
+} else if (isDshRuntime(candidateDsh)) {
+  dsh = candidateDsh
+} else if (explicitDsh === undefined && process.env.DSH_APP === undefined) {
+  try {
+    dsh = prepareDshRuntime()
+  } catch {
+    dsh = candidateDsh
+  }
+} else {
+  dsh = candidateDsh
+}
 if (!isDshRuntime(dsh)) {
-  console.error(`no DSH install at ${dsh}\n  pass --dsh <app dir> or set DSH_APP`)
+  console.error(`no DSH install at ${dsh}\n  pass --dsh <app dir>, --desktop, or set DSH_APP`)
   process.exit(1)
 }
 

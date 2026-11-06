@@ -1,40 +1,41 @@
-# 桌面客户端（Electron）说明
+# 桌面客户端（Electron）指南
 
-官方桌面版不是另一套前端。它内置同一个 web 应用，加上一层 Electron 壳与一个独立 profile。本文记录
-在这个环境里安装、验证、回滚本主题时要用的命令与边界。
+DSH 官方桌面版并非另一套独立前端：它内置与 Web 版相同的 `dsh-web-app` 与 `dsh-web-frontend`，外加一层 Electron 窗口外壳和一个隔离的 `desktop` profile。本文记录在桌面端安装、调试、截图与回滚本主题的具体方法。
 
-## 它是什么
+## 运行机制与 Profile 隔离
 
-- 外壳是 `@deepseek-ai/dsh-desktop`（Electron），内置 runtime `@deepseek-ai/dsh-desktop-runtime`；
-  本文的验证基线是 `0.2.1-rc.5`。
-- 桌面宿主 `dsh-desktop-host/lib/index.js` 的 `main()` 直接调用：
-
+- **外壳与运行时**：桌面端外壳为 `@deepseek-ai/dsh-desktop`（Electron），内置运行时 `@deepseek-ai/dsh-desktop-runtime`（本文验证基线为 `0.2.1-rc.5`）。宿主启动时直接执行：
   ```js
   runProfile({ profile: "desktop", args: ["--no-open", "--port", "19387"] })
   ```
+- **平台声明**：客户端模块加载器仍只识别 `dsh.client.platform === "web"`，因此本主题无需为桌面版拆分独立构建。
+- **目录隔离**：桌面端读取 `~/.dsh/profiles/desktop`，与 `~/.dsh/profiles/web` 的 `node_modules` 完全隔离。装在 `web` profile 下的插件不会在桌面端生效。
+- **CLI 限制**：DSH CLI 不允许直接操作 `desktop` profile（执行 `dsh --profile desktop ...` 会报错 `profile "desktop" is managed exclusively by the Electron application`）。除通过应用内插件市场安装外，本地离线或源码安装均需借用桌面端自带的 Electron Node 运行时。
 
-  也就是与 `dsh web` **同一套** web 应用（`dsh-web-app` + `dsh-web-frontend`），只是换了 profile
-  目录，外面套了 Electron。
-- 所以客户端插件不需要为桌面版改造：`dsh-client-modules` 仍然只认 `dsh.client.platform === "web"`
-  （0.2.1-rc.5 里还是这一行），本主题的 `package.json` 声明的正是这个值。
+## 安装、同步与回滚
 
-## profile 是隔离的
+### 1. 本地仓库一键同步（推荐）
 
-- 桌面版读 `$DSH_HOME/profiles/desktop`，与 `web` profile 的 `node_modules` 完全隔离：装在 `web`
-  profile 里的插件，桌面版**看不见**。要两边都用就得装两次。
-- 组合包列表在 profile `package.json` 的 `dsh.profile.bundles`；主题必须在里面才会被挂载。
-- CLI 不接管这个 profile：`dsh --profile desktop ...` 会被拒绝，报
-  `profile "desktop" is managed exclusively by the Electron application`。因此不能用
-  `dsh plugin --profile desktop add`，只能改文件 + 用桌面自带的 pnpm 安装。
+如果已在本地克隆本仓库，可直接运行内置脚本，自动打包并通过内容寻址缓存同步到本机的 `desktop` 与 `web` 两个 profile：
 
-## 安装、验证、回滚
+```sh
+pnpm run install:local                 # 同时同步 desktop 与 web
+pnpm run install:local --only desktop  # 仅同步桌面端 profile
+pnpm run install:local --dry-run       # 仅预览将修改的依赖配置
+```
 
-装：把 profile 的依赖指向目标 `.tgz`，再用**桌面自带的 pnpm** 安装 —— 它的 `node` 是 Electron 自己
-（`ELECTRON_RUN_AS_NODE=1`），profile 里的生命周期脚本依赖这套环境：
+脚本会自动补齐 profile `package.json` 中的 `dsh.profile.bundles`，并在桌面端自动调用内置的 Electron Node 运行时执行 `pnpm install`。若安装或校验失败，脚本会将 profile 的 `package.json` 恢复至修改前状态。
+
+- 桌面客户端安装在非默认路径时，可通过环境变量 `DSH_DESKTOP_APP` 指定目录；
+- 可通过 `DSH_THEME_TARBALL` 指定任意 `.tgz` 包路径。
+
+### 2. 手动调用桌面端内置 pnpm
+
+若需手动在 `~/.dsh/profiles/desktop` 下执行 `pnpm`，需将 Electron 可执行文件作为 Node 运行时传入（profile 生命周期脚本依赖该环境）：
 
 ```powershell
 $prof = "$env:USERPROFILE\.dsh\profiles\desktop"
-$exe  = "C:\Software\DeepSeek Harness\DeepSeek Harness.exe"          # 安装目录下的可执行文件
+$exe  = "C:\Software\DeepSeek Harness\DeepSeek Harness.exe"
 $pnpm = "C:\Software\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\pnpm\bin\pnpm.mjs"
 
 $env:ELECTRON_RUN_AS_NODE = "1"
@@ -43,24 +44,11 @@ $env:PATH = "C:\Software\DeepSeek Harness\resources\runtime\bin;$env:PATH"
 & $exe --expose-internals $pnpm install --dir $prof
 ```
 
-`dsh.profile.bundles` 里还要有 `dsh-theme-animal-island-ui`，否则包装了也不会挂载。
+同时确保 `$prof\package.json` 的 `dsh.profile.bundles` 数组中包含 `"dsh-theme-animal-island-ui"`。
 
-日常本地发版不用记上面这套命令：
+### 3. 离线验证挂载状态
 
-```sh
-pnpm run install:local                 # desktop + web
-pnpm run install:local --only web      # 只装一个 profile
-pnpm run install:local --dry-run       # 只打印会改的依赖
-```
-
-脚本按当前 `package.json` 版本定位 `artifacts/release-v<版本>/<包名>-<版本>.tgz`，按文件 SHA-256
-复制到 DSH home 下的内容寻址缓存，再把 `file:` 依赖写进两个 profile（缺 `dsh.profile.bundles` 会补上）。
-因此同一版本重新出包后，pnpm 也会识别为新的本地依赖。desktop 自动走上面的 Electron-as-node 安装，
-web 走常规 pnpm。任一步安装或版本校验失败时，脚本会把该 profile 的 `package.json` 恢复到安装前的原文。
-桌面装在非默认位置时用 `DSH_DESKTOP_APP` 指过去；tarball 路径可用 `DSH_THEME_TARBALL` 覆盖。
-
-离线验证组合结果（不必启动客户端）。桌面宿主用的就是
-`loadProfileDirectory(binName, dir, installAnchor)`，可以直接调它并打印被跳过的组合包：
+无需启动 GUI 窗口，可直接用上面的 Electron-as-Node 环境调用 `loadProfileDirectory` 检查主题是否被正常解析：
 
 ```js
 const boot = await import('file:///C:/Software/DeepSeek%20Harness/resources/app.asar/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js')
@@ -72,110 +60,67 @@ const profile = boot.loadProfileDirectory(
 console.log(profile.skippedBundles, profile.layers.map((layer) => layer.packageName))
 ```
 
-期望 `skippedBundles: []`，且 `layers` 末尾是本主题。普通 node 读不了 asar 里的模块，这一步同样要用
-上面的 Electron-as-node 环境跑。
+正常挂载时 `skippedBundles` 为空数组 `[]`，且 `layers` 列表末尾包含 `dsh-theme-animal-island-ui`。
 
-回滚：把依赖指回上一版的 `.tgz` 再 `pnpm install` 即可（`artifacts/README.md` 的表格里记着当前的
-规范产物与上一版目录）。
+### 4. 何时需要重启客户端
 
-## 版本兼容门禁
+- **首次安装或移除插件**：必须完整退出并重启桌面客户端。模块解析表在主进程启动时构建，运行期无法动态增删包入口。
+- **就地更新已挂载插件**：通常无需重启。`desktop` profile 默认启用了 `dsh-hmr`，重装更新后的客户端 bundle 会由 `dsh-client-hmr` 推送至渲染进程热替换。
 
-- `loadProfileDirectory` 在启动时与每次重组时都会检查**组合包自己声明的 DSH peer**；不兼容且没有豁免
-  的组合包会被跳过（与读不到的组合包同等待遇），并出现在 `skippedBundles` 里。
-- 豁免写在 profile 自己的 `compatibility.json`（与 `package.json`、`cordis.patch.yml` 并列），把精确的
-  `package-name@version` 映射到精确的 DSH runtime 版本；授权与风险确认由插件管理器负责。
-- 本主题不声明 `peerDependencies`，所以不受这条门禁影响。但要注意**开发基线与桌面 runtime 可能不同**：
-  仓库锁的是 `0.1.5-rc.3`，桌面内置的是 `0.2.1-rc.5`。桌面打包时剥掉了 `lib/types/**`，因此
-  `scripts/check-compat.mjs` 不能直接对着桌面包跑（它读 `lib/types/client/index.d.ts` 拿
-  `overrideTokens` 的返回类型）。要对桌面版做接缝检查，先把类型声明补出来，或临时把基线
-  devDependency 升到桌面 runtime 的版本。
+### 5. 回滚版本
 
-## 什么时候要重启
+将 profile `package.json` 中的依赖指向上一版本的 `.tgz`（或 npm 版本号），重新运行一次 `pnpm run install:local`（或上述手动安装命令）即可。
 
-- **新增或删除**组合包：要重启。runtime resolution 由 launcher 在启动时计算并装进 Node 的解析器，
-  运行中的 HMR 重组补不上这一层。
-- **就地更新**已挂载组合包的内容（例如换掉同名的 `.tgz` 后重装）：通常不用重启。desktop profile 里
-  `dsh-hmr` 是启用的（`runProfile` 会提供 `profileContext`，它的那一行就不会被 `disabled`），
-  `dsh-client-hmr` 会把新的客户端 bundle 推到渲染端就地替换。0.3.4 → 0.3.5 这次就是这样生效的。
+## 版本兼容与类型检查说明
 
-## 对着桌面 runtime 跑夹具
+- `loadProfileDirectory` 启动时会核对插件声明的 `peerDependencies`。本主题未声明硬性 `peerDependencies`，因此不会被版本门禁跳过。
+- 桌面端 `app.asar` 打包时剥离了 `.d.ts` 类型声明文件，因此依赖读取 `lib/types/client/index.d.ts` 的 `pnpm run check:compat` 默认针对仓库锁定的 `devDependencies` 运行，而不直接指向 `app.asar` 解包目录。
 
-桌面 runtime 在 `app.asar` 里，fixture runner 会按需解包并缓存：
+## 使用桌面端运行时渲染离屏夹具
+
+离屏夹具脚本支持直接解包桌面客户端的 `app.asar` 提取真实 CSS：
 
 ```sh
 pnpm run fixture sidebar-masthead --desktop
-# 非默认安装位置
+# 或指定自定义安装位置的 app.asar
 pnpm run fixture sidebar-masthead --asar "C:\path\to\app.asar"
 ```
 
-缓存位于 `.tmp/dsh-runtime/<size-mtime>/dsh`，同一桌面构建会直接复用。首次运行可能下载
-`@electron/asar`。夹具 `body.html` 里的 hash 前缀取自当前桌面 runtime（`0.2.1-rc.5` 是
-`wtg9ga_`）；桌面升级后要同步更新，否则真实 CSS 不命中，夹具会渲染成没有样式的样子。
+解包产物按 `app.asar` 的文件大小与修改时间缓存在 `.tmp/dsh-runtime/<size-mtime>/dsh` 下，同一版本的桌面客户端只会解包一次。
 
-## 截图与远程调试
+## 桌面窗口截图与远程调试
 
-不要用 `CopyFromScreen` 抓桌面窗口：它抓的是屏幕，被别的窗口挡住就拍到别人。`PrintWindow` 只能当
-背景参考：Electron 的 GPU 文字/滤镜层经常画不进 GDI DC，会出现“背景对、字没了”的假图。正确做法是
-抓渲染器的合成表面：
+对 Electron 窗口截图时，`CopyFromScreen` 会拍到遮挡窗口，而 GDI `PrintWindow` 常丢失 GPU 合成层导致文字缺失。项目中提供两条可靠的采集路径：
 
-- **日常主题/CSS 检查**：用 web 客户端（同一个 client bundle），Playwright/CDP 截图，跟窗口 z-order
-  无关；Windows 专属分支可以在页面里模拟 `data-windows-titlebar`。
-- **桌面壳专属检查**（caption、窗口按钮、原生圆角、acrylic）：给 Electron 开 CDP 端口，再走
-  `Page.captureScreenshot`。这是一次性的启动参数，之后随时能抓，窗口在后台也行。
+- **CDP 截图（`scripts/cdp-shot.mjs`）**：通过 Chrome DevTools Protocol 抓取渲染器内部画面，不受窗口遮挡影响，适合验证网页内部表面（不含 Windows 原生标题栏与窗口控制按钮）。
+- **DWM 离屏缩略图（`scripts/dwm-shot.ps1`）**：通过 Windows DWM API 注册窗口缩略图采集完整窗口（包含原生 `titleBarOverlay` 标题栏与右上角按钮），后台无遮挡亦可截取（最小化时除外）。
 
-### 1. 调试启动（需要先退出正在运行的客户端）
-
-```bat
-scripts\dsh-desktop-debug.cmd
-```
-
-或从仓库根目录：
+### 1. 以调试模式启动客户端（需先退出已运行的实例）
 
 ```sh
 pnpm run desktop:debug
 ```
 
-它会用 `--remote-debugging-port=9222` 启动客户端，并确认 `http://127.0.0.1:9222/json/list` 可访问。
-如果客户端已经在运行，脚本会拒绝启动并提示先退出——调试端口只在启动时生效，单实例不会把参数补上。
-端口只监听 localhost，但本地进程能控制这个窗口；只在调试时开。
+脚本会携带 `--remote-debugging-port=9222` 启动桌面端，并验证 `http://127.0.0.1:9222/json/list` 就绪。
 
-### 2. 截图
+### 2. 执行截图
 
 ```powershell
-# 仓库根目录的快捷方式（等价于下面的 capture-desktop.ps1）
+# 默认优先使用 CDP，未开启调试端口时自动回退至 DWM
 pnpm run capture:desktop
 
-# CDP 优先；没有调试端口时自动回退到 DWM
-powershell -ExecutionPolicy Bypass -File scripts\capture-desktop.ps1
-
-# 指定输出、整页
+# 指定输出路径与整页截取
 powershell -ExecutionPolicy Bypass -File scripts\capture-desktop.ps1 `
   -OutFile artifacts\smoke\desktop.png -FullPage
 
-# 只走 CDP，不降级
+# 强制仅使用 CDP
 powershell -ExecutionPolicy Bypass -File scripts\capture-desktop.ps1 -NoFallback
 ```
 
-脚本先调用 `scripts/cdp-shot.mjs`（Node 22+ 的全局 WebSocket，无额外依赖）；失败时用
-`scripts/dwm-shot.ps1` 把目标窗口注册成离屏 DWM 缩略图再截宿主。DWM 路径被其它窗口挡住也能拍，
-最小化时可能冻结/空白；它走 Windows PowerShell 5.1，因为 pwsh 7 的 .NET 10 WinForms/GDI+ 引用链
-不值得维护。
+## 桌面端特有的样式差异
 
-两者覆盖的范围不同：**CDP 截的是 web 内容**（不含 native caption/titleBarOverlay），**DWM 截的是
-整个窗口**（含原生标题栏）。验主题表面用 CDP；验 caption/窗口按钮用 DWM。
+Windows 桌面端带有 `[data-windows-titlebar]` 标记，存在三处与 Web 端不同的外壳特征（完整对照表见 [web-vs-desktop.md](web-vs-desktop.md)）：
 
-## 桌面侧已知差异
-
-- `[data-windows-titlebar]`：logoRow 变成 40px 且没有内边距，折叠按钮改成 `position: fixed`，
-  `brandIdentity` / `brandMark` 各带一个 1px transform。
-- Windows 外壳的 AppFrame（`.frame`）被画成 `--dsw-specific-sidebar-fill`，而 macOS 给同一个
-  frame 的是 `background: 0 0`。这块不透明底会把插件画在 UI 后面的画布盖掉，所以皮肤在
-  `html[data-windows-titlebar]` 下把它清成透明；侧栏/右栏各自重画自己的表面，不影响可读性。
-  这是 DSH Windows 分支与 macOS 不一致导致的（[discussion #9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)），
-  在 DSH 修掉之前需要保留这条 workaround。
-- 侧栏品牌区落在 DSH 自己的品牌按钮里：按钮本体只有 24px 高、`overflow: hidden`，而主题把
-  logoRow 长到 80px、把按钮做成 216×60 的渡岛船票，并把内层 24px 盒释放成 auto。Windows 分支给
-  `brand` 的 4px 左内边距由主题清零，票根才能贴住纸面边缘；约束与测试见
-  [compatibility.md](compatibility.md) 的「品牌船票」。
-- 其余 web / Windows 样式差异（标题栏、折叠侧栏、右栏全屏、dock float、macOS）统一登记在
-  [web-vs-desktop.md](web-vs-desktop.md)，改皮肤前先对照那张表判断是平台分支还是主题问题。
+1. **外层 Frame 底色**：Windows 分支下的 `.frame` 默认带不透明的 `--dsw-specific-sidebar-fill`（macOS 与 Web 端为透明），会挡住底层画布。主题在 `html[data-windows-titlebar]` 下将其显式清为透明（参考上游讨论 [#9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)）。
+2. **原生标题栏供色**：顶部 `40px` 标题栏由 Electron 原生 `titleBarOverlay` 绘制，通过读取 `body` 上的 `--dsw-specific-sidebar-fill` 同步颜色。主题利用 `body`、`#root` 与侧栏根节点的三级覆盖，分别维持标题栏、侧栏与画布的独立色彩层级。
+3. **侧栏品牌按钮内边距**：Windows 分支为未折叠的品牌按钮增加了 `4px` 左内边距，主题将其清零以保证船票左缘票根对齐。
