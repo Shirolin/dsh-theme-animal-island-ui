@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 concurrency:
   group: release-${{ github.ref }}
@@ -26,6 +27,7 @@ jobs:
         with:
           node-version: '24'
           cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -50,6 +52,14 @@ jobs:
       - name: Stage generic release assets
         run: |
           cp "$RUNNER_TEMP"/release/dsh-theme-animal-island-ui-*.tgz "$RUNNER_TEMP"/release/dsh-theme-animal-island-ui.tgz
+
+      - name: Publish to npm
+        if: ${{ env.NPM_TOKEN != '' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          pnpm publish --access public --no-git-checks --provenance
 
       - name: Publish GitHub Release
         env:
