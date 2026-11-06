@@ -54,12 +54,14 @@ jobs:
           cp "$RUNNER_TEMP"/release/dsh-theme-animal-island-ui-*.tgz "$RUNNER_TEMP"/release/dsh-theme-animal-island-ui.tgz
 
       - name: Publish to npm
-        if: ${{ env.NPM_TOKEN != '' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          if [ -n "${NODE_AUTH_TOKEN}" ]; then
+            pnpm config set //registry.npmjs.org/:_authToken "${NODE_AUTH_TOKEN}"
+          fi
           pnpm publish --access public --no-git-checks --provenance
+        continue-on-error: true
 
       - name: Publish GitHub Release
         env:
