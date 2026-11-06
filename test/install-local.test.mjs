@@ -77,7 +77,7 @@ test('install:local CLI accepts the forwarded separator', (t) => {
 
   assert.equal(result.status, 0, result.stderr)
   assert.match(result.stdout, /\[web\] dry run:/)
-  assert.match(result.stdout, /cache[\\/]theme-tarballs[\\/]dsh-theme-animal-island-ui[\\/]0\.3\.35-/)
+  assert.match(result.stdout, /cache[\\/]theme-tarballs[\\/]dsh-theme-animal-island-ui[\\/]\d+\.\d+\.\d+-/)
 })
 
 test('install:local restores the profile manifest when installation fails', (t) => {
