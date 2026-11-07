@@ -1,0 +1,299 @@
+/* 3:4 vertical cut. Loads after stage.css and only overrides composition. */
+
+html {
+  width: 1080px;
+  height: 1440px;
+}
+
+body.is-vertical {
+  width: 1080px;
+  height: 1440px;
+}
+
+body.is-vertical #film {
+  width: 1080px;
+  height: 1440px;
+}
+
+body.is-vertical #fx {
+  width: 1080px;
+  height: 1440px;
+}
+
+body.is-vertical .grain {
+  inset: -20%;
+}
+
+/* ---------- intro ---------- */
+
+body.is-vertical .intro-plate img {
+  transform: scale(1.42) rotate(-8deg) translate3d(-4%, -6%, 0);
+}
+
+body.is-vertical .intro-vignette--vertical {
+  background:
+    radial-gradient(circle at 50% 42%, transparent 0 22%, rgba(22, 13, 9, 0.2) 54%, rgba(18, 10, 6, 0.62) 100%),
+    linear-gradient(180deg, rgba(19, 11, 7, 0.86) 0%, rgba(21, 12, 8, 0.4) 34%, transparent 58%),
+    linear-gradient(0deg, rgba(18, 10, 6, 0.7) 0%, transparent 44%);
+}
+
+body.is-vertical .intro-copy {
+  top: 216px;
+  left: 64px;
+  width: 952px;
+}
+
+body.is-vertical .intro-copy h1 {
+  font-size: 118px;
+  line-height: 1;
+}
+
+body.is-vertical .intro-copy h1 .copy-line--lead {
+  margin-top: 18px;
+  font-size: 56px;
+  line-height: 1.2;
+}
+
+body.is-vertical .intro-subline {
+  margin-top: 34px;
+  font-size: 27px;
+  line-height: 1.6;
+}
+
+body.is-vertical .ticket-wrap {
+  right: auto;
+  bottom: 236px;
+  left: 230px;
+  width: 620px;
+  height: 288px;
+}
+
+/* ---------- cover card ---------- */
+
+body.is-vertical .cover-inner--vertical {
+  display: block;
+  height: 100%;
+  padding: 84px 56px 0;
+}
+
+body.is-vertical .cover-eyebrow {
+  margin-bottom: 22px;
+  font-size: 21px;
+  letter-spacing: 0.2em;
+}
+
+body.is-vertical .cover-title--vertical {
+  font-size: 170px;
+  letter-spacing: -0.08em;
+  line-height: 0.94;
+}
+
+body.is-vertical .cover-lead--vertical {
+  margin-top: 24px;
+  font-size: 52px;
+}
+
+body.is-vertical .cover-meta--vertical {
+  margin-top: 22px;
+  max-width: 900px;
+  font-size: 27px;
+  line-height: 1.55;
+}
+
+body.is-vertical .cover-shot--vertical {
+  position: absolute;
+  top: 656px;
+  left: 56px;
+  width: 968px;
+  padding: 14px;
+  border-radius: 30px;
+  transform: none;
+}
+
+body.is-vertical .cover-footline {
+  position: absolute;
+  bottom: 52px;
+  left: 56px;
+  margin: 0;
+  color: rgba(75, 46, 31, 0.6);
+  font-family: var(--latin);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+/* ---------- ui scene ---------- */
+
+.copy-zone-wash {
+  position: absolute;
+  z-index: 14;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 500px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.copy-zone-wash.day {
+  background: linear-gradient(180deg, rgba(248, 240, 221, 0.97) 0%, rgba(248, 240, 221, 0.93) 58%, rgba(248, 240, 221, 0) 100%);
+}
+
+.copy-zone-wash.night {
+  background: linear-gradient(180deg, rgba(6, 27, 33, 0.94) 0%, rgba(6, 27, 33, 0.86) 58%, rgba(6, 27, 33, 0) 100%);
+}
+
+body.is-vertical .ui-copy {
+  top: 88px;
+  right: auto;
+  bottom: auto;
+  left: 56px;
+  width: 968px;
+  max-width: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+body.is-vertical .ui-copy .eyebrow {
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+body.is-vertical .ui-title {
+  font-size: 66px;
+  letter-spacing: -0.06em;
+  line-height: 1.08;
+}
+
+body.is-vertical .ui-copy.night-copy {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.is-vertical .screen-viewport {
+  z-index: 20;
+  inset: auto;
+  top: 468px;
+  left: 40px;
+  width: 1000px;
+  height: 625px;
+  overflow: hidden;
+  border-radius: 30px;
+  background: var(--cream);
+  box-shadow:
+    0 0 0 7px rgba(255, 248, 231, 0.92),
+    0 46px 96px rgba(22, 52, 40, 0.36);
+}
+
+body.is-vertical .screen-viewport.is-night {
+  box-shadow:
+    0 0 0 7px rgba(255, 236, 178, 0.22),
+    0 46px 96px rgba(3, 14, 18, 0.6);
+}
+
+body.is-vertical .screen-shell {
+  left: 0;
+  top: 0;
+}
+
+body.is-vertical .screen-pointer {
+  width: 42px;
+  height: 42px;
+}
+body.is-vertical .transition-band {
+  inset: -18% -22%;
+}
+
+body.is-vertical .transition-mark {
+  display: none;
+}
+
+
+body.is-vertical .beat-rail {
+  position: absolute;
+  z-index: 22;
+  top: 1178px;
+  right: 56px;
+  left: 56px;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  justify-content: space-between;
+  gap: 10px;
+  list-style: none;
+  font-family: var(--latin);
+}
+
+body.is-vertical .beat-rail li {
+  display: flex;
+  padding: 10px 16px;
+  align-items: baseline;
+  gap: 8px;
+  border: 1px solid rgba(255, 250, 236, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 250, 236, 0.86);
+  color: rgba(59, 42, 28, 0.86);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+body.is-vertical .beat-rail b {
+  font-size: 14px;
+  font-weight: 800;
+  opacity: 0.66;
+}
+
+body.is-vertical .beat-rail li.is-active {
+  border-color: rgba(47, 107, 85, 0.34);
+  background: rgba(255, 250, 236, 0.94);
+  color: #1f5d4a;
+  box-shadow: 0 12px 26px rgba(28, 68, 50, 0.16);
+}
+
+/* ---------- outro ---------- */
+
+body.is-vertical .outro-night {
+  -webkit-mask-image: linear-gradient(180deg, transparent calc(var(--night) - 7%), #000 calc(var(--night) + 7%), #000 100%);
+  mask-image: linear-gradient(180deg, transparent calc(var(--night) - 7%), #000 calc(var(--night) + 7%), #000 100%);
+}
+
+body.is-vertical .outro-moon {
+  top: 15%;
+  right: 18%;
+}
+
+body.is-vertical .outro-copy {
+  top: 296px;
+  left: 64px;
+  width: 952px;
+}
+
+body.is-vertical .outro-title {
+  font-size: 104px;
+  line-height: 1.04;
+}
+
+body.is-vertical .outro-rule {
+  top: 218px;
+  left: 64px;
+  width: 300px;
+}
+
+body.is-vertical .brand-lockup {
+  margin-top: 38px;
+  font-size: 25px;
+}
+
+body.is-vertical .outro-cta {
+  margin-top: 22px;
+  max-width: 900px;
+  font-size: 21px;
+  line-height: 1.6;
+  word-break: break-all;
+}
