@@ -45,11 +45,18 @@ pnpm run fixture sidebar-masthead                        # 自动探测本机 We
 pnpm run fixture document-preview-plain --dsh <app_dir>  # 显式指定 Web 端 DSH 目录
 pnpm run fixture boot-loading --desktop                  # 显式解包桌面端 app.asar 运行时
 pnpm run check:visual                                    # 侧栏船票真实 DOM 视觉门禁
+pnpm run check:fixtures                                  # 全套夹具（11 个，浅/深）
 ```
 
 - 夹具位于 `test/fixtures/<name>/`，由 `fixture.json`（依赖的插件 CSS、窗口尺寸与浏览器断言）和 `body.html`（最小可复现 DOM 片段）组成；
 - `assertions` 中的每条 `{ message, expression }` 在真实 Chromium 中求值，返回非 `true` 时命令以非零状态码退出；
 - 渲染截图输出在 `artifacts/smoke/`（已被 git 忽略），提交涉及视觉变化的 PR 时请附上前后对比图。
+
+夹具镜像的是某个具体 DSH 版本的 DOM 与 CSS，因此：
+
+- 运行时版本会打印在每次输出的第一行，`pnpm run check:fixtures -- --expect-dsh 0.2.2-rc.1` 可以把结论钉到某个版本；
+- 断言只比较设计意图（元素的实际位置、尺寸、计算样式），不要从 `padding`/`margin` 反推几何 —— 那会在 DSH 调整自身内边距时误报；
+- 桌面客户端升级后先跑一遍全套夹具，再判断是皮肤回归还是夹具 DOM 过期，判据见 [docs/compatibility.md](docs/compatibility.md#dsh-升级时怎么处理)。
 
 ## 提交与 Pull Request
 

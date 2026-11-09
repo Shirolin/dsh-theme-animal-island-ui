@@ -109,6 +109,7 @@ pnpm run lint           # Biome 静态检查
 pnpm run fixture sidebar-masthead            # 渲染指定夹具（自动探测本机 Web 或桌面端 DSH 运行时）
 pnpm run fixture boot-loading --desktop      # 显式使用桌面端 app.asar 运行时渲染
 pnpm run check:visual                        # 运行侧栏船票的 DOM 几何与样式门禁
+pnpm run check:fixtures                      # 全套夹具；加 -- --expect-dsh <版本> 可钉死运行时版本
 ```
 
 **子路径导出**（供外部脚本或工具直接复用色板与对比度计算）：

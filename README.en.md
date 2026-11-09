@@ -109,6 +109,7 @@ pnpm run lint           # Lint with Biome
 pnpm run fixture sidebar-masthead            # Render fixture (auto-detects local Web or Desktop DSH runtime)
 pnpm run fixture boot-loading --desktop      # Explicitly extract and use desktop app.asar runtime
 pnpm run check:visual                        # Run the sidebar ticket geometry & style gate
+pnpm run check:fixtures                      # Run every fixture; add -- --expect-dsh <version> to pin the runtime
 ```
 
 **Subpath Exports** (for external tools reusing the palette or contrast utilities):

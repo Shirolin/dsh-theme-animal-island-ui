@@ -4,7 +4,7 @@ DSH 官方桌面版并非另一套独立前端：它内置与 Web 版相同的 `
 
 ## 运行机制与 Profile 隔离
 
-- **外壳与运行时**：桌面端外壳为 `@deepseek-ai/dsh-desktop`（Electron），内置运行时 `@deepseek-ai/dsh-desktop-runtime`（本文验证基线为 `0.2.1-rc.5`）。宿主启动时直接执行：
+- **外壳与运行时**：桌面端外壳为 `@deepseek-ai/dsh-desktop`（Electron），内置运行时 `@deepseek-ai/dsh-desktop-runtime`（本文验证基线为 `0.2.2-rc.1`）。宿主启动时直接执行：
   ```js
   runProfile({ profile: "desktop", args: ["--no-open", "--port", "19387"] })
   ```
@@ -87,6 +87,14 @@ pnpm run fixture sidebar-masthead --asar "C:\path\to\app.asar"
 ```
 
 解包产物按 `app.asar` 的文件大小与修改时间缓存在 `.tmp/dsh-runtime/<size-mtime>/dsh` 下，同一版本的桌面客户端只会解包一次。
+
+夹具还原的是某个具体 DSH 版本的 DOM，所以每次运行都会打印 `[fixture] DSH runtime <版本>`，并且可以用 `--expect-dsh` 把它钉死（版本不符直接失败）。跑全套：
+
+```sh
+pnpm run build && pnpm run check:fixtures -- --expect-dsh 0.2.2-rc.1
+```
+
+夹具失败时如何区分「皮肤回归」与「夹具 DOM 过期」，见 [compatibility.md](compatibility.md#dsh-升级时怎么处理)。
 
 ## 桌面窗口截图与远程调试
 
