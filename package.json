@@ -90,6 +90,7 @@
     "test": "pnpm run build && node test/run.mjs",
     "check:compat": "pnpm run build && node scripts/check-compat.mjs",
     "check:visual": "node scripts/fixture.mjs sidebar-masthead --desktop",
+    "check:fixtures": "node scripts/fixture-suite.mjs",
     "fixture": "node scripts/fixture.mjs",
     "perf": "node scripts/perf.mjs",
     "capture:desktop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/capture-desktop.ps1",

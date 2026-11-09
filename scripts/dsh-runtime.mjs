@@ -22,6 +22,16 @@ export function isDshRuntime(dsh) {
   return REQUIRED_RUNTIME_PATHS.every((path) => existsSync(join(dsh, path)))
 }
 
+/** Version of the DSH client the fixture renders against (web frontend, else runtime root). */
+export async function readDshRuntimeVersion(dsh) {
+  for (const candidate of [join(dsh, 'node_modules', '@deepseek-ai', 'dsh-web-frontend', 'package.json'), join(dsh, 'package.json')]) {
+    if (!existsSync(candidate)) continue
+    const packageJson = JSON.parse(await readFile(candidate, 'utf8'))
+    if (typeof packageJson.version === 'string') return packageJson.version
+  }
+  return undefined
+}
+
 export function resolveDshPackage(name, requestedPackage) {
   if (requestedPackage === undefined) return dirname(require.resolve(`${name}/package.json`))
   const requestedPath = isAbsolute(requestedPackage) ? requestedPackage : resolve(process.cwd(), requestedPackage)

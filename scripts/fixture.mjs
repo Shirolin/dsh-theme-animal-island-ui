@@ -28,7 +28,7 @@ import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { JSDOM } from 'jsdom'
-import { isDshRuntime, readDshBundleCss, readDshFrontendCss, readDshThemeBaseCss } from './dsh-runtime.mjs'
+import { isDshRuntime, readDshBundleCss, readDshFrontendCss, readDshRuntimeVersion, readDshThemeBaseCss } from './dsh-runtime.mjs'
 import { buildOwnedSkinCss } from './owned-skin-css.mjs'
 import { prepareDshRuntime } from './prepare-dsh-runtime.mjs'
 
@@ -41,7 +41,9 @@ const flag = (name, fallback) => {
 const name = args[0]?.startsWith('--') !== false ? undefined : args[0]
 
 if (name === undefined) {
-  console.error('usage: node scripts/fixture.mjs <fixture-name> [--desktop | --asar <app.asar> | --dsh <app dir>] [--chrome <binary>] [--out <dir>]')
+  console.error(
+    'usage: node scripts/fixture.mjs <fixture-name> [--desktop | --asar <app.asar> | --dsh <app dir>] [--expect-dsh <version>] [--chrome <binary>] [--out <dir>]',
+  )
   process.exit(1)
 }
 
@@ -70,6 +72,16 @@ if (useDesktop || explicitAsar !== undefined) {
 }
 if (!isDshRuntime(dsh)) {
   console.error(`no DSH install at ${dsh}\n  pass --dsh <app dir>, --desktop, or set DSH_APP`)
+  process.exit(1)
+}
+
+// Fixtures mirror a specific DSH DOM, so every run states which runtime it
+// rendered and can be pinned with --expect-dsh to keep results reproducible.
+const dshVersion = await readDshRuntimeVersion(dsh)
+console.error(`[fixture] DSH runtime ${dshVersion ?? 'unknown'} <- ${dsh}`)
+const expectDsh = flag('expect-dsh')
+if (expectDsh !== undefined && dshVersion !== expectDsh) {
+  console.error(`[fixture] expected DSH runtime ${expectDsh}, found ${dshVersion ?? 'unknown'}`)
   process.exit(1)
 }
 
