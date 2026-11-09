@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 /*
- * Release helper: bump the version, pack the canonical tarball, and record its
- * SHA-256 in artifacts/README.md.
+ * Release helper: bump the version and pack the tarball used for the local
+ * client check (`install:local`) and for eyeballing the artifact.
  *
- * Hand-editing those hashes is how a release quietly drifts from its artifact,
- * so this script rewrites them from the packed file and fails loudly when the
- * documents no longer match the expected shape.
+ * The tarball packed here is NOT the published one and its SHA-256 is not
+ * recorded anywhere: `pnpm pack` gzip streams differ per platform, so a
+ * checksum computed on the developer machine never matches the workflow's. The
+ * release workflow packs, verifies, and publishes its own checksum with the
+ * GitHub release.
  *
  *   node scripts/release.mjs 0.3.5
  *
  * It does not commit or push: review `git status`, then commit yourself.
  */
-import { createHash } from 'node:crypto'
 import { execSync } from 'node:child_process'
 import { readFile, writeFile, stat } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -46,22 +47,13 @@ execSync(`pnpm pack --pack-destination "${destination}"`, { cwd: root, stdio: 'i
 
 const tarball = join(root, destination, `${packageJson.name}-${version}.tgz`)
 const { size } = await stat(tarball)
-const sha = createHash('sha256')
-  .update(await readFile(tarball))
-  .digest('hex')
-  .toUpperCase()
 console.log(`tarball: ${destination}/${packageJson.name}-${version}.tgz (${size} bytes)`)
-console.log(`sha256 : ${sha}`)
-
-const document = {
-  file: 'artifacts/README.md',
-  expected: /SHA-256: [0-9A-F]{64}/,
-}
+console.log('note: this pack is for local checks only; the published checksum comes from the release workflow')
 
 /*
  * README.md ships inside the tarball, so it must not name the tarball's own
- * version or SHA: rewriting that data after packing would change the next
- * pack's bytes. Keep release-specific metadata in the unshipped artifact log.
+ * version: rewriting that data after packing would change the next pack's
+ * bytes. Keep release-specific metadata in the unshipped artifact log.
  *
  * A blanket `release-v<semver>/` sweep would also relabel the "previous
  * release" row in artifacts/README.md's table, which has to keep naming the
@@ -80,16 +72,11 @@ const rewrites = [
   // release" row is deliberately left alone: only the author knows which
   // directory is being archived as the rollback target.
   [/`release-v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?\/` \| 当前规范产物/g, `\`release-v${version}/\` | 当前规范产物`],
-  [/SHA-256: [0-9A-F]{64}/g, `SHA-256: ${sha}`],
 ]
 
-const { file, expected } = document
+const file = 'artifacts/README.md'
 const path = join(root, file)
 const original = await readFile(path, 'utf8')
-if (!expected.test(original)) {
-  console.error(`${file}: no "SHA-256: <64 hex>" line found — update the document shape first`)
-  process.exit(1)
-}
 const next = rewrites.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), original)
 if (next !== original) {
   await writeFile(path, next)

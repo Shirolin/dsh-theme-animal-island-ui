@@ -72,7 +72,7 @@ pnpm run check:fixtures                                  # 全套夹具（11 个
    ```sh
    pnpm run release <version>
    ```
-   该脚本会更新 `package.json` 版本号、生成 `artifacts/release-v<version>/` 下的 `.tgz` 包，并将 SHA-256 写入 `artifacts/README.md`；
+   该脚本会更新 `package.json` 版本号、生成 `artifacts/release-v<version>/` 下的 `.tgz` 包；这个包只用于本机核对，**不要记录它的 SHA-256**（见下一步）；
 3. 运行 `pnpm run check`、`pnpm run format:check` 和 `pnpm run lint`；
 4. 如本机装有客户端，可运行 `pnpm run install:local` 将新产物同步至本机 `web` 与 `desktop` profile 进行实机核对；
 5. 提交变更并推送带 `v` 前缀的标签：
@@ -81,7 +81,10 @@ pnpm run check:fixtures                                  # 全套夹具（11 个
    git push origin main v<version>
    ```
 
-推送标签后，GitHub Actions 的 `release` 工作流会重新运行完整门禁，校验版本号与构建产物一致性，通过 OIDC Trusted Publishing 自动将包发布至 npm（附带 Sigstore Provenance 签名），并创建附带 `.tgz` 与 `SHA256SUMS` 的 GitHub Release。
+推送标签后，GitHub Actions 的 `release` 工作流会重新运行完整门禁，`verify-release.mjs` 会解包并逐个文件比对 CI 出包与仓库内容（版本号、CHANGELOG 段落、`package.json` 的 `files` 清单与文件字节），然后通过 OIDC Trusted Publishing 将包发布至 npm（附带 Sigstore Provenance 签名），并创建附带 `.tgz` 与 `SHA256SUMS` 的 GitHub Release。
+
+- 发布产物的 SHA-256 由该工作流计算并写进 Release 说明，不落在仓库里：`pnpm pack` 的 gzip 流因平台而异，本机算出的校验值不可能与发布产物相同；
+- 工作流失败时：修好问题后删除并重打同一个 tag（`git tag -d v<version> && git push origin :refs/tags/v<version>`），不要靠改本机 SHA 对齐。
 
 ## 许可证
 

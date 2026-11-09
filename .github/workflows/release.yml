@@ -47,6 +47,7 @@ jobs:
           pnpm pack --pack-destination "$RUNNER_TEMP/release"
 
       - name: Verify release metadata
+        id: verify
         run: node scripts/verify-release.mjs "$GITHUB_REF_NAME" "$RUNNER_TEMP"/release/*.tgz
 
       - name: Stage generic release assets
@@ -67,9 +68,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          notes="$RUNNER_TEMP/release/notes.md"
+          gh api "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+            -f tag_name="$GITHUB_REF_NAME" --jq .body > "$notes"
+          {
+            echo ""
+            echo "## 产物校验"
+            echo ""
+            echo '```text'
+            echo "${{ steps.verify.outputs.sha }}  dsh-theme-animal-island-ui-${GITHUB_REF_NAME#v}.tgz"
+            echo '```'
+            echo ""
+            echo "该 SHA-256 由本工作流在 Linux 上出包后计算，与附件中的 tgz 和 \`SHA256SUMS\` 一致。"
+          } >> "$notes"
           gh release create "$GITHUB_REF_NAME" \
             --verify-tag \
-            --generate-notes \
             --title "$GITHUB_REF_NAME" \
+            --notes-file "$notes" \
             "$RUNNER_TEMP"/release/*.tgz \
             "$RUNNER_TEMP"/release/SHA256SUMS

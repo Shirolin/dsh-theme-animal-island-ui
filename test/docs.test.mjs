@@ -41,14 +41,17 @@ test('repository documents exist and their relative links resolve', async () => 
   }
 })
 
-test('release manifest records the current artifact without self-referential README metadata', async () => {
+test('release manifest records the current artifact without self-referential checksums', async () => {
   const packageJson = JSON.parse(await readFile(resolve(root, 'package.json'), 'utf8'))
   const expected = `${packageJson.name}-${packageJson.version}.tgz`
   const manifest = await readFile(resolve(root, 'artifacts/README.md'), 'utf8')
   const readme = await readFile(resolve(root, 'README.md'), 'utf8')
 
   assert.ok(manifest.includes(`release-v${packageJson.version}/${expected}`), `artifacts/README.md: must name release-v${packageJson.version}/${expected}`)
-  assert.equal([...manifest.matchAll(/SHA-256: [0-9A-F]{64}/g)].length, 1, 'artifacts/README.md: expected exactly one SHA-256 line')
+  // Checksums are computed by the release workflow from the pack it publishes;
+  // a committed one would be a developer-machine value that can never match.
+  assert.doesNotMatch(manifest, /SHA-256: [0-9A-F]{64}/, 'artifacts/README.md: checksums belong to the GitHub release')
+  assert.match(manifest, /SHA256SUMS/, 'artifacts/README.md: must point at the published checksum')
   assert.doesNotMatch(readme, /release-v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?\//)
   assert.doesNotMatch(readme, /SHA-256: [0-9A-F]{64}/)
 })
