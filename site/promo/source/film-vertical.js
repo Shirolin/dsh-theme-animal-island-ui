@@ -15,8 +15,7 @@ const easeInOut = (value) => {
   return x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2
 }
 const mix = (from, to, amount) => from + (to - from) * amount
-const windowFade = (time, start, end, feather = 0.35) =>
-  smooth(progress(time, start, start + feather)) * (1 - smooth(progress(time, end - feather, end)))
+const windowFade = (time, start, end, feather = 0.35) => smooth(progress(time, start, start + feather)) * (1 - smooth(progress(time, end - feather, end)))
 
 const intro = $('#intro')
 const introPlate = $('#intro-plate')
@@ -246,12 +245,8 @@ function renderScreen(time) {
   const shellHeight = 1000 * zoom
   const freeX = CARD.width / 2 - centerX * zoom
   const freeY = CARD.height / 2 - centerY * zoom
-  const x = shellWidth <= CARD.width
-    ? (CARD.width - shellWidth) / 2
-    : Math.min(0, Math.max(CARD.width - shellWidth, freeX))
-  const y = shellHeight <= CARD.height
-    ? (CARD.height - shellHeight) / 2
-    : Math.min(0, Math.max(CARD.height - shellHeight, freeY))
+  const x = shellWidth <= CARD.width ? (CARD.width - shellWidth) / 2 : Math.min(0, Math.max(CARD.width - shellWidth, freeX))
+  const y = shellHeight <= CARD.height ? (CARD.height - shellHeight) / 2 : Math.min(0, Math.max(CARD.height - shellHeight, freeY))
   screenShell.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${zoom})`
   return { camera, radius: CARD.radius }
 }
@@ -347,9 +342,7 @@ function renderWorkspaceInteraction(time) {
       break
     }
   }
-  const pressed =
-    (time >= 5.63 && time <= 5.7) ||
-    (time >= 8.42 && time <= 8.49)
+  const pressed = (time >= 5.63 && time <= 5.7) || (time >= 8.42 && time <= 8.49)
   screenPointer.style.opacity = windowFade(time, 5.2, 8.49, 0.1)
   screenPointer.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) scale(${pressed ? 0.86 : 1})`
   return seek
@@ -458,7 +451,7 @@ function renderCanvas(time) {
       const seed = index * 37.17
       const speed = 5 + (index % 5) * 2
       const x = ((seed * 5.3 + time * speed) % (WIDTH + 80)) - 40
-      const y = ((seed * 11.7 - time * (3 + (index % 4) * 1.5)) % HEIGHT + HEIGHT) % HEIGHT
+      const y = (((seed * 11.7 - time * (3 + (index % 4) * 1.5)) % HEIGHT) + HEIGHT) % HEIGHT
       const twinkle = Math.pow(0.5 + 0.5 * Math.sin(time * (0.8 + (index % 4) * 0.17) + seed), 3)
       const alpha = (0.3 + (index % 3) * 0.09) * introDust * twinkle
       ctx.beginPath()
@@ -490,7 +483,7 @@ function renderCanvas(time) {
     for (let index = 0; index < 7; index += 1) {
       const seed = index * 71.3
       const x = ((seed * 8.7 + time * (7 + (index % 5) * 2)) % (WIDTH + 120)) - 60
-      const y = ((seed * 17.9 - time * (5 + (index % 7) * 1.5)) % (HEIGHT + 120) + HEIGHT + 120) % (HEIGHT + 120) - 60
+      const y = ((((seed * 17.9 - time * (5 + (index % 7) * 1.5)) % (HEIGHT + 120)) + HEIGHT + 120) % (HEIGHT + 120)) - 60
       const size = 8 + (index % 4) * 2
       const angle = time * (0.16 + (index % 4) * 0.03) + seed
       const color = dark > 0.6 ? `rgba(23, 92, 73, ${0.14 + (index % 3) * 0.03})` : `rgba(75, 113, 86, ${0.07 + (index % 3) * 0.02})`

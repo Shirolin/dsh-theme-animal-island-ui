@@ -64,9 +64,7 @@ body {
   height: 1080px;
   overflow: hidden;
   isolation: isolate;
-  background:
-    radial-gradient(circle at 70% 25%, rgba(117, 201, 167, 0.22), transparent 35%),
-    var(--cocoa-deep);
+  background: radial-gradient(circle at 70% 25%, rgba(117, 201, 167, 0.22), transparent 35%), var(--cocoa-deep);
 }
 
 .scene {
@@ -102,8 +100,7 @@ body {
   inset: 0;
   background:
     radial-gradient(circle at 33% 50%, transparent 0 20%, rgba(22, 13, 9, 0.22) 58%, rgba(18, 10, 6, 0.64) 100%),
-    linear-gradient(90deg, rgba(21, 12, 8, 0.9) 0%, rgba(21, 12, 8, 0.43) 33%, transparent 62%),
-    linear-gradient(0deg, rgba(21, 12, 8, 0.48), transparent 35%);
+    linear-gradient(90deg, rgba(21, 12, 8, 0.9) 0%, rgba(21, 12, 8, 0.43) 33%, transparent 62%), linear-gradient(0deg, rgba(21, 12, 8, 0.48), transparent 35%);
 }
 
 .copy-stack {
@@ -192,8 +189,7 @@ body {
   border: 3px solid rgba(75, 46, 31, 0.76);
   border-radius: 30px;
   background:
-    radial-gradient(circle at 16% 15%, rgba(117, 201, 167, 0.42), transparent 28%),
-    linear-gradient(110deg, #fff9e9 0%, var(--cream) 58%, #f2e6c9 100%);
+    radial-gradient(circle at 16% 15%, rgba(117, 201, 167, 0.42), transparent 28%), linear-gradient(110deg, #fff9e9 0%, var(--cream) 58%, #f2e6c9 100%);
   box-shadow: var(--paper-shadow);
   color: var(--cocoa);
   transform-origin: 62% 50%;
@@ -558,8 +554,7 @@ body {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(34, 53, 36, 0.68) 0%, rgba(34, 53, 36, 0.3) 31%, transparent 61%),
-    linear-gradient(0deg, rgba(7, 31, 40, 0.36), transparent 38%);
+    linear-gradient(90deg, rgba(34, 53, 36, 0.68) 0%, rgba(34, 53, 36, 0.3) 31%, transparent 61%), linear-gradient(0deg, rgba(7, 31, 40, 0.36), transparent 38%);
 }
 
 .outro-copy {
@@ -614,7 +609,6 @@ body {
   transform-origin: left center;
 }
 
-
 .ticket-half {
   position: absolute;
   inset: 0;
@@ -622,11 +616,59 @@ body {
 }
 
 .ticket-half.left {
-  clip-path: polygon(0 0, 75.2% 0, 76.1% 5%, 75.5% 10%, 76.2% 15%, 75.4% 20%, 76.3% 25%, 75.6% 30%, 76% 35%, 75.3% 40%, 76.4% 45%, 75.5% 50%, 76.1% 55%, 75.4% 60%, 76.2% 65%, 75.6% 70%, 76.3% 75%, 75.4% 80%, 76% 85%, 75.6% 90%, 76.2% 95%, 75.7% 100%, 0 100%);
+  clip-path: polygon(
+    0 0,
+    75.2% 0,
+    76.1% 5%,
+    75.5% 10%,
+    76.2% 15%,
+    75.4% 20%,
+    76.3% 25%,
+    75.6% 30%,
+    76% 35%,
+    75.3% 40%,
+    76.4% 45%,
+    75.5% 50%,
+    76.1% 55%,
+    75.4% 60%,
+    76.2% 65%,
+    75.6% 70%,
+    76.3% 75%,
+    75.4% 80%,
+    76% 85%,
+    75.6% 90%,
+    76.2% 95%,
+    75.7% 100%,
+    0 100%
+  );
 }
 
 .ticket-half.right {
-  clip-path: polygon(75.2% 0, 100% 0, 100% 100%, 75.7% 100%, 76.2% 95%, 75.6% 90%, 76% 85%, 75.4% 80%, 76.3% 75%, 75.6% 70%, 76.2% 65%, 75.4% 60%, 76.1% 55%, 75.5% 50%, 76.4% 45%, 75.3% 40%, 76% 35%, 75.6% 30%, 76.3% 25%, 75.4% 20%, 76.2% 15%, 75.5% 10%, 76.1% 5%);
+  clip-path: polygon(
+    75.2% 0,
+    100% 0,
+    100% 100%,
+    75.7% 100%,
+    76.2% 95%,
+    75.6% 90%,
+    76% 85%,
+    75.4% 80%,
+    76.3% 75%,
+    75.6% 70%,
+    76.2% 65%,
+    75.4% 60%,
+    76.1% 55%,
+    75.5% 50%,
+    76.4% 45%,
+    75.3% 40%,
+    76% 35%,
+    75.6% 30%,
+    76.3% 25%,
+    75.4% 20%,
+    76.2% 15%,
+    75.5% 10%,
+    76.1% 5%
+  );
 }
 
 .ticket-half::after {
@@ -714,11 +756,33 @@ body {
 .transition-band {
   position: absolute;
   inset: -8%;
-  background:
-    radial-gradient(circle at 65% 45%, rgba(117, 201, 167, 0.42), transparent 30%),
-    linear-gradient(110deg, #302015, #4b2e1f 45%, #183f36 100%);
+  background: radial-gradient(circle at 65% 45%, rgba(117, 201, 167, 0.42), transparent 30%), linear-gradient(110deg, #302015, #4b2e1f 45%, #183f36 100%);
   box-shadow: 0 0 120px rgba(13, 34, 28, 0.5);
-  clip-path: polygon(0 0, 94% 0, 94.4% 5%, 93.9% 10%, 94.5% 15%, 93.9% 20%, 94.4% 25%, 93.8% 30%, 94.5% 35%, 93.9% 40%, 94.4% 45%, 93.8% 50%, 94.5% 55%, 93.9% 60%, 94.4% 65%, 93.8% 70%, 94.5% 75%, 93.9% 80%, 94.4% 85%, 93.8% 90%, 94.5% 95%, 94.1% 100%, 0 100%);
+  clip-path: polygon(
+    0 0,
+    94% 0,
+    94.4% 5%,
+    93.9% 10%,
+    94.5% 15%,
+    93.9% 20%,
+    94.4% 25%,
+    93.8% 30%,
+    94.5% 35%,
+    93.9% 40%,
+    94.4% 45%,
+    93.8% 50%,
+    94.5% 55%,
+    93.9% 60%,
+    94.4% 65%,
+    93.8% 70%,
+    94.5% 75%,
+    93.9% 80%,
+    94.4% 85%,
+    93.8% 90%,
+    94.5% 95%,
+    94.1% 100%,
+    0 100%
+  );
 }
 
 .transition-band::after {
@@ -814,9 +878,7 @@ body.debug .safe-marker {
   z-index: 65;
   inset: 0;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 78% 18%, rgba(117, 201, 167, 0.38), transparent 42%),
-    linear-gradient(115deg, #f8f0dd 0%, #f3ead2 46%, #dcebdc 100%);
+  background: radial-gradient(circle at 78% 18%, rgba(117, 201, 167, 0.38), transparent 42%), linear-gradient(115deg, #f8f0dd 0%, #f3ead2 46%, #dcebdc 100%);
   color: #4b2e1f;
   box-shadow: 0 46px 96px rgba(28, 18, 10, 0.34);
   transform-origin: 50% 0;

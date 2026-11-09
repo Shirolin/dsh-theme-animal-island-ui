@@ -213,7 +213,6 @@ body.is-vertical .transition-mark {
   display: none;
 }
 
-
 body.is-vertical .beat-rail {
   position: absolute;
   z-index: 22;
