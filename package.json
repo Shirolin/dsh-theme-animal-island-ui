@@ -1,6 +1,6 @@
 {
   "name": "dsh-theme-animal-island-ui",
-  "version": "0.3.36",
+  "version": "0.3.37",
   "description": "A high-fidelity Animal Island inspired DSH Web skin with ThemeRuntime tokens and public slots",
   "icon": "./assets/icon-256.png",
   "repository": {

@@ -2,7 +2,7 @@
 
 本文件记录每个发布版本对用户可见的变化。安装与验收流程见 `README.md`，设计映射见 `docs/design.md`，DSH 兼容边界见 `docs/compatibility.md`。
 
-## 未发布
+## 0.3.37（DSH 0.2.2 基线确认与工具链更新）
 
 - 桌面客户端验证基线更新为 DSH `0.2.2-rc.1`，并声明支持区间 `>= 0.2.2 < 0.3`：设置面板改成 grid 布局、导航标题脱离 `nav` 后，皮肤无需改动（`0.2.1-rc.5 → 0.2.2-rc.1` 的夹具截图逐字节相同），只把设置导航夹具的 DOM 同步到新结构；
 - 离屏夹具每次运行打印 `[fixture] DSH runtime <版本>`，新增 `--expect-dsh <版本>` 把结论钉到具体运行时；新增 `pnpm run check:fixtures` 一条命令跑全套夹具，`docs/compatibility.md` 补上「DSH 升级时怎么处理」的判据表，避免把夹具 DOM 过期误判成皮肤回归；
