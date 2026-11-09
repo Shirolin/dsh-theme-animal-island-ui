@@ -67,7 +67,7 @@ pnpm run check:fixtures                                  # 全套夹具（11 个
 
 ## 发布
 
-1. 在 [CHANGELOG.md](CHANGELOG.md) 中补齐新版本变更说明；
+1. 在 [CHANGELOG.md](CHANGELOG.md) 中补齐新版本变更说明：把顶部的「未发布」段落改名为 `## <version>（<主题>）`，没有则新增一段；
 2. 执行打包与产物清单更新脚本：
    ```sh
    pnpm run release <version>
