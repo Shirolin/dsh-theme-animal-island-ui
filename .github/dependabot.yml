@@ -19,6 +19,14 @@ updates:
       - dependency-name: typescript
         update-types:
           - version-update:semver-major
+      # The bundle externalizes react and runs on the DSH host's copy, so the
+      # types must stay on the React major the host ships (18).
+      - dependency-name: react
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@types/react'
+        update-types:
+          - version-update:semver-major
 
   - package-ecosystem: github-actions
     directory: /
