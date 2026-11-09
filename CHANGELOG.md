@@ -2,6 +2,13 @@
 
 本文件记录每个发布版本对用户可见的变化。安装与验收流程见 `README.md`，设计映射见 `docs/design.md`，DSH 兼容边界见 `docs/compatibility.md`。
 
+## 未发布
+
+- 桌面客户端验证基线更新为 DSH `0.2.2-rc.1`，并声明支持区间 `>= 0.2.2 < 0.3`：设置面板改成 grid 布局、导航标题脱离 `nav` 后，皮肤无需改动（`0.2.1-rc.5 → 0.2.2-rc.1` 的夹具截图逐字节相同），只把设置导航夹具的 DOM 同步到新结构；
+- 离屏夹具每次运行打印 `[fixture] DSH runtime <版本>`，新增 `--expect-dsh <版本>` 把结论钉到具体运行时；新增 `pnpm run check:fixtures` 一条命令跑全套夹具，`docs/compatibility.md` 补上「DSH 升级时怎么处理」的判据表，避免把夹具 DOM 过期误判成皮肤回归；
+- 开发工具链升级：TypeScript 5.9.3、jsdom 31、esbuild 0.28、lightningcss 1.33、Biome 2.6.5 与 Nunito 5.3.0（内嵌字体数据更新），GitHub Actions 升到 `checkout`/`setup-node`/`upload-artifact` v7、`pnpm/action-setup` v6；Dependabot 改为按周分组提 PR（minor/patch 合并为一条，React 与 TypeScript 的 major 不再自动提）；
+- 修复 CI 的格式门禁：`site/promo/source/` 四个未格式化文件会让 `format:check` 在每个平台失败。
+
 ## 0.3.36（重置卡片与作者支持入口、官方商店收录与 npm 双发）
 
 - 「设置 → 内置插件 → 动森外观」底部的「全部恢复默认」升级为卡片式布局：采用微浅黄纸面与波点背景容器，左侧包含操作说明，右侧收纳次级重置按钮，解决右浮动按钮空悬与对齐问题；

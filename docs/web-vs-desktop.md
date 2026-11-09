@@ -2,7 +2,7 @@
 
 > 目的：把「web 正常、desktop 不对」拆成**平台分支**、**版本差异**、**主题自身问题**三类，避免再靠截图逐个猜。
 >
-> 基线：桌面客户端 `0.2.1-rc.5`（`app.asar` 内置 runtime），浏览器 web 端可能来自不同构建；两者共用同一套 web app 与 client plugin 契约（见 [compatibility.md](compatibility.md)）。
+> 基线：桌面客户端 `0.2.2-rc.1`（当前验证基线，见 [compatibility.md](compatibility.md)）；下表的 Windows 行为实测于 `0.2.1-rc.5`，尚未在新基线上复测，复测后请更新表格内的版本标注。浏览器 web 端可能来自不同构建；两者共用同一套 web app 与 client plugin 契约。
 
 ## 先判定，再改样式
 
