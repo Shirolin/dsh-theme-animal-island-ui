@@ -140,7 +140,10 @@ function installWeb(profileDir) {
   // One command string with shell: true keeps Windows' pnpm.CMD shim working
   // without hitting Node's DEP0190 (args + shell) warning; the profile path is
   // passed as cwd, not interpolated.
-  runShell('pnpm install', { cwd: profileDir })
+  // The manifest is rewritten right before this install, so the profile lockfile
+  // always disagrees with it; without --no-frozen-lockfile the install aborts
+  // whenever pnpm runs in CI mode (CI=true defaults the flag to true).
+  runShell('pnpm install --no-frozen-lockfile', { cwd: profileDir })
 }
 
 function installDesktop(profileDir, desktop) {
@@ -150,7 +153,7 @@ function installDesktop(profileDir, desktop) {
     DSH_DESKTOP_NODE_EXECUTABLE: desktop.executable,
     PATH: `${desktop.runtimeBin};${process.env.PATH ?? ''}`,
   }
-  run(desktop.executable, ['--expose-internals', desktop.pnpm, 'install', '--dir', profileDir], { env })
+  run(desktop.executable, ['--expose-internals', desktop.pnpm, 'install', '--no-frozen-lockfile', '--dir', profileDir], { env })
 }
 
 async function main() {
