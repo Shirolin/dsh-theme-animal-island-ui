@@ -102,7 +102,7 @@
     "check": "pnpm run check:site && pnpm run typecheck && pnpm run build && node test/run.mjs && node scripts/check-compat.mjs"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.5",
+    "@biomejs/biome": "2.6.6",
     "@deepseek-ai/dsh-client-ui-conversation": "0.1.5-rc.3",
     "@deepseek-ai/dsh-client-ui-renderer": "0.1.5-rc.3",
     "@deepseek-ai/dsh-client-ui-sidebar": "0.1.5-rc.3",
