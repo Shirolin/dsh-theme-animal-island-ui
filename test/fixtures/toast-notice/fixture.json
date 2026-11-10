@@ -1,0 +1,22 @@
+{
+  "title": "浮层提示 · toast 在工具提示面上的可读性",
+  "assertions": [
+    {
+      "message": "提示文字与浮层底色对比度不低于 4.5:1",
+      "expression": "(() => { const toast = document.querySelector('[role=\"alert\"]'); if (!toast) return false; const rgba = (value) => { const n = value.match(/[\\d.]+/g); return [Number(n[0]), Number(n[1]), Number(n[2]), n.length > 3 ? Number(n[3]) : 1]; }; const over = (top, bottom) => top.slice(0, 3).map((v, i) => Math.round(v * top[3] + bottom[i] * (1 - top[3]))); const lum = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }; const page = rgba(getComputedStyle(document.body).backgroundColor); const bg = over(rgba(getComputedStyle(toast).backgroundColor), page); const fg = rgba(getComputedStyle(toast).color); const [light, dark] = [lum(fg), lum(bg)].sort((a, b) => b - a); return (light + 0.05) / (dark + 0.05) >= 4.5; })()"
+    },
+    {
+      "message": "浮层沿用主题的工具栏提示底色",
+      "expression": "(() => { const toast = document.querySelector('[role=\"alert\"]'); if (!toast) return false; const dark = document.body.hasAttribute('data-ds-dark-theme'); return getComputedStyle(toast).backgroundColor === (dark ? 'rgb(89, 79, 66)' : 'rgb(127, 90, 56)'); })()"
+    },
+    {
+      "message": "成功图标与浮层底色的对比度不低于 3:1",
+      "expression": "(() => { const toast = document.querySelector('[role=\"alert\"]'); const icon = toast && toast.querySelector('svg'); if (!icon) return false; const rgba = (value) => { const n = value.match(/[\\d.]+/g); return [Number(n[0]), Number(n[1]), Number(n[2]), n.length > 3 ? Number(n[3]) : 1]; }; const over = (top, bottom) => top.slice(0, 3).map((v, i) => Math.round(v * top[3] + bottom[i] * (1 - top[3]))); const lum = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }; const page = rgba(getComputedStyle(document.body).backgroundColor); const bg = over(rgba(getComputedStyle(toast).backgroundColor), page); const fg = rgba(getComputedStyle(icon).color); const [light, dark] = [lum(fg), lum(bg)].sort((a, b) => b - a); return (light + 0.05) / (dark + 0.05) >= 3; })()"
+    },
+    {
+      "message": "行内操作链接与浮层底色的对比度不低于 4.5:1",
+      "expression": "(() => { const toast = document.querySelector('[role=\"alert\"]'); const action = toast && toast.querySelector('button'); if (!action) return false; const rgba = (value) => { const n = value.match(/[\\d.]+/g); return [Number(n[0]), Number(n[1]), Number(n[2]), n.length > 3 ? Number(n[3]) : 1]; }; const over = (top, bottom) => top.slice(0, 3).map((v, i) => Math.round(v * top[3] + bottom[i] * (1 - top[3]))); const lum = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }; const page = rgba(getComputedStyle(document.body).backgroundColor); const bg = over(rgba(getComputedStyle(toast).backgroundColor), page); const fg = rgba(getComputedStyle(action).color); const [light, dark] = [lum(fg), lum(bg)].sort((a, b) => b - a); return (light + 0.05) / (dark + 0.05) >= 4.5; })()"
+    }
+  ],
+  "variants": [{ "id": "light", "mode": "light", "window": "760,300" }, { "id": "dark", "mode": "dark", "window": "760,300" }]
+}
