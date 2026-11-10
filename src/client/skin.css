@@ -650,9 +650,11 @@ html[data-dsh-animal-island-skin] :where([role="treeitem"][aria-selected="true"]
 /* The turn-trigger notice is the one card in a light conversation that DSH paints
    on the dark code surface, but it colors its header and body with the light
    palette's label tiers — the header lands at 2.6:1. Re-point the three tiers
-   inside that notice only; its surface, border, and hover states stay as shipped.
-   Dark mode already pairs these tiers with the night code surface, so it keeps them. */
-html[data-dsh-animal-island-skin] body:not([data-ds-dark-theme]) [data-turn-trigger] {
+   inside that notice, but only while the card keeps its dark surface: on hover
+   DSH swaps the card to the light interactive wash, and its original dark tiers
+   are the ones paired with that state. Dark mode already pairs these tiers with
+   the night code surface, so it keeps them. */
+html[data-dsh-animal-island-skin] body:not([data-ds-dark-theme]) [data-turn-trigger]:not(:hover) {
   --dsw-alias-label-primary: #e8d5bc;
   --dsw-alias-label-secondary: #b8a68a;
   --dsw-alias-label-tertiary: #a69580;
@@ -1028,23 +1030,37 @@ html[data-dsh-animal-island-skin]
    and the radius stays DSH's own: declaring 20px on the container would also
    override the document preview, which deliberately sets 0px for its flat code
    view (it renders the same CodeBlock). */
-/* The code island is dark in both palettes, but the banner inherits
-   --dsw-alias-label-primary, which is warm brown in light mode — unreadable on
-   the dark banner. The language label declares that colour itself, so the
-   banner's own colour is not enough: the label and the action slot (whose copy
-   button only inherits) are both driven from the code foreground. */
-html[data-dsh-animal-island-skin] [data-code-block-banner],
-html[data-dsh-animal-island-skin] [data-code-block-banner] > :where(div, span, button, code) {
+/* The code island is dark in both palettes, but its banner header declares the
+   label tiers itself: the language/title/status labels use label-tertiary and
+   the action icons use label-secondary, so colouring the banner alone cannot
+   reach them. In light mode those tiers are warm brown on the dark banner
+   (~2:1). Remap the three tiers to the code foreground inside the banner;
+   state colours (copy failure, pressed wrap) keep their own tokens. */
+html[data-dsh-animal-island-skin] [data-code-block-banner] {
+  --dsw-alias-label-primary: var(--shiki-foreground, #e8d5bc);
+  --dsw-alias-label-secondary: var(--shiki-foreground, #e8d5bc);
+  --dsw-alias-label-tertiary: var(--shiki-foreground, #e8d5bc);
   color: var(--shiki-foreground, #e8d5bc);
 }
 
-/* Code typography and the code foreground are for the dark island. The right
-   sidebar's document preview is not an island: it renders flat views on the
-   sidebar surface (highlighted body = data-code-preview, plain-text pages =
-   data-textpreview-plain, one <pre> per page, 0 radius, transparent background).
-   Excluding those subtrees keeps DSH's own padding, colour and metrics there —
-   in light mode our foreground had left the plain view at ~1.35:1. */
-html[data-dsh-animal-island-skin] pre:not([data-code-preview] *):not([data-textpreview-plain] *) {
+/* Code typography and the code foreground are for the dark island. Several
+   surfaces are not islands, and the cream foreground is unreadable on each of
+   them (measured 1.0–1.4:1 in light mode):
+   - the right sidebar's document preview (highlighted body = data-code-preview,
+     plain-text pages = data-textpreview-plain, one <pre> per page, 0 radius,
+     transparent background);
+   - the turn-trigger notice, whose plain <pre> must follow its own label tiers
+     when DSH lightens the card on hover;
+   - action cards (data-action-card), the present tool row (data-tool="present")
+     and the schedule-create fallback (data-tool="schedule_create"), which are
+     plain text on paper-coloured cards;
+   - every dialog (role="dialog"): the plugin update log and the agent-preset
+     source viewer are plain text on paper, not code islands.
+   Excluding those subtrees keeps DSH's own padding, colour and metrics there. */
+html[data-dsh-animal-island-skin]
+  pre:not([data-code-preview] *):not([data-textpreview-plain] *):not([data-turn-trigger] *):not([data-action-card] *):not([data-tool="present"] *):not(
+    [data-tool="schedule_create"] *
+  ):not([role="dialog"] *) {
   padding: 20px 24px !important;
   color: var(--shiki-foreground, #e8d5bc) !important;
   font-family: var(--animal-code-family) !important;

@@ -1,0 +1,26 @@
+{
+  "title": "代码岛作用域 · 浅色卡面不被奶油前景命中",
+  "pluginCss": [
+    "@deepseek-ai/dsh-client-ui-action-cards",
+    "@deepseek-ai/dsh-client-ui-deliverables",
+    "@deepseek-ai/dsh-client-ui-plugin-manager",
+    "@deepseek-ai/dsh-client-ui-agent-preset",
+    "@deepseek-ai/dsh-client-ui-schedule",
+    "@deepseek-ai/dsh-client-ui-trajectory"
+  ],
+  "assertions": [
+    {
+      "message": "浅色卡面上的 pre 保持 DSH 自己的标签色、对比度不低于 4.5:1 且不套用 20px 代码排版",
+      "expression": "(() => { const parse = (value) => { const n = value.match(/[\\d.]+/g); return [Number(n[0]), Number(n[1]), Number(n[2]), n.length > 3 ? Number(n[3]) : 1]; }; const over = (top, bottom) => top.slice(0, 3).map((v, i) => Math.round(v * top[3] + bottom[i] * (1 - top[3]))); const lum = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }; const dark = document.body.hasAttribute('data-ds-dark-theme'); const secondary = dark ? 'rgb(234, 217, 189)' : 'rgb(101, 74, 47)'; const tertiary = dark ? 'rgb(203, 185, 148)' : 'rgb(114, 95, 72)'; const cream = dark ? 'rgb(243, 223, 189)' : 'rgb(232, 213, 188)'; const page = parse(getComputedStyle(document.body).backgroundColor); return [...document.querySelectorAll('[data-audit=\"light\"]')].every((pre) => { const style = getComputedStyle(pre); const want = pre.classList.contains('oT5lKa_fallback') ? tertiary : secondary; let node = pre; let bg = [255, 255, 255, 1]; while (node !== null) { const c = parse(getComputedStyle(node).backgroundColor); if (c[3] > 0.999) { bg = c; break; } if (c[3] > 0) { bg = over(c, page); break; } node = node.parentElement; } const [light, darkLum] = [lum(parse(style.color)), lum(bg)].sort((a, b) => b - a); return style.color === want && style.color !== cream && style.paddingTop !== '20px' && (light + 0.05) / (darkLum + 0.05) >= 4.5; }); })()"
+    },
+    {
+      "message": "深色代码岛上的 payload pre 仍使用奶油代码前景且对比度不低于 4.5:1",
+      "expression": "(() => { const pre = document.querySelector('[data-audit=\"dark\"]'); if (!pre) return false; const parse = (value) => { const n = value.match(/[\\d.]+/g); return [Number(n[0]), Number(n[1]), Number(n[2]), n.length > 3 ? Number(n[3]) : 1]; }; const lum = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }; const dark = document.body.hasAttribute('data-ds-dark-theme'); const style = getComputedStyle(pre); const [light, darkLum] = [lum(parse(style.color)), lum(parse(style.backgroundColor))].sort((a, b) => b - a); return style.color === (dark ? 'rgb(243, 223, 189)' : 'rgb(232, 213, 188)') && (light + 0.05) / (darkLum + 0.05) >= 4.5; })()"
+    },
+    {
+      "message": "代码块顶部栏的语言标签与操作按钮在深色栏底上保持奶油前景且对比度不低于 4.5:1",
+      "expression": "(() => { const label = document.querySelector('[data-audit=\"banner-label\"]'); const action = document.querySelector('[data-audit=\"banner-action\"]'); const header = label && label.closest('[data-code-block-banner]'); if (!label || !action || !header) return false; const parse = (value) => { const n = value.match(/[\\d.]+/g); return [Number(n[0]), Number(n[1]), Number(n[2]), n.length > 3 ? Number(n[3]) : 1]; }; const lum = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }; const dark = document.body.hasAttribute('data-ds-dark-theme'); const cream = dark ? 'rgb(243, 223, 189)' : 'rgb(232, 213, 188)'; const bg = parse(getComputedStyle(header).backgroundColor); const readable = (element) => { const [light, darkLum] = [lum(parse(getComputedStyle(element).color)), lum(bg)].sort((a, b) => b - a); return (light + 0.05) / (darkLum + 0.05) >= 4.5; }; return getComputedStyle(label).color === cream && getComputedStyle(action).color === cream && readable(label) && readable(action); })()"
+    }
+  ],
+  "variants": [{ "id": "light", "mode": "light", "window": "900,1100" }, { "id": "dark", "mode": "dark", "window": "900,1100" }]
+}

@@ -182,6 +182,30 @@ export const PUBLIC_DATA_HOOKS = [
     ),
   }),
   publicDataHook({
+    attribute: 'action-card',
+    selector: '[data-action-card]',
+    required: false,
+    purpose: 'Keep action-card result text on the card’s own label colours instead of the dark island foreground.',
+    evidence: dshSource(
+      '@deepseek-ai/dsh-client-ui-action-cards',
+      'lib/client.js',
+      'data-action-card',
+      'ActionCard renders this marker on the section that wraps its body.',
+    ),
+  }),
+  publicDataHook({
+    attribute: 'tool',
+    selector: '[data-tool="present"]',
+    required: false,
+    purpose: 'Keep plain-text tool output (the present row and the schedule-create fallback) on the card’s own label colours.',
+    evidence: dshSource(
+      '@deepseek-ai/dsh-client-ui-deliverables',
+      'lib/client.js',
+      'data-tool',
+      'Present outcomes render the tool marker on the row root that wraps their output.',
+    ),
+  }),
+  publicDataHook({
     attribute: 'dsh-boot',
     selector: '[data-dsh-boot]',
     required: false,

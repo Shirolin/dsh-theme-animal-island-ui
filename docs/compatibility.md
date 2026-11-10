@@ -54,11 +54,13 @@ Slot 仅用于公开组件注入；`data-slot` 仅在测试断言中用于定位
 | `[data-trigger-menu]` | Composer 的 `/` 与 `@` 触发面板：排除胶囊与对话框装饰，并在底边加 `16px` 渐隐（`::after`），不改内联 `max-height` | DSH 自身的 pointerdown 关闭逻辑依赖该属性 |
 | `[data-code-block-banner]` | 代码块顶部栏（语言标签 + 复制按钮）文字颜色：亮色下将默认深棕字改为浅色代码前景，连同直接子元素一并覆盖 | 代码块头部标记；仅改颜色，不改几何 |
 | `[data-code-preview]`、`[data-textpreview-plain]` | 右侧栏「文档」预览的两条平面视图（高亮代码 / 纯文本）：排除深色代码岛排版，保留 DSH 原生内边距与文字色 | `CodeBody` 与 `TextBody` 渲染的公开属性 |
-| `[data-turn-trigger]` | 会话里的触发提示条：DSH 用深色代码面作底，却配浅色界面的三级文字色。亮色下把该卡片作用域内的 `label-primary/secondary/tertiary` 换成深面可读的暖色；卡片底色、边框与 hover 保持原样 | `TurnTriggerNodeView` 渲染在 section 根上的标记；由 `turn-trigger-notice` 夹具锁定对比度 |
+| `[data-turn-trigger]` | 会话里的触发提示条：DSH 用深色代码面作底，却配浅色界面的三级文字色。亮色下仅在卡片保持深色底时把该作用域内的 `label-primary/secondary/tertiary` 换成深面可读的暖色；悬停时 DSH 会把底色换成浅色交互面，该状态交还它原本的深色文字。卡片底色、边框与 hover 配色保持原样 | `TurnTriggerNodeView` 渲染在 section 根上的标记；由 `turn-trigger-notice` 夹具锁定默认态对比度，CSS 规则测试锁定 `:not(:hover)` 作用域 |
 | `body > [role="alert"]` | 应用内浮层提示（toast）：DSH 把它 portal 到 `body`，底色是本主题的深色工具栏棕。亮色下把图标（`state-success-primary` / `state-warn-label`）换成深面可读的浅色；行内操作链接（`static-deepseek-400`）在两种模式下都换成浅蓝——DSH 静态蓝在该底色上也只有 3.4:1。浮层底色、圆角与阴影保持原样 | DSH `createPortal(..., document.body)` 的 toast 根节点；由 `toast-notice` 夹具锁定对比度 |
 | `[data-review-view]` | 右侧栏 Deliverables 代码 diff：画在浅色纸面上的平面视图。亮色下将 `--shiki-*` 切换为浅面可读的暖色语法色，几何由组件自身控制 | `FileDiff` 组件的根标记；由 `deliverables-diff` 夹具锁定计算色 |
 | `[data-open-target]` | 分裂式「打开方式」按钮在亮色下的外框与中缝（内部 `button[aria-haspopup="menu"]`）：增强在浅色画布上过淡的原生边框 | `OpenTargetButton` 的语义标记，不依赖 CSS Module 哈希 |
 | `[data-plugin-item]`、`[data-plugin-package]` | 插件管理列表行在亮色下的浅奶油阅读面，防止画布底部波浪穿过透明行文字；不改边距与排列 | Plugin Manager 为配置行与插件行写出的标记 |
+| `[data-action-card]` | 动作卡内的结果文本是浅色卡面上的普通文本：不套深色代码岛前景与 `20px` 代码排版，保留 DSH 自身的标签色与紧凑度量 | `ActionCard` 渲染在包裹卡体 section 上的标记；由 `code-island-scopes` 夹具锁定 |
+| `[data-tool="present"]`、`[data-tool="schedule_create"]` | Present 结果行与「创建自动化任务」回退文本位于浅色工具卡：同样交还原生 label 色与度量 | 工具行根节点的语义工具标记；由 `code-island-scopes` 夹具锁定 |
 | `[data-dsh-boot]` | 全屏启动等待页：提供昼夜岛屿背景；失败页保持官方错误列表可滚动 | `WebBootPage` 在插件加载前写出的根标记 |
 | `[data-dsh-boot-spinner]` | 启动进度章：通过 `[data-dsh-boot]:has([data-dsh-boot-spinner])` 启用渡岛船票纸卡；进度弧读取 `--dsh-boot-arc` | 启动失败时该节点被移除，纸卡条件随之失配，自动退回官方错误页 |
 | `--dsl-code-block-*` | 代码块圆角、底色与 Banner 变量 —— 皮肤**只读不写**，避免顶掉文档预览的 `0px` / `transparent` 平面设置 | DSH 为代码块预留的样式变量 |
@@ -67,7 +69,7 @@ Slot 仅用于公开组件注入；`data-slot` 仅在测试断言中用于定位
 | `#root` + `div:has(> nav[aria-label])` | Windows 标题栏三层表面：让 `body` 的 `sidebar-fill` 供原生标题栏读取，再在 `#root` 与侧栏根节点恢复各自底色 | `#root` 为根容器，侧栏根节点包含直接子元素 `nav[aria-label]`；仅改底色 |
 | `--dsh-windows-content-radius` | Windows 内容列左上角圆角：在 **frame 元素**上设为 `0px`，与 Web 端直角对齐 | Layout 插件公开变量；必须写在 `.frame` 元素上才能覆盖其自身声明 |
 | `--dsw-menu-surface-fill` | 桌面端新版菜单材质底色别名：映射到不透明的 `--dsw-specific-menu`，防止透出下方焦点环 | 仅在支持该变量的运行时生效，旧版自然忽略 |
-| `role="alert" / button / checkbox / dialog / group / listbox / menu / menuitem / menuitemradio / option / radio / search / switch / treeitem` | 控件、弹层、搜索框与树行的语义锚点 | 标准 ARIA 角色 |
+| `role="alert" / button / checkbox / dialog / group / listbox / menu / menuitem / menuitemradio / option / radio / search / switch / treeitem` | 控件、弹层、搜索框与树行的语义锚点；对话框内的 `<pre>`（插件更新日志、预设源码查看）保持对话框自身的文字色，不套深色代码岛排版 | 标准 ARIA 角色 |
 | `[role='treeitem'][aria-selected='true']` | 选中的会话行与搜索结果行：木牌底色、木纹与内嵌压边 | 树行选中态 ARIA 属性 |
 | `[aria-current='page']` | 侧栏面板行的当前选中项：木牌底色、木纹与内嵌压边 | 导航当前页 ARIA 属性 |
 | `[aria-pressed]`、`[aria-selected]`、`[aria-checked]`、`[aria-expanded]` | 按钮按压、列表选中、开关与展开状态 | 标准 ARIA 状态属性 |

@@ -799,3 +799,28 @@ test("selected-row wood grain survives DSH's selected shorthand", () => {
   assert.equal(content.declaration('color')?.value, 'var(--dsw-alias-label-secondary)')
   assert.equal(content.declaration('color')?.important, true)
 })
+
+test('turn-trigger label fix applies only while the card stays dark', () => {
+  // DSH swaps the card to the light interactive wash on hover and pairs that
+  // state with its own dark label tiers; keeping the light tiers there made the
+  // hovered notice unreadable.
+  const labelRules = ruleQuery.filter((candidate) => candidate.selector.includes('[data-turn-trigger]') && candidate.declaration('--dsw-alias-label-tertiary'))
+  assert.ok(labelRules.length > 0, 'the turn-trigger label override is missing')
+  for (const rule of labelRules) {
+    assert.match(rule.selector, /\[data-turn-trigger\]:not\(:hover\)/)
+  }
+})
+
+test('code-island pre styling leaves paper-surface pre blocks alone', () => {
+  // The cream code foreground is !important; if it reaches a plain <pre> on a
+  // light card, the text stays at ~1.3:1. Every reviewed paper surface has to
+  // be excluded explicitly.
+  const preRule = ruleQuery.find(
+    (candidate) => candidate.selector.includes('pre:not(') && candidate.declaration('color')?.value === 'var(--shiki-foreground, #e8d5bc)',
+  )
+  assert.ok(preRule, 'the code-island pre rule is missing')
+  const compact = preRule.selector.replace(/\s+/g, '')
+  for (const scope of ['[data-turn-trigger]', '[data-action-card]', '[data-tool="present"]', '[data-tool="schedule_create"]', '[role="dialog"]']) {
+    assert.ok(compact.includes(`:not(${scope.replace(/\s+/g, '')}*)`), `${scope} pre blocks must keep DSH's own colour and metrics`)
+  }
+})

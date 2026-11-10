@@ -1,0 +1,101 @@
+<!doctype html>
+<!--
+  Plain <pre> blocks that DSH paints on paper-coloured cards. The skin's dark
+  code island foreground must not reach any of them; the trajectory payload at
+  the end is the dark-island control that must keep the cream foreground.
+
+  The class names come from the pinned runtime's CSS modules and are not
+  selected by the skin; only the reviewed data hooks and the dialog role are.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>代码岛作用域</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #f8f8f0;
+  }
+  .fixture {
+    width: 720px;
+    margin: 0 auto;
+    padding: 24px 26px 40px;
+  }
+  .fixture-title {
+    margin: 0 0 18px;
+    color: var(--dsw-alias-label-primary);
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .fixture-row {
+    margin: 0 0 18px;
+  }
+  .fixture-dialog {
+    padding: 12px;
+    background: var(--dsw-alias-bg-layer-1);
+    border: 1px solid var(--dsw-alias-border-l1);
+    border-radius: var(--dsw-radius-lg);
+  }
+  .fixture-dark {
+    background: var(--dsw-alias-bg-layer-1);
+    padding: 12px;
+    border-radius: var(--dsw-radius-lg);
+  }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{TOKENS}} {{BODY_STYLE}}">
+<main class="fixture">
+  <h1 class="fixture-title">代码岛作用域</h1>
+
+  <section class="fixture-row" data-action-card="call-1" data-action="propose">
+    <pre class="ZMgt9a_reason" data-audit="light">提议理由：把结果整理成一个文件。</pre>
+  </section>
+
+  <section class="fixture-row">
+    <div data-tool="present" data-state="ok">
+      <pre class="YcWBLa_output" data-audit="light">已交付 1 个文件：notes.md</pre>
+    </div>
+  </section>
+
+  <section class="fixture-row">
+    <div class="oT5lKa_card" data-tool="schedule_create">
+      <pre class="oT5lKa_fallback" data-audit="light">schedule fallback output</pre>
+    </div>
+  </section>
+
+  <section class="fixture-row">
+    <div class="fixture-dialog" role="dialog" aria-modal="true">
+      <pre class="V7pFBG_updateOutput" data-audit="light">plugin update output</pre>
+    </div>
+  </section>
+
+  <section class="fixture-row">
+    <div class="fixture-dialog" role="dialog" aria-modal="true">
+      <pre class="Wsg8iW_viewerCode" data-audit="light">preset source text</pre>
+    </div>
+  </section>
+
+  <section class="fixture-row">
+    <div class="_card_1mqf1_1">
+      <div class="_header_1mqf1_10" data-code-block-banner="true">
+        <div class="_heading_1mqf1_23">
+          <span class="_language_1mqf1_30" data-audit="banner-label">ts</span>
+        </div>
+        <div class="_actions_1mqf1_43">
+          <button class="_action_1mqf1_43" type="button" aria-label="复制" data-audit="banner-action">copy</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fixture-row fixture-dark">
+    <pre class="xeixwq_payload" data-audit="dark">{"payload":"dark island"}</pre>
+  </section>
+</main>
+</body>
+</html>
