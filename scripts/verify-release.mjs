@@ -87,7 +87,13 @@ for (const entry of packageJson.files ?? []) {
 const workDir = mkdtempSync(join(tmpdir(), 'dsh-release-verify-'))
 let shipped
 try {
-  execFileSync('tar', ['-xzf', tarball, '-C', workDir], { stdio: ['ignore', 'inherit', 'inherit'] })
+  // GNU tar treats the `C:` in an absolute Windows archive path as a remote
+  // host, so name the archive relative to its own directory and keep `-C` in
+  // forward slashes; bsdtar (Windows' built-in tar) accepts the same form.
+  execFileSync('tar', ['-xzf', basename(tarball), '-C', toPosix(workDir)], {
+    cwd: dirname(tarball),
+    stdio: ['ignore', 'inherit', 'inherit'],
+  })
   const packageDir = join(workDir, 'package')
   if (!existsSync(packageDir)) fail(`${basename(tarball)}: no package/ directory`)
   shipped = new Set(await listFiles(packageDir))

@@ -4,7 +4,7 @@ import { execFileSync, spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { basename, join, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const script = fileURLToPath(new URL('../scripts/verify-release.mjs', import.meta.url))
@@ -45,7 +45,12 @@ function makeRelease(t, { mutate = () => {} } = {}) {
   mutate({ checkout, staging })
 
   const tarball = join(releaseDir, 'dsh-theme-test-9.9.9.tgz')
-  execFileSync('tar', ['-czf', tarball, '-C', staging, 'package'], { stdio: 'inherit' })
+  // GNU tar reads the `C:` in an absolute Windows archive path as a remote
+  // host, so build the archive by relative name from its own directory.
+  execFileSync('tar', ['-czf', basename(tarball), '-C', staging.split(sep).join('/'), 'package'], {
+    cwd: releaseDir,
+    stdio: 'inherit',
+  })
   return { root, checkout, staging, tarball }
 }
 
