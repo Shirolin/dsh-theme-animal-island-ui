@@ -3,7 +3,7 @@
 当前唯一规范产物：
 
 ```text
-release-v0.3.37/dsh-theme-animal-island-ui-0.3.37.tgz
+release-v0.3.38/dsh-theme-animal-island-ui-0.3.38.tgz
 ```
 
 本机产物由 `pnpm run release <version>`（内部 `pnpm pack`）生成，`prepack` 会先清空并重建 `lib`，同一版本号不要重复出包。
@@ -14,7 +14,7 @@ release-v0.3.37/dsh-theme-animal-island-ui-0.3.37.tgz
 
 | 目录 | 内容 | 是否可用于验收 |
 | --- | --- | --- |
-| `release-v0.3.37/` | 当前规范产物 | 是 |
+| `release-v0.3.38/` | 当前规范产物 | 是 |
 | `release-v0.3.34/` | 上一版，profile 回滚用 | 仅回滚 |
 | `release-v0.3.30/` 及更早版本、`release/`、`release-final/`、`final/`、`dsh-theme-animal-island-ui-0.1.0.tgz` | 历史归档，含早期重复的 0.1.0 包 | 否 |
 | `smoke/` | 离屏夹具截图（回归证据，随 `*-smoke.png` 一起被 git 忽略） | 参考 |
