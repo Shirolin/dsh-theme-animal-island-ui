@@ -100,6 +100,18 @@ export const PUBLIC_DATA_HOOKS = [
     ),
   }),
   publicDataHook({
+    attribute: 'turn-trigger',
+    selector: '[data-turn-trigger]',
+    required: false,
+    purpose: 'Keep the turn-trigger notice label readable on its dark code surface.',
+    evidence: dshSource(
+      '@deepseek-ai/dsh-client-ui-chat',
+      'lib/client.js',
+      'data-turn-trigger',
+      'The chat turn-trigger notice renders this marker on its section root.',
+    ),
+  }),
+  publicDataHook({
     attribute: 'code-preview',
     selector: '[data-code-preview]',
     required: false,
@@ -205,6 +217,11 @@ export const PUBLIC_DATA_HOOKS = [
 export const ALLOWED_DATA_HOOKS = [PLUGIN_ROOT_ATTRIBUTE, ...PLUGIN_OWNED_DATA_ATTRIBUTES, ...PUBLIC_DATA_HOOKS.map(({ attribute }) => attribute)]
 
 export const PUBLIC_ARIA_ROLES = [
+  {
+    role: 'alert',
+    purpose: 'Recolor the toast icons and inline action on the theme tooltip surface.',
+    evidence: ariaStandard('Reviewed against the DSH toast markup, which portals role="alert" to <body>.'),
+  },
   {
     role: 'button',
     purpose: 'Style controls whose native semantics are expressed as a button role.',

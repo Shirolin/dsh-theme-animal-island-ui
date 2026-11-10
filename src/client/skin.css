@@ -647,6 +647,30 @@ html[data-dsh-animal-island-skin] :where([role="treeitem"][aria-selected="true"]
   color: var(--dsw-alias-label-secondary) !important;
 }
 
+/* The turn-trigger notice is the one card in a light conversation that DSH paints
+   on the dark code surface, but it colors its header and body with the light
+   palette's label tiers — the header lands at 2.6:1. Re-point the three tiers
+   inside that notice only; its surface, border, and hover states stay as shipped.
+   Dark mode already pairs these tiers with the night code surface, so it keeps them. */
+html[data-dsh-animal-island-skin] body:not([data-ds-dark-theme]) [data-turn-trigger] {
+  --dsw-alias-label-primary: #e8d5bc;
+  --dsw-alias-label-secondary: #b8a68a;
+  --dsw-alias-label-tertiary: #a69580;
+}
+
+/* The toast is the one surface DSH portals straight to <body>, and the theme
+   paints it with the dark tooltip brown. Its icons and inline action still read
+   the light palette — the success check lands at 1.1:1 and the "撤销" link at
+   2.6:1 — so re-point just those colours inside the toast. The icon values match
+   the night palette (already paired with this surface); the action blue is
+   lightened for both modes because DSH's static blue only reaches 3.4:1 on the
+   dark-brown tooltip too. Surface, radius and shadow stay as shipped. */
+html[data-dsh-animal-island-skin] body > [role="alert"] {
+  --dsw-alias-state-success-primary: #a9db69;
+  --dsw-alias-state-warn-label: #ffd15a;
+  --dsw-static-deepseek-400: #cfe3ff;
+}
+
 /* The composer's "/" and "@" trigger panel is a scroll area whose max-height DSH
    computes from the space above the composer and sets inline, so CSS must not
    fight that number. A row at the cut edge is clipped mid-line; fading the panel's

@@ -1,0 +1,71 @@
+<!doctype html>
+<!--
+  The turn-trigger notice that opens a non-human turn (a scheduled task here).
+
+  DSH paints this notice on the dark code-block surface but colors its header
+  with the light palette's label tiers, so the fixture measures the contrast of
+  the real header against the real card surface. The class names come from the
+  pinned runtime's CSS module and are not selected by the skin.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>触发提示条 · 深色卡片文字</title>
+<!--{{DSH_CSS}}-->
+<!--{{THEME_BASE_CSS}}-->
+<!--{{PLUGIN_CSS}}-->
+<!--{{SKIN_CSS}}-->
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #8fcaa5;
+    background-image:
+      radial-gradient(circle, rgba(74, 126, 83, .24) 1.25px, transparent 1.4px),
+      radial-gradient(circle, rgba(245, 250, 222, .22) .85px, transparent 1px);
+    background-position: 0 0, 8px 8px;
+    background-size: 30px 30px, 15px 15px;
+  }
+  .fixture {
+    position: relative;
+    width: 680px;
+    min-height: 220px;
+    margin: 30px auto;
+    padding: 24px 26px 34px;
+    overflow: hidden;
+    color: var(--animal-body);
+    background: rgba(248, 248, 240, .18);
+    border: 1px solid rgba(143, 118, 94, .2);
+    border-radius: 22px;
+  }
+  .fixture-title {
+    margin: 0 0 16px;
+    color: var(--animal-ink);
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .turn {
+    position: relative;
+    z-index: 1;
+    padding: 6px 18px;
+  }
+</style>
+</head>
+<body {{BODY_ATTRIBUTES}} style="{{TOKENS}} {{BODY_STYLE}}">
+<main class="fixture">
+  <h1 class="fixture-title">会话</h1>
+  <div class="turn">
+    <section class="hSzSIW_root" data-turn-trigger="true">
+      <button class="hSzSIW_header" type="button" aria-expanded="false" aria-controls="trigger-body">
+        <span class="hSzSIW_icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6"/><path d="M8 4.6V8l2.2 1.6" stroke-linecap="round"/></svg>
+        </span>
+        <span class="hSzSIW_title">自动化任务</span>
+        <time class="hSzSIW_time" datetime="2026-11-09T10:10:00.000Z">18:10</time>
+        <svg class="hSzSIW_chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m4 6 4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </section>
+  </div>
+</main>
+</body>
+</html>
