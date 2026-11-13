@@ -1,0 +1,273 @@
+<!doctype html>
+<!--
+  The custom veil control at its natural settings width and at a narrow width.
+  The markup mirrors AppearanceTab's public plugin-owned classes so the grid
+  hierarchy, value badge, reset action, focus ring and overflow can be checked
+  against the real skin in both light and dark themes.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>动森外观 · 自定义透明度</title>
+<link rel="stylesheet" href="css/dsh.css">
+<link rel="stylesheet" href="css/theme-base.css">
+
+<link rel="stylesheet" href="css/skin.css">
+<style>
+  * { box-sizing: border-box; }
+  body { min-height: 100vh; margin: 0; padding: 24px; }
+  .fixture {
+    display: grid;
+    grid-template-columns: minmax(0, 560px) minmax(0, 320px);
+    align-items: start;
+    gap: 24px;
+    width: min(930px, 100%);
+    margin: 0 auto;
+  }
+  .settings-sheet {
+    min-width: 0;
+    padding: 18px;
+    border: 1.5px solid var(--animal-border);
+    border-radius: 24px;
+    background: var(--animal-cream);
+    box-shadow: 0 8px 24px var(--animal-shadow-card);
+  }
+  .settings-sheet .animal-island-appearance {
+    max-width: none;
+    padding: 0;
+  }
+  .fixture-label {
+    margin: 0 0 14px;
+    color: var(--animal-muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .06em;
+  }
+</style>
+</head>
+<body  style="--dsw-alias-bg-base:#f8f8f0;--dsw-alias-bg-layer-1:#ffffff;--dsw-alias-bg-layer-2:#f7f3df;--dsw-alias-bg-layer-3:#f0e8d8;--dsw-alias-bg-module-platform:#f3f1e8;--dsw-alias-bg-multi-select:#f6f4f2;--dsw-alias-bg-overlay:#fffbe7;--dsw-alias-bg-skeleton:rgba(111, 69, 31, 0.07);--dsw-alias-bg-mask-1:#3d342a3d;--dsw-alias-bg-mask-2:#3d342a1f;--dsw-alias-bg-mask-3:#160f0a7a;--dsw-alias-bg-mask-photo:#160f0ae0;--dsw-alias-bg-mask-drop:rgba(248, 248, 240, 0.7);--dsw-alias-border-l1:rgba(220, 216, 209, 0.35);--dsw-alias-border-l2:rgba(220, 216, 209, 0.55);--dsw-alias-border-l2-darkmode-thin:rgba(220, 216, 209, 0.35);--dsw-alias-border-l3:rgba(220, 216, 209, 0.7);--dsw-alias-border-l4:rgba(220, 216, 209, 0.9);--dsw-alias-border-inverted:rgba(111, 69, 31, 0.06);--dsw-alias-border-inverted2:rgba(111, 69, 31, 0.09);--dsw-alias-brand-primary:#19c8b9;--dsw-alias-brand-primary-invert:#6f451f;--dsw-alias-brand-primary-new-colorprimary-new-color:#19c8b9;--dsw-alias-brand-text:#6f451f;--dsw-alias-link:#0b6d64;--dsw-font-family:Nunito, &quot;Noto Sans SC&quot;, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, sans-serif;--ds-font-family-code:&quot;SFMono-Regular&quot;, &quot;Cascadia Code&quot;, &quot;Fira Code&quot;, Consolas, &quot;Liberation Mono&quot;, monospace;--dsw-alias-button-contrast-fill:#7f5a38;--dsw-alias-button-elevated-fill:#fffbe7;--dsw-alias-button-floating-fill:#ffffff;--dsw-alias-button-floating-hover:#f5f2ef;--dsw-alias-button-ghost-active-border:#dcd8d1;--dsw-alias-button-ghost-active-fill:#f3f0ed;--dsw-alias-button-ghost-active-hover:#ebe5e0;--dsw-alias-button-info-fill:#2e6f7d;--dsw-alias-button-info-hover:#3a676c;--dsw-alias-button-primary-dimmed:#f8f8f0;--dsw-alias-button-primary-fill:#f8f8f0;--dsw-alias-button-primary-hover:#fffbe7;--dsw-alias-button-tool-bar-fill:rgba(111, 69, 31, 0.5);--dsw-alias-button-tool-bar-fill-invisible:rgba(111, 69, 31, 0.36);--dsw-alias-button-tool-bar-hover:rgba(111, 69, 31, 0.62);--dsw-alias-interactive-bg-hover:rgba(229, 201, 155, 0.5);--dsw-alias-interactive-bg-hover-accent:rgba(25, 200, 185, 0.22);--dsw-alias-interactive-bg-hover-danger:rgba(182, 62, 62, 0.13);--dsw-alias-interactive-bg-hover-solid:rgba(240, 226, 200, 0.82);--dsw-alias-interactive-bg-active:rgba(229, 201, 155, 0.78);--dsw-alias-label-primary:#6f451f;--dsw-alias-label-secondary:#654a2f;--dsw-alias-label-tertiary:#725f48;--dsw-alias-label-caption:#7c684d;--dsw-alias-label-dimmed:#d6cfbe;--dsw-alias-label-primary-bluish:#6f451f;--dsw-alias-label-primary-dimmed:#7f5a38;--dsw-alias-label-primary-foreground:#2a2118;--dsw-alias-label-primary-inverted:#f8f8f0;--dsw-alias-markdown-code-block:#2b2118;--dsw-alias-markdown-code-block-banner:#342a20;--dsw-alias-markdown-code-segment-selected:#3e3328;--dsw-alias-markdown-code-segment-unselected:#2b2118;--dsw-alias-markdown-inline-code:#f7f3df;--dsw-alias-markdown-citation:#f5f2ef;--dsw-alias-markdown-placeholder:#f3f1e8;--dsw-alias-markdown-tag:#f8f6f4;--dsw-alias-scrollbar-bg-l1:rgba(111, 69, 31, 0.18);--dsw-alias-scrollbar-bg-l2:rgba(111, 69, 31, 0.22);--dsw-alias-scrollbar-hover-l1:rgba(111, 69, 31, 0.3);--dsw-alias-scrollbar-hover-l2:rgba(111, 69, 31, 0.34);--dsw-alias-state-error-primary:#b63e3e;--dsw-alias-state-error-secondary:#c36362;--dsw-alias-state-success-primary:#48741d;--dsw-alias-state-success-secondary:#6b8e47;--dsw-alias-state-success-tertiary:#d8e0ca;--dsw-alias-state-warn-primary:#846100;--dsw-alias-state-warn-secondary:#9b7f30;--dsw-alias-state-warn-tertiary:#e3ddc5;--dsw-alias-state-warn-label:#846100;--dsw-alias-state-business-primary:#0b6d64;--dsw-alias-state-business-tertiary:#c7ede4;--dsw-alias-toast-bg:#7f5a38;--dsw-alias-tooltip-bg:#7f5a38;--dsw-specific-bubble:#e6f9f6;--dsw-specific-bubble-highlight:#adebe5;--dsw-specific-input-major:#ffffff;--dsw-specific-login-input:#f4f3ea;--dsw-specific-menu:#ffffff;--dsw-specific-selector:#f8f6f4;--dsw-specific-sidebar-fill:#faf8f3;--dsw-specific-sidebar-nav-item-hover:#f0e2c8;--dsw-specific-sidebar-nav-item-active:#e5c99b;--dsw-specific-sidebar-nav-item-active-accent:#c6bc93;--dsw-specific-tip:#f8f6f4;--dsw-static-deepseek-500:#0b6d64;--dsw-static-deepseek-200:#b1cec6;--dsw-static-blue-500:#0b6d64;--dsw-static-blue-450:#3dd4c6;--dsw-static-neutral-bluish-400:#b4a68c;--dsw-shadow-lv1:0 2px 4px 0 #3d34280f;--dsw-shadow-lv1-blur:0 4px 12px 0 #3d342808;--dsw-shadow-lv2:0 4px 12px 0 #3d342808, 0 2px 8px 0 #3d34280d;--dsw-shadow-lv3:0 0 1px 0 #3d342833, 0 0 4px 0 #3d34280d, 0 12px 32px 0 #3d34281f;--dsw-elevation-stroke-color:#82715766;--dsw-elevation-stroke:0 0 0 .5px var(--dsw-elevation-stroke-color);--dsw-elevation-panel:var(--dsw-elevation-stroke), 0 4px 12px 0 #3d342814, 0 0 20px 0 #3d34280d;--dsw-elevation-prominent:var(--dsw-elevation-stroke), 0 8px 24px 0 #3d342824, 0 0 28px 0 #3d342814;--dsw-elevation-soft:var(--dsw-elevation-stroke), 0 4px 16px 0 #3d342814, 0 0 28px 0 #3d34280f;--dsw-linear-gradient-think:linear-gradient(180deg, #f8f8f0 20.19%, rgba(248, 248, 240, 0) 100%);--dsw-linear-think-select:linear-gradient(180deg, #ffffff 20.19%, rgba(255, 255, 255, 0) 100%);--shiki-foreground:#e8d5bc;--shiki-background:#2b2118;--shiki-token-comment:#a69580;--shiki-token-keyword:#d4a0e0;--shiki-token-string:#a8d4a0;--shiki-token-string-expression:#a8d4a0;--shiki-token-constant:#e8c87a;--shiki-token-function:#61afef;--shiki-token-parameter:#f0a870;--shiki-token-punctuation:#d4b896;--shiki-token-link:#74c0fc ">
+<main class="fixture">
+  <article class="settings-sheet" role="dialog" aria-label="动森外观设置（正常宽度）">
+    <p class="fixture-label">正常宽度 · 560px</p>
+    <section class="animal-island-appearance">
+      <h3>动森外观</h3>
+      <p>画布上那层奶油「纸面」的透明度。越低越绿、越像游戏；越高越纸白、越好读。</p>
+      <fieldset class="animal-island-appearance__presets" aria-label="外观预设">
+        <button type="button" class="animal-island-appearance__preset">纸白<small>0.52</small></button>
+        <button type="button" class="animal-island-appearance__preset" aria-pressed="true">均衡<small>0.40</small></button>
+        <button type="button" class="animal-island-appearance__preset">海岛<small>0.28</small></button>
+      </fieldset>
+      <div class="animal-island-appearance__custom">
+        <label class="animal-island-appearance__slider">
+          <span class="animal-island-appearance__slider-title">自定义</span>
+          <output class="animal-island-appearance__slider-value">0.40</output>
+          <input type="range" min="0.15" max="0.60" step="0.01" value="0.40" style="--animal-slider-progress: 55.5556%">
+        </label>
+        <span class="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
+      </div>
+      <fieldset class="animal-island-appearance__diff" aria-label="diff 语法配色">
+        <span class="animal-island-appearance__diff-title">diff 语法配色</span>
+        <p class="animal-island-appearance__diff-hint">只影响右侧栏中画在纸面上的代码 diff；「暖色」与纸面更统一，「中性」是 DSH 原生亮色语法色。</p>
+        <div class="animal-island-appearance__diff-options">
+          <button type="button" class="animal-island-appearance__preset" aria-pressed="true">暖色<small>跟随纸面</small></button>
+          <button type="button" class="animal-island-appearance__preset">中性<small>DSH 原生</small></button>
+        </div>
+      </fieldset>
+      <fieldset class="animal-island-appearance__details" aria-label="外观细节">
+        <span class="animal-island-appearance__details-title">细节</span>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">插画装饰</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="插画装饰">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">显示<small>山丘与叶</small></button>
+            <button type="button" class="animal-island-appearance__preset">隐藏<small>只留底纹</small></button>
+          </fieldset>
+        </div>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">纸纹</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="纸纹">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">开<small>纸面颗粒</small></button>
+            <button type="button" class="animal-island-appearance__preset">关<small>纯色纸</small></button>
+          </fieldset>
+        </div>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">界面字体</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="界面字体">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">动森<small>Nunito</small></button>
+            <button type="button" class="animal-island-appearance__preset">系统<small>跟随平台</small></button>
+          </fieldset>
+        </div>
+        <p class="animal-island-appearance__details-hint">隐藏插画只保留波点与斜纹底；纸纹只作用于 composer 与对话框。</p>
+      </fieldset>
+      <div class="animal-island-appearance__actions">
+        <div class="animal-island-appearance__reset-card">
+          <div class="animal-island-appearance__reset-info">
+            <span class="animal-island-appearance__reset-title">重置所有外观偏好</span>
+            <p class="animal-island-appearance__note">设置卡片本身是固定纸面，滑杆调整的是它背后的画布；偏好保存在本机这个客户端，系统开启「高对比」时会自动回到纸白。</p>
+          </div>
+          <button type="button" class="animal-island-appearance__reset" aria-label="恢复全部外观设置">
+            <span class="animal-island-appearance__reset-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10"/><path d="M4.7 2.7v3.1h3.1"/></svg>
+            </span>
+            <span class="animal-island-appearance__reset-copy"><span>全部恢复默认</span><small>均衡 0.40</small></span>
+          </button>
+        </div>
+      </div>
+
+      <footer class="animal-island-appearance__about">
+        <div class="animal-island-appearance__about-meta">
+          <span class="animal-island-appearance__about-title">Animal Island UI</span>
+          <span class="animal-island-appearance__about-author">作者：<a href="https://github.com/Shirolin" target="_blank" rel="noreferrer">Shirolin</a></span>
+        </div>
+        <div class="animal-island-appearance__about-links">
+          <a class="animal-island-appearance__about-link" href="https://github.com/Shirolin/dsh-theme-animal-island-ui" target="_blank" rel="noreferrer" title="查看源码与反馈 Issue">
+            <svg class="animal-island-appearance__about-icon" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            <span>GitHub</span>
+          </a>
+          <span class="animal-island-appearance__about-sep" aria-hidden="true">·</span>
+          <a class="animal-island-appearance__about-link" href="https://afdian.com/a/shirolin" target="_blank" rel="noreferrer" title="在爱发电赞助支持">
+            <svg class="animal-island-appearance__about-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span>爱发电</span>
+          </a>
+          <span class="animal-island-appearance__about-sep" aria-hidden="true">·</span>
+          <a class="animal-island-appearance__about-link" href="https://ko-fi.com/shirolin" target="_blank" rel="noreferrer" title="Buy me a coffee on Ko-fi">
+            <svg class="animal-island-appearance__about-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M20.216 6.415l-.132-.666c-.119-.597-.388-1.135-.779-1.557C18.667 3.5 17.65 3 16.273 3H4.5C3.67 3 3 3.67 3 4.5v10C3 15.33 3.67 16 4.5 16h11.773c1.377 0 2.394-.5 3.032-1.192.391-.422.66-.96.779-1.557l.132-.666c.472-.375.784-.954.784-1.585v-3c0-.631-.312-1.21-.784-1.585zm-2.07 4.17c-.035.176-.118.337-.24.463-.264.274-.757.452-1.633.452h-.773V7.5h.773c.876 0 1.369.178 1.633.452.122.126.205.287.24.463l.066.333-.066.837zM4.5 4.5h11.773c.85 0 1.25.26 1.408.43.08.087.135.197.165.32l.064.321V6H4.5V4.5zm0 10V7.5h10.5v7H4.5zM2 19.5C2 18.67 2.67 18 3.5 18h16c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-16C2.67 21 2 20.33 2 19.5z"/>
+            </svg>
+            <span>Ko-fi</span>
+          </a>
+        </div>
+      </footer>
+    </section>
+  </article>
+
+  <article class="settings-sheet" role="dialog" aria-label="动森外观设置（窄宽）">
+    <p class="fixture-label">窄宽 · 320px</p>
+    <section class="animal-island-appearance">
+      <h3>动森外观</h3>
+      <p>画布上那层奶油「纸面」的透明度。</p>
+      <fieldset class="animal-island-appearance__presets" aria-label="外观预设">
+        <button type="button" class="animal-island-appearance__preset">纸白<small>0.52</small></button>
+        <button type="button" class="animal-island-appearance__preset" aria-pressed="true">均衡<small>0.40</small></button>
+        <button type="button" class="animal-island-appearance__preset">海岛<small>0.28</small></button>
+      </fieldset>
+      <div class="animal-island-appearance__custom">
+        <label class="animal-island-appearance__slider">
+          <span class="animal-island-appearance__slider-title">自定义</span>
+          <output class="animal-island-appearance__slider-value">0.40</output>
+          <input type="range" min="0.15" max="0.60" step="0.01" value="0.40" style="--animal-slider-progress: 55.5556%">
+        </label>
+        <span class="animal-island-appearance__custom-hint">拖动微调纸面浓度</span>
+      </div>
+      <fieldset class="animal-island-appearance__diff" aria-label="diff 语法配色">
+        <span class="animal-island-appearance__diff-title">diff 语法配色</span>
+        <p class="animal-island-appearance__diff-hint">只影响浅色纸面上的代码 diff。</p>
+        <div class="animal-island-appearance__diff-options">
+          <button type="button" class="animal-island-appearance__preset" aria-pressed="true">暖色<small>跟随纸面</small></button>
+          <button type="button" class="animal-island-appearance__preset">中性<small>DSH 原生</small></button>
+        </div>
+      </fieldset>
+      <fieldset class="animal-island-appearance__details" aria-label="外观细节">
+        <span class="animal-island-appearance__details-title">细节</span>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">插画装饰</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="插画装饰">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">显示<small>山丘与叶</small></button>
+            <button type="button" class="animal-island-appearance__preset">隐藏<small>只留底纹</small></button>
+          </fieldset>
+        </div>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">纸纹</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="纸纹">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">开<small>纸面颗粒</small></button>
+            <button type="button" class="animal-island-appearance__preset">关<small>纯色纸</small></button>
+          </fieldset>
+        </div>
+        <div class="animal-island-appearance__details-row">
+          <span class="animal-island-appearance__details-label">界面字体</span>
+          <fieldset class="animal-island-appearance__details-options" aria-label="界面字体">
+            <button type="button" class="animal-island-appearance__preset" aria-pressed="true">动森<small>Nunito</small></button>
+            <button type="button" class="animal-island-appearance__preset">系统<small>跟随平台</small></button>
+          </fieldset>
+        </div>
+        <p class="animal-island-appearance__details-hint">隐藏插画只保留波点与斜纹底。</p>
+      </fieldset>
+      <div class="animal-island-appearance__actions">
+        <div class="animal-island-appearance__reset-card">
+          <div class="animal-island-appearance__reset-info">
+            <span class="animal-island-appearance__reset-title">重置偏好</span>
+            <p class="animal-island-appearance__note">偏好保存在本机这个客户端。</p>
+          </div>
+          <button type="button" class="animal-island-appearance__reset" aria-label="恢复全部外观设置">
+            <span class="animal-island-appearance__reset-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4.7 5.8A4.2 4.2 0 1 1 4.4 10"/><path d="M4.7 2.7v3.1h3.1"/></svg>
+            </span>
+            <span class="animal-island-appearance__reset-copy"><span>全部恢复默认</span><small>均衡 0.40</small></span>
+          </button>
+        </div>
+      </div>
+
+      <footer class="animal-island-appearance__about">
+        <div class="animal-island-appearance__about-meta">
+          <span class="animal-island-appearance__about-title">Animal Island</span>
+          <span class="animal-island-appearance__about-author"><a href="https://github.com/Shirolin" target="_blank" rel="noreferrer">Shirolin</a></span>
+        </div>
+      </footer>
+    </section>
+  </article>
+</main>
+<script>
+(() => {
+  const doc = document.documentElement;
+  const body = document.body;
+  const initial = {
+    decor: doc.getAttribute('data-animal-decor'),
+    grain: doc.getAttribute('data-animal-grain'),
+    diffSyntax: doc.getAttribute('data-animal-diff-syntax'),
+    font: doc.getAttribute('data-animal-font'),
+    veil: body.style.getPropertyValue('--animal-canvas-veil'),
+    fontFamily: body.style.getPropertyValue('--dsw-font-family'),
+  };
+  const restoreAttr = (name, value) => {
+    if (value === null) doc.removeAttribute(name);
+    else doc.setAttribute(name, value);
+  };
+  const restoreProp = (name, value) => {
+    if (value) body.style.setProperty(name, value);
+    else body.style.removeProperty(name);
+  };
+  window.addEventListener('message', (event) => {
+    const data = event.data;
+    if (!data || data.type !== 'animal-island:appearance') return;
+    if (data.reset) {
+      restoreAttr('data-animal-decor', initial.decor);
+      restoreAttr('data-animal-grain', initial.grain);
+      restoreAttr('data-animal-diff-syntax', initial.diffSyntax);
+      restoreAttr('data-animal-font', initial.font);
+      restoreProp('--animal-canvas-veil', initial.veil);
+      restoreProp('--dsw-font-family', initial.fontFamily);
+      return;
+    }
+    const patch = data.patch || {};
+    if (patch.decor !== undefined) doc.setAttribute('data-animal-decor', patch.decor);
+    if (patch.grain !== undefined) doc.setAttribute('data-animal-grain', patch.grain);
+    if (patch.diffSyntax !== undefined) doc.setAttribute('data-animal-diff-syntax', patch.diffSyntax);
+    if (patch.font !== undefined) {
+      doc.setAttribute('data-animal-font', patch.font);
+      if (patch.font === 'system') {
+        body.style.setProperty('--dsw-font-family', 'var(--animal-system-font-family, sans-serif)');
+      } else {
+        restoreProp('--dsw-font-family', initial.fontFamily);
+      }
+    }
+    if (patch.veil !== undefined) {
+      body.style.setProperty('--animal-canvas-veil', String(patch.veil));
+    }
+  });
+})();
+</script>
+</body>
+</html>

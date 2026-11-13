@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>settings navigation</title>
+<link rel="stylesheet" href="css/dsh.css">
+<link rel="stylesheet" href="css/theme-base.css">
+<link rel="stylesheet" href="css/plugins/settings-general.css">
+<link rel="stylesheet" href="css/skin.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; }
+  .stage { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .AnXs9G_panel { height: min(620px, calc(100vh - 48px)); }
+  .AnXs9G_options { min-width: 0; padding: 24px; color: var(--animal-body); }
+</style>
+</head>
+<body  data-ds-dark-theme="" style="--dsw-alias-bg-base:#29231c;--dsw-alias-bg-layer-1:#362e25;--dsw-alias-bg-layer-2:#2d2923;--dsw-alias-bg-layer-3:#28241f;--dsw-alias-bg-module-platform:#312b23;--dsw-alias-bg-multi-select:#42392f;--dsw-alias-bg-overlay:#40362b;--dsw-alias-bg-skeleton:rgba(247, 231, 199, 0.07);--dsw-alias-bg-mask-1:#160f0a80;--dsw-alias-bg-mask-2:#160f0a33;--dsw-alias-bg-mask-3:#160f0a7a;--dsw-alias-bg-mask-photo:#160f0ae0;--dsw-alias-bg-mask-drop:rgba(41, 35, 28, 0.7);--dsw-alias-border-l1:rgba(138, 112, 87, 0.35);--dsw-alias-border-l2:rgba(138, 112, 87, 0.55);--dsw-alias-border-l2-darkmode-thin:rgba(138, 112, 87, 0.35);--dsw-alias-border-l3:rgba(138, 112, 87, 0.7);--dsw-alias-border-l4:rgba(138, 112, 87, 0.9);--dsw-alias-border-inverted:rgba(247, 231, 199, 0.06);--dsw-alias-border-inverted2:rgba(247, 231, 199, 0.09);--dsw-alias-brand-primary:#61d9cb;--dsw-alias-brand-primary-invert:#f7e7c7;--dsw-alias-brand-primary-new-colorprimary-new-color:#61d9cb;--dsw-alias-brand-text:#f7e7c7;--dsw-alias-link:#7be2d5;--dsw-font-family:Nunito, &quot;Noto Sans SC&quot;, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, sans-serif;--ds-font-family-code:&quot;SFMono-Regular&quot;, &quot;Cascadia Code&quot;, &quot;Fira Code&quot;, Consolas, &quot;Liberation Mono&quot;, monospace;--dsw-alias-button-contrast-fill:#decfb2;--dsw-alias-button-elevated-fill:#40362b;--dsw-alias-button-floating-fill:#362e25;--dsw-alias-button-floating-hover:#443b30;--dsw-alias-button-ghost-active-border:#8a7057;--dsw-alias-button-ghost-active-fill:#453d32;--dsw-alias-button-ghost-active-hover:#51483c;--dsw-alias-button-info-fill:#589ea5;--dsw-alias-button-info-hover:#75abab;--dsw-alias-button-primary-dimmed:#41382e;--dsw-alias-button-primary-fill:#4a4035;--dsw-alias-button-primary-hover:#5a4d3e;--dsw-alias-button-tool-bar-fill:rgba(247, 231, 199, 0.5);--dsw-alias-button-tool-bar-fill-invisible:rgba(247, 231, 199, 0.36);--dsw-alias-button-tool-bar-hover:rgba(247, 231, 199, 0.62);--dsw-alias-interactive-bg-hover:rgba(107, 74, 44, 0.38);--dsw-alias-interactive-bg-hover-accent:rgba(97, 217, 203, 0.22);--dsw-alias-interactive-bg-hover-danger:rgba(255, 139, 139, 0.13);--dsw-alias-interactive-bg-hover-solid:#4a3a28;--dsw-alias-interactive-bg-active:rgba(107, 74, 44, 0.72);--dsw-alias-label-primary:#f7e7c7;--dsw-alias-label-secondary:#ead9bd;--dsw-alias-label-tertiary:#cbb994;--dsw-alias-label-caption:#aa987c;--dsw-alias-label-dimmed:#695a48;--dsw-alias-label-primary-bluish:#f7e7c7;--dsw-alias-label-primary-dimmed:#decfb2;--dsw-alias-label-primary-foreground:#fffbe7;--dsw-alias-label-primary-inverted:#29231c;--dsw-alias-markdown-code-block:#211b16;--dsw-alias-markdown-code-block-banner:#2c251e;--dsw-alias-markdown-code-segment-selected:#362f27;--dsw-alias-markdown-code-segment-unselected:#211b16;--dsw-alias-markdown-inline-code:#2d2923;--dsw-alias-markdown-citation:#443b30;--dsw-alias-markdown-placeholder:#312b23;--dsw-alias-markdown-tag:#40372d;--dsw-alias-scrollbar-bg-l1:rgba(247, 231, 199, 0.18);--dsw-alias-scrollbar-bg-l2:rgba(247, 231, 199, 0.22);--dsw-alias-scrollbar-hover-l1:rgba(247, 231, 199, 0.3);--dsw-alias-scrollbar-hover-l2:rgba(247, 231, 199, 0.34);--dsw-alias-state-error-primary:#ff8b8b;--dsw-alias-state-error-secondary:#d47675;--dsw-alias-state-success-primary:#a9db69;--dsw-alias-state-success-secondary:#8fb65a;--dsw-alias-state-success-tertiary:#40442a;--dsw-alias-state-warn-primary:#ffd15a;--dsw-alias-state-warn-secondary:#d4ae4e;--dsw-alias-state-warn-tertiary:#504227;--dsw-alias-state-warn-label:#ffd15a;--dsw-alias-state-business-primary:#7be2d5;--dsw-alias-state-business-tertiary:#354b43;--dsw-alias-toast-bg:#594f42;--dsw-alias-tooltip-bg:#594f42;--dsw-specific-bubble:#294640;--dsw-specific-bubble-highlight:#396f67;--dsw-specific-input-major:#362e25;--dsw-specific-login-input:#2f2921;--dsw-specific-menu:#362e25;--dsw-specific-selector:#40372d;--dsw-specific-sidebar-fill:#303444;--dsw-specific-sidebar-nav-item-hover:#4a3a28;--dsw-specific-sidebar-nav-item-active:#6b4a2c;--dsw-specific-sidebar-nav-item-active-accent:#6d5f44;--dsw-specific-tip:#40372d;--dsw-static-deepseek-500:#7be2d5;--dsw-static-deepseek-200:#425c54;--dsw-static-blue-500:#7be2d5;--dsw-static-blue-450:#7be2d5;--dsw-static-neutral-bluish-400:#a99173;--dsw-shadow-lv1:0 2px 4px 0 #160f0a59;--dsw-shadow-lv1-blur:0 4px 12px 0 #160f0a40;--dsw-shadow-lv2:0 4px 12px 0 #160f0a40, 0 2px 8px 0 #160f0a4d;--dsw-shadow-lv3:0 0 1px 0 #160f0a80, 0 0 4px 0 #160f0a4d, 0 12px 32px 0 #160f0a66;--dsw-elevation-stroke-color:#cbb99466;--dsw-elevation-stroke:0 0 0 .5px var(--dsw-elevation-stroke-color);--dsw-elevation-panel:var(--dsw-elevation-stroke), 0 4px 12px 0 #3d342814, 0 0 20px 0 #3d34280d;--dsw-elevation-prominent:var(--dsw-elevation-stroke), 0 8px 24px 0 #3d342824, 0 0 28px 0 #3d342814;--dsw-elevation-soft:var(--dsw-elevation-stroke), 0 4px 16px 0 #3d342814, 0 0 28px 0 #3d34280f;--dsw-linear-gradient-think:linear-gradient(180deg, #29231c 20.19%, rgba(41, 35, 28, 0) 100%);--dsw-linear-think-select:linear-gradient(180deg, #362e25 20.19%, rgba(54, 46, 37, 0) 100%);--shiki-foreground:#f3dfbd;--shiki-background:#211b16;--shiki-token-comment:#a4937b;--shiki-token-keyword:#f0a1c0;--shiki-token-string:#8bd694;--shiki-token-string-expression:#8bd694;--shiki-token-constant:#ffb86b;--shiki-token-function:#9dd9ff;--shiki-token-parameter:#d0a6ff;--shiki-token-punctuation:#d4c0a0;--shiki-token-link:#72d6e3 ">
+<main class="stage">
+  <!-- DSH 0.2.2 lays the settings panel out as a grid with the title in its own
+       cell above the nav; the title must stay a panel child, not a nav child. -->
+  <div role="dialog" aria-modal="true" aria-label="设置" tabindex="-1" class="AnXs9G_panel">
+    <div class="AnXs9G_navTitle">设置</div>
+    <nav class="AnXs9G_nav">
+      <div class="AnXs9G_navList">
+        <button type="button" class="AnXs9G_navCell">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M3.5 13c.5-2.6 2.1-4 4.5-4s4 1.4 4.5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">账号与余额</span>
+        </button>
+        <button type="button" class="AnXs9G_navCell AnXs9G_active">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">通用设置</span>
+        </button>
+        <button type="button" class="AnXs9G_navCell">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 4.5h10M3 8h10M3 11.5h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">模型</span>
+        </button>
+        <button type="button" class="AnXs9G_navCell">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="2.5" y="3" width="11" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">内置插件</span>
+        </button>
+        <button type="button" class="AnXs9G_navCell">
+          <svg class="AnXs9G_navIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2.5 13 5v6l-5 2.5L3 11V5l5-2.5Z" stroke="currentColor" stroke-width="1.2"/>
+            <path d="m5.5 8 1.5 1.5L11 6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span class="AnXs9G_navLabel">Agent 预设</span>
+        </button>
+      </div>
+    </nav>
+    <div class="AnXs9G_options">通用设置</div>
+  </div>
+</main>
+<script>
+  document.querySelectorAll('[role="dialog"] nav button')[1]?.focus({ focusVisible: true })
+</script>
+<script>
+(() => {
+  const doc = document.documentElement;
+  const body = document.body;
+  const initial = {
+    decor: doc.getAttribute('data-animal-decor'),
+    grain: doc.getAttribute('data-animal-grain'),
+    diffSyntax: doc.getAttribute('data-animal-diff-syntax'),
+    font: doc.getAttribute('data-animal-font'),
+    veil: body.style.getPropertyValue('--animal-canvas-veil'),
+    fontFamily: body.style.getPropertyValue('--dsw-font-family'),
+  };
+  const restoreAttr = (name, value) => {
+    if (value === null) doc.removeAttribute(name);
+    else doc.setAttribute(name, value);
+  };
+  const restoreProp = (name, value) => {
+    if (value) body.style.setProperty(name, value);
+    else body.style.removeProperty(name);
+  };
+  window.addEventListener('message', (event) => {
+    const data = event.data;
+    if (!data || data.type !== 'animal-island:appearance') return;
+    if (data.reset) {
+      restoreAttr('data-animal-decor', initial.decor);
+      restoreAttr('data-animal-grain', initial.grain);
+      restoreAttr('data-animal-diff-syntax', initial.diffSyntax);
+      restoreAttr('data-animal-font', initial.font);
+      restoreProp('--animal-canvas-veil', initial.veil);
+      restoreProp('--dsw-font-family', initial.fontFamily);
+      return;
+    }
+    const patch = data.patch || {};
+    if (patch.decor !== undefined) doc.setAttribute('data-animal-decor', patch.decor);
+    if (patch.grain !== undefined) doc.setAttribute('data-animal-grain', patch.grain);
+    if (patch.diffSyntax !== undefined) doc.setAttribute('data-animal-diff-syntax', patch.diffSyntax);
+    if (patch.font !== undefined) {
+      doc.setAttribute('data-animal-font', patch.font);
+      if (patch.font === 'system') {
+        body.style.setProperty('--dsw-font-family', 'var(--animal-system-font-family, sans-serif)');
+      } else {
+        restoreProp('--dsw-font-family', initial.fontFamily);
+      }
+    }
+    if (patch.veil !== undefined) {
+      body.style.setProperty('--animal-canvas-veil', String(patch.veil));
+    }
+  });
+})();
+</script>
+</body>
+</html>

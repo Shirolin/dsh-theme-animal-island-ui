@@ -10,8 +10,6 @@ import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const siteDir = resolve(root, 'site')
-const indexPath = resolve(siteDir, 'index.html')
-const html = await readFile(indexPath, 'utf8')
 const failures = []
 
 const fail = (message) => failures.push(message)
@@ -20,54 +18,68 @@ const getAttribute = (tag, name) => {
   return match?.[1] ?? match?.[2] ?? match?.[3]
 }
 const hasAttribute = (tag, name) => new RegExp(`\\b${name}(?:\\s*=|\\s|>)`, 'i').test(tag)
-const tags = [...html.matchAll(/<(img|a|link|script|video|source|meta)\b[^>]*>/gi)].map((match) => ({
-  name: match[1].toLowerCase(),
-  markup: match[0],
-}))
 const attr = (tag, name) => getAttribute(tag.markup, name)
 
-const h1Count = [...html.matchAll(/<h1\b/gi)].length
-if (h1Count !== 1) fail(`expected exactly one h1, found ${h1Count}`)
-
-for (const tag of tags.filter((entry) => entry.name === 'img')) {
-  if (!hasAttribute(tag.markup, 'alt')) fail(`image is missing alt: ${tag.markup}`)
-}
-
-const ids = new Set([...html.matchAll(/\bid\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s>]+))/gi)].map((match) => match[1] ?? match[2] ?? match[3]))
 let localReferenceCount = 0
 
-for (const tag of tags) {
-  for (const name of ['href', 'src', 'poster']) {
-    const value = attr(tag, name)
-    if (value === undefined) continue
+async function validateHtmlReferences(pageFile, label) {
+  const html = await readFile(pageFile, 'utf8')
+  const pageDir = dirname(pageFile)
+  const tags = [...html.matchAll(/<(img|a|link|script|video|source|meta)\b[^>]*>/gi)].map((match) => ({
+    name: match[1].toLowerCase(),
+    markup: match[0],
+  }))
 
-    if (value.startsWith('#')) {
-      const id = decodeURIComponent(value.slice(1))
-      if (id && !ids.has(id)) fail(`missing anchor target "${value}"`)
-      continue
-    }
-    if (/^(?:https?:|mailto:|tel:|data:)/i.test(value)) continue
+  const h1Count = [...html.matchAll(/<h1\b/gi)].length
+  if (h1Count !== 1) fail(`${label}: expected exactly one h1, found ${h1Count}`)
 
-    const [pathPart, hashPart] = value.split('#', 2)
-    const rawPath = pathPart.split('?', 1)[0]
-    if (!rawPath) continue
-
-    localReferenceCount += 1
-    const target = resolve(siteDir, decodeURIComponent(rawPath))
-    if (target !== siteDir && !target.startsWith(`${siteDir}${sep}`)) {
-      fail(`local reference escapes site/: ${value}`)
-      continue
-    }
-
-    try {
-      if (!(await stat(target)).isFile()) fail(`local reference is not a file: ${value}`)
-    } catch {
-      fail(`missing local reference: ${value}`)
-    }
-
-    if (hashPart && !ids.has(decodeURIComponent(hashPart))) fail(`missing anchor target "${value}"`)
+  for (const tag of tags.filter((entry) => entry.name === 'img')) {
+    if (!hasAttribute(tag.markup, 'alt')) fail(`${label}: image is missing alt: ${tag.markup}`)
   }
+
+  const ids = new Set([...html.matchAll(/\bid\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s>]+))/gi)].map((match) => match[1] ?? match[2] ?? match[3]))
+
+  for (const tag of tags) {
+    for (const name of ['href', 'src', 'poster']) {
+      const value = attr(tag, name)
+      if (value === undefined) continue
+
+      if (value.startsWith('#')) {
+        const id = decodeURIComponent(value.slice(1))
+        if (id && !ids.has(id)) fail(`${label}: missing anchor target "${value}"`)
+        continue
+      }
+      if (/^(?:https?:|mailto:|tel:|data:)/i.test(value)) continue
+
+      const [pathPart, hashPart] = value.split('#', 2)
+      const rawPath = pathPart.split('?', 1)[0]
+      if (!rawPath) continue
+
+      localReferenceCount += 1
+      const decoded = decodeURIComponent(rawPath)
+      let target = resolve(pageDir, decoded)
+      if (decoded.endsWith('/')) target = resolve(target, 'index.html')
+
+      if (target !== siteDir && !target.startsWith(`${siteDir}${sep}`)) {
+        fail(`${label}: local reference escapes site/: ${value}`)
+        continue
+      }
+
+      try {
+        if (!(await stat(target)).isFile()) fail(`${label}: local reference is not a file: ${value}`)
+      } catch {
+        fail(`${label}: missing local reference: ${value}`)
+      }
+
+      if (hashPart && !ids.has(decodeURIComponent(hashPart))) fail(`${label}: missing anchor target "${value}"`)
+    }
+  }
+
+  return { html, tags }
 }
+
+// 1. Validate landing page (site/index.html)
+const { html, tags } = await validateHtmlReferences(resolve(siteDir, 'index.html'), 'index.html')
 
 const videos = tags.filter((entry) => entry.name === 'video')
 if (videos.length === 0) fail('expected a promo video')
@@ -141,10 +153,52 @@ try {
   fail('missing promo/social-card.png')
 }
 
+// 2. Validate showcase page and generated fixture documents
+const showcaseDir = resolve(siteDir, 'showcase')
+await validateHtmlReferences(resolve(showcaseDir, 'index.html'), 'showcase/index.html')
+
+const manifestPath = resolve(showcaseDir, 'generated', 'manifest.json')
+try {
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'))
+  if (!Array.isArray(manifest.fixtures) || manifest.fixtures.length === 0) {
+    fail('showcase/generated/manifest.json: fixtures must be a non-empty array')
+  } else {
+    for (const fixture of manifest.fixtures) {
+      for (const variant of fixture.variants ?? []) {
+        const docPath = resolve(showcaseDir, variant.src)
+        if (!docPath.startsWith(`${showcaseDir}${sep}`)) {
+          fail(`showcase/generated/manifest.json: path escapes showcase/: ${variant.src}`)
+          continue
+        }
+        try {
+          if (!(await stat(docPath)).isFile()) {
+            fail(`showcase/generated/manifest.json: missing file ${variant.src}`)
+            continue
+          }
+          const docHtml = await readFile(docPath, 'utf8')
+          for (const linkMatch of docHtml.matchAll(/<link\b[^>]*rel=["']stylesheet["'][^>]*href=["']([^"']+)["'][^>]*>/gi)) {
+            const cssPath = resolve(dirname(docPath), linkMatch[1])
+            try {
+              if (!(await stat(cssPath)).isFile()) fail(`${variant.src}: missing stylesheet ${linkMatch[1]}`)
+            } catch {
+              fail(`${variant.src}: missing stylesheet ${linkMatch[1]}`)
+            }
+          }
+          localReferenceCount += 1
+        } catch {
+          fail(`showcase/generated/manifest.json: missing file ${variant.src}`)
+        }
+      }
+    }
+  }
+} catch (error) {
+  fail(`showcase/generated/manifest.json: ${error instanceof Error ? error.message : String(error)}`)
+}
+
 if (failures.length > 0) {
   console.error(`site check failed with ${failures.length} issue(s):`)
   for (const failure of failures) console.error(`- ${failure}`)
   process.exit(1)
 }
 
-console.log(`site check passed: ${localReferenceCount} local references, metadata, accessibility and social card`)
+console.log(`site check passed: ${localReferenceCount} local references, metadata, accessibility, social card and showcase`)

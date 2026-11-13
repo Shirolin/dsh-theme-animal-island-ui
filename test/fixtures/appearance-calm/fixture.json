@@ -1,5 +1,6 @@
 {
   "title": "动森外观 · 素净画布（无插画 / 无纸纹 / 系统字体，亮暗）",
+  "group": "设置与外观",
   "pluginCss": [],
   "assertions": [
     {
@@ -19,5 +20,16 @@
       "expression": "(() => { const family = getComputedStyle(document.body).fontFamily; return family.includes('system-ui') && family.includes('PingFang SC'); })()"
     }
   ],
-  "variants": [{ "id": "light", "mode": "light", "window": "900,620" }, { "id": "dark", "mode": "dark", "window": "900,620" }]
+  "variants": [
+    {
+      "id": "light",
+      "mode": "light",
+      "window": "900,620"
+    },
+    {
+      "id": "dark",
+      "mode": "dark",
+      "window": "900,620"
+    }
+  ]
 }

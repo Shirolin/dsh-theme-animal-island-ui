@@ -24,13 +24,13 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdtempSync, rmSync } from 'node:fs'
-import { homedir, tmpdir } from 'node:os'
+import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { JSDOM } from 'jsdom'
-import { isDshRuntime, readDshBundleCss, readDshFrontendCss, readDshRuntimeVersion, readDshThemeBaseCss } from './dsh-runtime.mjs'
+import { readDshBundleCss, readDshFrontendCss, readDshRuntimeVersion, readDshThemeBaseCss } from './dsh-runtime.mjs'
+import { formatTokenVars, renderFixturePage, resolveDshRuntime } from './fixture-page.mjs'
 import { buildOwnedSkinCss } from './owned-skin-css.mjs'
-import { prepareDshRuntime } from './prepare-dsh-runtime.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2)
@@ -47,33 +47,7 @@ if (name === undefined) {
   process.exit(1)
 }
 
-const explicitDsh = flag('dsh')
-const explicitAsar = flag('asar')
-const useDesktop = args.includes('--desktop')
-if (explicitDsh !== undefined && (useDesktop || explicitAsar !== undefined)) {
-  console.error('choose one of --dsh, --asar or --desktop')
-  process.exit(1)
-}
-
-const candidateDsh = resolve(explicitDsh ?? process.env.DSH_APP ?? join(homedir(), '.dsh', 'app'))
-let dsh
-if (useDesktop || explicitAsar !== undefined) {
-  dsh = prepareDshRuntime({ asarPath: explicitAsar })
-} else if (isDshRuntime(candidateDsh)) {
-  dsh = candidateDsh
-} else if (explicitDsh === undefined && process.env.DSH_APP === undefined) {
-  try {
-    dsh = prepareDshRuntime()
-  } catch {
-    dsh = candidateDsh
-  }
-} else {
-  dsh = candidateDsh
-}
-if (!isDshRuntime(dsh)) {
-  console.error(`no DSH install at ${dsh}\n  pass --dsh <app dir>, --desktop, or set DSH_APP`)
-  process.exit(1)
-}
+const dsh = resolveDshRuntime(args)
 
 // Fixtures mirror a specific DSH DOM, so every run states which runtime it
 // rendered and can be pinned with --expect-dsh to keep results reproducible.
@@ -143,11 +117,7 @@ if (!existsSync(tokensPath)) {
 }
 const { buildTokenOverrides } = await import(`${pathToFileURL(tokensPath).href}?t=${Date.now()}`)
 const overrides = buildTokenOverrides()
-const tokenVars = (mode) =>
-  Object.entries(overrides)
-    .map(([token, value]) => `${token}:${value[mode]}`)
-    .join(';')
-    .replaceAll('"', '&quot;')
+const tokenVars = (mode) => formatTokenVars(overrides, mode)
 
 const ownedSkinCss = await buildOwnedSkinCss()
 
@@ -159,15 +129,16 @@ await mkdir(workDir, { recursive: true })
 for (const variant of config.variants) {
   const profile = mkdtempSync(join(tmpdir(), 'dsh-theme-fixture-chrome-'))
   const mode = variant.mode ?? 'light'
-  const page = body
-    .replaceAll('<!--{{DSH_CSS}}-->', `<style>${frontendCss}</style>`)
-    .replaceAll('<!--{{THEME_BASE_CSS}}-->', `<style>${themeBaseCss}</style>`)
-    .replaceAll('<!--{{PLUGIN_CSS}}-->', `<style>${pluginCss}</style>`)
-    .replaceAll('<!--{{SKIN_CSS}}-->', `<style>${ownedSkinCss}</style>`)
-    .replaceAll('{{TOKENS}}', tokenVars(mode))
-    .replaceAll('{{BODY_ATTRIBUTES}}', mode === 'dark' ? ' data-ds-dark-theme=""' : '')
-    .replaceAll('{{BODY_STYLE}}', variant.bodyStyle ?? '')
-    .replace('</body>', `${assertionScript}\n</body>`)
+  const page = renderFixturePage(body, {
+    dshCss: `<style>${frontendCss}</style>`,
+    themeBaseCss: `<style>${themeBaseCss}</style>`,
+    pluginCss: `<style>${pluginCss}</style>`,
+    skinCss: `<style>${ownedSkinCss}</style>`,
+    tokens: tokenVars(mode),
+    dark: mode === 'dark',
+    bodyStyle: variant.bodyStyle,
+    tail: assertionScript,
+  })
 
   const pagePath = join(workDir, `${variant.id}.html`)
   const shot = join(outDir, `${name}-${variant.id}-smoke.png`)

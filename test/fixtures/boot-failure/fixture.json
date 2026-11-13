@@ -1,6 +1,18 @@
 {
   "title": "DSH 启动失败页 · 官方错误列表可滚动",
-  "variants": [{ "id": "light", "mode": "light", "window": "900,620" }, { "id": "dark", "mode": "dark", "window": "900,620" }],
+  "group": "启动页",
+  "variants": [
+    {
+      "id": "light",
+      "mode": "light",
+      "window": "900,620"
+    },
+    {
+      "id": "dark",
+      "mode": "dark",
+      "window": "900,620"
+    }
+  ],
   "assertions": [
     {
       "message": "failure page does not apply the loading card",

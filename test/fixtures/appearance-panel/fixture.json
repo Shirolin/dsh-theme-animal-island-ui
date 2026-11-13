@@ -1,5 +1,6 @@
 {
   "title": "动森外观 · 自定义透明度控件（560px / 320px，亮暗）",
+  "group": "设置与外观",
   "pluginCss": [],
   "assertions": [
     {
@@ -31,5 +32,16 @@
       "expression": "(() => [...document.querySelectorAll('.animal-island-appearance')].every((panel) => { const actions = panel.querySelector('.animal-island-appearance__actions'); const details = panel.querySelector('.animal-island-appearance__details'); if (!actions || !details) return false; const order = actions.compareDocumentPosition(details); return Boolean(order & Node.DOCUMENT_POSITION_PRECEDING) && actions.querySelectorAll('.animal-island-appearance__reset').length === 1; }))()"
     }
   ],
-  "variants": [{ "id": "light", "mode": "light", "window": "980,1120" }, { "id": "dark", "mode": "dark", "window": "980,1120" }]
+  "variants": [
+    {
+      "id": "light",
+      "mode": "light",
+      "window": "980,1120"
+    },
+    {
+      "id": "dark",
+      "mode": "dark",
+      "window": "980,1120"
+    }
+  ]
 }

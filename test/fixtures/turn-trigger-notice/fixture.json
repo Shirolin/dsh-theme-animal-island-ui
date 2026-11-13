@@ -1,5 +1,6 @@
 {
   "title": "触发提示条 · 深色卡片文字可读性",
+  "group": "工作区与会话",
   "pluginCss": ["@deepseek-ai/dsh-client-ui-chat"],
   "assertions": [
     {
@@ -19,5 +20,16 @@
       "expression": "(() => { const root = document.querySelector('[data-turn-trigger]'); const pre = root && root.querySelector('pre'); if (!root || !pre) return false; const rgba = (value) => { const n = value.match(/[\\d.]+/g); return [Number(n[0]), Number(n[1]), Number(n[2]), n.length > 3 ? Number(n[3]) : 1]; }; const over = (top, bottom) => top.slice(0, 3).map((v, i) => Math.round(v * top[3] + bottom[i] * (1 - top[3]))); const lum = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }; const page = rgba(getComputedStyle(document.body).backgroundColor); const card = over(rgba(getComputedStyle(root).backgroundColor), page); const fg = rgba(getComputedStyle(pre).color); const [light, dark] = [lum(fg), lum(card)].sort((a, b) => b - a); return (light + 0.05) / (dark + 0.05) >= 4.5; })()"
     }
   ],
-  "variants": [{ "id": "light", "mode": "light", "window": "760,420" }, { "id": "dark", "mode": "dark", "window": "760,420" }]
+  "variants": [
+    {
+      "id": "light",
+      "mode": "light",
+      "window": "760,420"
+    },
+    {
+      "id": "dark",
+      "mode": "dark",
+      "window": "760,420"
+    }
+  ]
 }

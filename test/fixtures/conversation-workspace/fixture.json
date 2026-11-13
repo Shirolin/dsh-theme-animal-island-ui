@@ -1,0 +1,40 @@
+{
+  "title": "主工作区 · 标题木牌、Hero 场景、代码块与对话气泡",
+  "group": "工作区与会话",
+  "pluginCss": [
+    "@deepseek-ai/dsh-client-ui-layout",
+    "@deepseek-ai/dsh-client-ui-conversation",
+    "@deepseek-ai/dsh-client-ui-chat",
+    "@deepseek-ai/dsh-client-ui-model-selection"
+  ],
+  "assertions": [
+    {
+      "message": "主内容画布消费 --dsw-alias-bg-base 半透明纸面（随纸面浓度滑杆变化）",
+      "expression": "(() => { const frame = document.querySelector('.mP3x-q_frame'); if (!frame) return false; const bg = getComputedStyle(frame).backgroundColor; const dark = document.body.hasAttribute('data-ds-dark-theme'); return dark ? bg === 'rgba(41, 35, 28, 0.84)' : bg === 'rgba(248, 248, 240, 0.4)'; })()"
+    },
+    {
+      "message": "标题木牌绶带具备真实盒子尺寸",
+      "expression": "(() => { const nav = document.querySelector('header nav'); if (!nav) return false; const r = nav.getBoundingClientRect(); return r.width >= 60 && r.height >= 24; })()"
+    },
+    {
+      "message": "对话气泡 Composer 保留非空纸纹与边框",
+      "expression": "(() => { const card = document.querySelector('[data-composer-card]'); if (!card) return false; const cs = getComputedStyle(card); return cs.backgroundImage.includes('data:image/svg+xml') && Number.parseFloat(cs.borderTopWidth) >= 1.5; })()"
+    },
+    {
+      "message": "发送键采用主题实色胶囊背景",
+      "expression": "(() => { const btn = document.querySelector('[data-composer-card] button[aria-label=\"发送\"]'); if (!btn) return false; const bg = getComputedStyle(btn).backgroundColor; return bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent'; })()"
+    }
+  ],
+  "variants": [
+    {
+      "id": "light",
+      "mode": "light",
+      "window": "940,860"
+    },
+    {
+      "id": "dark",
+      "mode": "dark",
+      "window": "940,860"
+    }
+  ]
+}

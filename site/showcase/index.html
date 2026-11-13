@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Animal Island UI for DSH 组件图鉴：基于真实 DSH 运行时 CSS 与主题皮肤渲染的日夜组件对照预览。"
+    />
+    <title>DSH 组件图鉴 · Animal Island UI</title>
+    <link rel="icon" href="../assets/loading-leaf.svg" type="image/svg+xml" />
+    <link rel="icon" href="../assets/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="preload" href="../assets/nunito-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="showcase.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__row topbar__row--brand">
+        <div class="topbar__title">
+          <a class="back-link" href="../">
+            <img src="../assets/loading-leaf.svg" alt="" width="28" height="28" />
+            <span>返回首页</span>
+          </a>
+          <span class="divider" aria-hidden="true">/</span>
+          <h1>DSH 组件图鉴</h1>
+        </div>
+
+        <div class="topbar__tools">
+          <label class="search-field">
+            <span class="sr-only">搜索组件或插件包</span>
+            <input type="search" id="search-input" placeholder="筛选组件名、标题或插件包…" autocomplete="off" />
+          </label>
+
+          <div class="mode-switch" role="group" aria-label="切换日夜模式">
+            <button type="button" class="seg-btn is-active" data-mode="light" aria-pressed="true">日间</button>
+            <button type="button" class="seg-btn" data-mode="dark" aria-pressed="false">夜岛</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="topbar__row topbar__row--controls" aria-label="外观参数实时调节">
+        <div
+          class="ctrl-group"
+          title="调节主工作台画布、Diff 交付区、迷你预览窗等使用 --dsw-alias-bg-base 的纸面遮罩透明度；固定背景卡片不变"
+        >
+          <span class="ctrl-label">纸面浓度</span>
+          <div class="preset-group" role="group" aria-label="纸面浓度预设">
+            <button type="button" class="pill-btn" data-veil-preset="0.52">纸白</button>
+            <button type="button" class="pill-btn is-active" data-veil-preset="0.4">均衡</button>
+            <button type="button" class="pill-btn" data-veil-preset="0.28">海岛</button>
+          </div>
+          <input type="range" id="veil-slider" min="0.15" max="0.6" step="0.01" value="0.4" aria-label="纸面遮罩透明度" />
+          <output id="veil-output" for="veil-slider">0.40</output>
+        </div>
+
+        <div class="ctrl-group">
+          <label
+            class="toggle-chip"
+            title="开关工作台与通用底层的波浪/飘落手账装饰（启动加载页固定保留插画）"
+          >
+            <input type="checkbox" id="toggle-decor" checked />
+            <span>插画装饰</span>
+          </label>
+          <label
+            class="toggle-chip"
+            title="开关弹窗（设置、作用域选择、快捷键面板）与输入卡（Composer）的手账斜纹纸面"
+          >
+            <input type="checkbox" id="toggle-grain" checked />
+            <span>手账纸纹</span>
+          </label>
+          <label
+            class="toggle-chip"
+            id="toggle-diff-chip"
+            title="切换 Diff 红绿行高亮（仅日间模式作用于 Diff 交付区卡片）"
+          >
+            <input type="checkbox" id="toggle-diff" />
+            <span>原生 Diff 语法</span>
+          </label>
+          <label
+            class="toggle-chip"
+            title="切换主题内置 Nunito 圆体与系统默认字体（主要影响英文与数字字形）"
+          >
+            <input type="checkbox" id="toggle-font" />
+            <span>系统字体</span>
+          </label>
+        </div>
+
+        <button
+          type="button"
+          class="reset-btn"
+          id="reset-btn"
+          title="清除统一覆盖，使每张卡片恢复各自的演示预设状态"
+        >
+          恢复各卡默认
+        </button>
+
+        <span class="ctrl-hint">作用域：浓度作用于主画布/Diff，纸纹作用于弹窗/输入卡，Diff 语法仅日间生效</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="组件分类目录">
+        <nav id="toc" class="toc"></nav>
+      </aside>
+
+      <main class="stage-column" id="stage-column">
+        <p class="status-bar" id="status-bar">正在加载组件清单…</p>
+        <div id="sections-root"></div>
+      </main>
+    </div>
+
+    <footer class="showcase-footer">
+      <p id="footer-meta">渲染于真实 DSH 运行时 CSS 与主题构建产物。</p>
+      <div class="footer-links">
+        <a href="../">主题首页</a>
+        <a href="https://github.com/Shirolin/dsh-theme-animal-island-ui" target="_blank" rel="noreferrer">GitHub 仓库</a>
+      </div>
+    </footer>
+
+    <script defer src="showcase.js"></script>
+  </body>
+</html>

@@ -1,5 +1,17 @@
 {
   "title": "右侧栏「文档」预览的纯文本视图",
+  "group": "代码与交付",
   "pluginCss": ["@deepseek-ai/dsh-client-ui-sidebar-documentpreview"],
-  "variants": [{ "id": "light", "mode": "light", "window": "820,300" }, { "id": "dark", "mode": "dark", "window": "820,300" }]
+  "variants": [
+    {
+      "id": "light",
+      "mode": "light",
+      "window": "820,300"
+    },
+    {
+      "id": "dark",
+      "mode": "dark",
+      "window": "820,300"
+    }
+  ]
 }

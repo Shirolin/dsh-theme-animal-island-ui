@@ -36,6 +36,10 @@ SOFTWARE.
 
 构建时内嵌 `@fontsource/nunito` 提供的 Nunito Latin WOFF2。Nunito 由 The Nunito Project Authors 创作，采用 SIL Open Font License 1.1。完整许可证见 `licenses/Nunito-OFL.txt`。
 
+## DeepSeek Harness (DSH)
+
+`site/showcase/generated/css/` 包含由构建脚本从 `@deepseek-ai/dsh-web-frontend` 与 `@deepseek-ai/dsh-client-ui-*` 提取的 CSS 样式片段，仅用于在组件图鉴中还原真实的 DSH 组件外观。上述上游包均以 MIT License 发布。
+
 ## Original resources
 
 `src/client/assets/sidebar-wave.svg`、React Brand/Hero Mark 和 skin CSS geometry 为本项目原创资源，随本插件 MIT License 发布。

@@ -1,0 +1,298 @@
+<!doctype html>
+<!--
+  Main conversation workspace fixture: reproduces Layout's centerCol (consuming
+  --dsw-alias-bg-base), Conversation header crumbs + corner slot (triggering the
+  wooden header ribbon), the Hero scenery slot, a markdown prose + code island
+  bubble, and the Composer speech bubble with Model Selection.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>主工作区 · 会话界面</title>
+<link rel="stylesheet" href="css/dsh.css">
+<link rel="stylesheet" href="css/theme-base.css">
+<link rel="stylesheet" href="css/plugins/layout.css">
+<link rel="stylesheet" href="css/plugins/conversation.css">
+<link rel="stylesheet" href="css/plugins/chat.css">
+<link rel="stylesheet" href="css/plugins/model-selection.css">
+<link rel="stylesheet" href="css/skin.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  .workspace-frame {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace-frame .mP3x-q_centerCol {
+    grid-area: 1 / 1;
+    height: 100%;
+    border-radius: 0 !important;
+  }
+  .an3WzG_root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+  }
+  .an3WzG_scrollBody {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 18px 28px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .demo-thread {
+    width: min(740px, 100%);
+    margin: 0 auto;
+    display: grid;
+    gap: 14px;
+  }
+  .demo-user-msg {
+    justify-self: end;
+    max-width: 80%;
+    padding: 10px 16px;
+    border-radius: 18px;
+    background: var(--dsw-alias-bg-layer-1);
+    border: 1px solid var(--dsw-alias-border-l2);
+    color: var(--dsw-alias-label-primary);
+    font-size: 14px;
+  }
+  .demo-assistant-msg {
+    color: var(--dsw-alias-label-primary);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .demo-assistant-msg p { margin: 0 0 10px; }
+  .demo-code-card {
+    border-radius: var(--dsl-code-block-radius, 14px);
+    background: var(--dsl-code-block-bg, var(--dsw-alias-markdown-code-block));
+    overflow: hidden;
+  }
+  .demo-code-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: var(--dsl-code-block-banner-bg, rgba(255, 255, 255, 0.04));
+    font-size: 12px;
+  }
+  .demo-code-card pre {
+    margin: 0;
+    padding: 12px 14px;
+    overflow-x: auto;
+  }
+  .an3WzG_composerSeat {
+    flex: none;
+    padding: 8px 28px 20px;
+  }
+  .GRgSLq_root {
+    width: min(740px, 100%);
+    margin: 0 auto;
+  }
+  .GRgSLq_card {
+    padding: 14px 16px 10px;
+  }
+  .GRgSLq_input {
+    min-height: 36px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--dsw-alias-label-primary);
+    outline: none;
+  }
+  .GRgSLq_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .GRgSLq_tools,
+  .GRgSLq_trailing,
+  .GRgSLq_standardControls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .GRgSLq_add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--dsw-alias-label-secondary);
+    cursor: pointer;
+  }
+  .GRgSLq_primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body  data-ds-dark-theme="" style="--dsw-alias-bg-base:#29231c;--dsw-alias-bg-layer-1:#362e25;--dsw-alias-bg-layer-2:#2d2923;--dsw-alias-bg-layer-3:#28241f;--dsw-alias-bg-module-platform:#312b23;--dsw-alias-bg-multi-select:#42392f;--dsw-alias-bg-overlay:#40362b;--dsw-alias-bg-skeleton:rgba(247, 231, 199, 0.07);--dsw-alias-bg-mask-1:#160f0a80;--dsw-alias-bg-mask-2:#160f0a33;--dsw-alias-bg-mask-3:#160f0a7a;--dsw-alias-bg-mask-photo:#160f0ae0;--dsw-alias-bg-mask-drop:rgba(41, 35, 28, 0.7);--dsw-alias-border-l1:rgba(138, 112, 87, 0.35);--dsw-alias-border-l2:rgba(138, 112, 87, 0.55);--dsw-alias-border-l2-darkmode-thin:rgba(138, 112, 87, 0.35);--dsw-alias-border-l3:rgba(138, 112, 87, 0.7);--dsw-alias-border-l4:rgba(138, 112, 87, 0.9);--dsw-alias-border-inverted:rgba(247, 231, 199, 0.06);--dsw-alias-border-inverted2:rgba(247, 231, 199, 0.09);--dsw-alias-brand-primary:#61d9cb;--dsw-alias-brand-primary-invert:#f7e7c7;--dsw-alias-brand-primary-new-colorprimary-new-color:#61d9cb;--dsw-alias-brand-text:#f7e7c7;--dsw-alias-link:#7be2d5;--dsw-font-family:Nunito, &quot;Noto Sans SC&quot;, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, sans-serif;--ds-font-family-code:&quot;SFMono-Regular&quot;, &quot;Cascadia Code&quot;, &quot;Fira Code&quot;, Consolas, &quot;Liberation Mono&quot;, monospace;--dsw-alias-button-contrast-fill:#decfb2;--dsw-alias-button-elevated-fill:#40362b;--dsw-alias-button-floating-fill:#362e25;--dsw-alias-button-floating-hover:#443b30;--dsw-alias-button-ghost-active-border:#8a7057;--dsw-alias-button-ghost-active-fill:#453d32;--dsw-alias-button-ghost-active-hover:#51483c;--dsw-alias-button-info-fill:#589ea5;--dsw-alias-button-info-hover:#75abab;--dsw-alias-button-primary-dimmed:#41382e;--dsw-alias-button-primary-fill:#4a4035;--dsw-alias-button-primary-hover:#5a4d3e;--dsw-alias-button-tool-bar-fill:rgba(247, 231, 199, 0.5);--dsw-alias-button-tool-bar-fill-invisible:rgba(247, 231, 199, 0.36);--dsw-alias-button-tool-bar-hover:rgba(247, 231, 199, 0.62);--dsw-alias-interactive-bg-hover:rgba(107, 74, 44, 0.38);--dsw-alias-interactive-bg-hover-accent:rgba(97, 217, 203, 0.22);--dsw-alias-interactive-bg-hover-danger:rgba(255, 139, 139, 0.13);--dsw-alias-interactive-bg-hover-solid:#4a3a28;--dsw-alias-interactive-bg-active:rgba(107, 74, 44, 0.72);--dsw-alias-label-primary:#f7e7c7;--dsw-alias-label-secondary:#ead9bd;--dsw-alias-label-tertiary:#cbb994;--dsw-alias-label-caption:#aa987c;--dsw-alias-label-dimmed:#695a48;--dsw-alias-label-primary-bluish:#f7e7c7;--dsw-alias-label-primary-dimmed:#decfb2;--dsw-alias-label-primary-foreground:#fffbe7;--dsw-alias-label-primary-inverted:#29231c;--dsw-alias-markdown-code-block:#211b16;--dsw-alias-markdown-code-block-banner:#2c251e;--dsw-alias-markdown-code-segment-selected:#362f27;--dsw-alias-markdown-code-segment-unselected:#211b16;--dsw-alias-markdown-inline-code:#2d2923;--dsw-alias-markdown-citation:#443b30;--dsw-alias-markdown-placeholder:#312b23;--dsw-alias-markdown-tag:#40372d;--dsw-alias-scrollbar-bg-l1:rgba(247, 231, 199, 0.18);--dsw-alias-scrollbar-bg-l2:rgba(247, 231, 199, 0.22);--dsw-alias-scrollbar-hover-l1:rgba(247, 231, 199, 0.3);--dsw-alias-scrollbar-hover-l2:rgba(247, 231, 199, 0.34);--dsw-alias-state-error-primary:#ff8b8b;--dsw-alias-state-error-secondary:#d47675;--dsw-alias-state-success-primary:#a9db69;--dsw-alias-state-success-secondary:#8fb65a;--dsw-alias-state-success-tertiary:#40442a;--dsw-alias-state-warn-primary:#ffd15a;--dsw-alias-state-warn-secondary:#d4ae4e;--dsw-alias-state-warn-tertiary:#504227;--dsw-alias-state-warn-label:#ffd15a;--dsw-alias-state-business-primary:#7be2d5;--dsw-alias-state-business-tertiary:#354b43;--dsw-alias-toast-bg:#594f42;--dsw-alias-tooltip-bg:#594f42;--dsw-specific-bubble:#294640;--dsw-specific-bubble-highlight:#396f67;--dsw-specific-input-major:#362e25;--dsw-specific-login-input:#2f2921;--dsw-specific-menu:#362e25;--dsw-specific-selector:#40372d;--dsw-specific-sidebar-fill:#303444;--dsw-specific-sidebar-nav-item-hover:#4a3a28;--dsw-specific-sidebar-nav-item-active:#6b4a2c;--dsw-specific-sidebar-nav-item-active-accent:#6d5f44;--dsw-specific-tip:#40372d;--dsw-static-deepseek-500:#7be2d5;--dsw-static-deepseek-200:#425c54;--dsw-static-blue-500:#7be2d5;--dsw-static-blue-450:#7be2d5;--dsw-static-neutral-bluish-400:#a99173;--dsw-shadow-lv1:0 2px 4px 0 #160f0a59;--dsw-shadow-lv1-blur:0 4px 12px 0 #160f0a40;--dsw-shadow-lv2:0 4px 12px 0 #160f0a40, 0 2px 8px 0 #160f0a4d;--dsw-shadow-lv3:0 0 1px 0 #160f0a80, 0 0 4px 0 #160f0a4d, 0 12px 32px 0 #160f0a66;--dsw-elevation-stroke-color:#cbb99466;--dsw-elevation-stroke:0 0 0 .5px var(--dsw-elevation-stroke-color);--dsw-elevation-panel:var(--dsw-elevation-stroke), 0 4px 12px 0 #3d342814, 0 0 20px 0 #3d34280d;--dsw-elevation-prominent:var(--dsw-elevation-stroke), 0 8px 24px 0 #3d342824, 0 0 28px 0 #3d342814;--dsw-elevation-soft:var(--dsw-elevation-stroke), 0 4px 16px 0 #3d342814, 0 0 28px 0 #3d34280f;--dsw-linear-gradient-think:linear-gradient(180deg, #29231c 20.19%, rgba(41, 35, 28, 0) 100%);--dsw-linear-think-select:linear-gradient(180deg, #362e25 20.19%, rgba(54, 46, 37, 0) 100%);--shiki-foreground:#f3dfbd;--shiki-background:#211b16;--shiki-token-comment:#a4937b;--shiki-token-keyword:#f0a1c0;--shiki-token-string:#8bd694;--shiki-token-string-expression:#8bd694;--shiki-token-constant:#ffb86b;--shiki-token-function:#9dd9ff;--shiki-token-parameter:#d0a6ff;--shiki-token-punctuation:#d4c0a0;--shiki-token-link:#72d6e3 ">
+<div class="mP3x-q_frame workspace-frame">
+  <div class="mP3x-q_centerCol">
+    <div class="mP3x-q_mainPanel">
+      <div class="an3WzG_root">
+        <header class="an3WzG_header" data-window-drag="true">
+          <div class="an3WzG_headerLeading" data-conversation-header-leading=""></div>
+          <div class="an3WzG_titleRow">
+            <div class="an3WzG_titleCluster">
+              <nav class="an3WzG_crumbs" aria-label="会话层级">
+                <span class="an3WzG_crumb an3WzG_crumbCurrent">主题安装与验收</span>
+              </nav>
+            </div>
+            <div class="an3WzG_headerUtilities"></div>
+          </div>
+          <div class="an3WzG_headerCorner" data-conversation-header-corner=""></div>
+        </header>
+
+        <div class="an3WzG_scrollBody" data-conversation-scroll="true">
+          <div class="WOwLGG_root">
+            <div class="WOwLGG_headline">
+              <span class="WOwLGG_fishHitbox">
+                <div data-slot="" style="display: contents;">
+                  <span class="animal-island-hero__brand">
+                    <svg aria-hidden="true" class="animal-island-hero__scenery animal-island-hero__scenery--day" viewBox="0 0 700 154" preserveAspectRatio="xMidYMid slice">
+                      <ellipse cx="350" cy="77" rx="312" ry="67" fill="#fffbea" opacity=".24" />
+                      <circle class="animal-island-hero__scene-sun" cx="505" cy="45" r="24" fill="#f5dc88" stroke="#e8c768" stroke-width="1.2" />
+                      <path d="M0 125c67-15 108 1 165-9 55-10 87-25 143-18 57 7 94-7 145 0 64 7 100 20 154 14 42-5 72-6 93 3v39H0Z" fill="#9ed4ad" opacity=".36" />
+                    </svg>
+                    <svg aria-hidden="true" class="animal-island-hero__scenery animal-island-hero__scenery--night" viewBox="0 0 700 154" preserveAspectRatio="xMidYMid slice">
+                      <circle class="animal-island-hero__scene-moon" cx="505" cy="43" r="25" fill="#f6e6b4" stroke="#d8c58c" stroke-width="1.1" />
+                      <g class="animal-island-hero__scene-stars" fill="#fff3c5">
+                        <circle cx="96" cy="28" r="1.6" /><circle cx="227" cy="25" r="1.8" /><circle cx="353" cy="20" r="1.4" /><circle cx="581" cy="27" r="1.7" />
+                      </g>
+                      <path d="M0 126c69-12 111 0 171-10 57-10 92-24 150-17 61 8 99-7 154 0 63 8 97 19 146 14 35-4 61-4 79 2v39H0Z" fill="#21483e" opacity=".6" />
+                    </svg>
+                    <span class="animal-island-hero__identity">
+                      <svg aria-hidden="true" class="animal-island-brand__mark WOwLGG_fish" width="34" height="34" viewBox="0 0 64 64">
+                        <g transform="rotate(-18 32 32)">
+                          <path d="M32 54c0 5-2 8-7 9" fill="none" stroke="#2f7d3c" stroke-width="4.5" stroke-linecap="round"/>
+                          <path d="M32 6C19 16 10 27 10 38c0 11 10 18 22 18s22-7 22-18C54 27 45 16 32 6Z" fill="#6cc35a" stroke="#2f7d3c" stroke-width="3.2" stroke-linejoin="round"/>
+                          <path d="M32 12v37" stroke="#d9f2c1" stroke-width="3.4" stroke-linecap="round"/>
+                        </g>
+                      </svg>
+                      <span class="animal-island-hero__wordmark">动森岛</span>
+                      <span class="animal-island-hero__divider" aria-hidden="true"></span>
+                      <span class="animal-island-hero__english" aria-hidden="true">ANIMAL ISLAND</span>
+                    </span>
+                  </span>
+                </div>
+              </span>
+              <span class="WOwLGG_titleGroup">
+                <span>探索未至之境</span>
+                <span class="WOwLGG_previewBadge">预览</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="demo-thread">
+            <div class="demo-user-msg">帮我检查 <code>--animal-canvas-veil</code> 在日间与夜岛纸面上的层次效果。</div>
+            <div class="demo-assistant-msg">
+              <p>主内容纸面读取 <code>--dsw-alias-bg-base</code>，下方可透过底层的岛屿波点与风景装饰；代码块则保留独立的深色代码岛容器：</p>
+              <div class="demo-code-card">
+                <div class="demo-code-banner" data-code-block-banner="true">
+                  <span>typescript</span>
+                  <button type="button" aria-label="复制">复制</button>
+                </div>
+                <pre><code>export const ANIMAL_ISLAND_VEIL = 0.40; // paper: 0.52 · island: 0.28</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="an3WzG_composerSeat" data-composer-seat="true">
+          <div class="GRgSLq_root">
+            <div class="GRgSLq_card" data-composer-card="true" tabindex="-1">
+              <div class="GRgSLq_input" contenteditable="true" role="textbox" aria-label="给 DeepSeek 发送消息">在动森岛工作台继续对话…</div>
+              <div class="GRgSLq_row">
+                <div class="GRgSLq_tools">
+                  <button type="button" class="GRgSLq_add" aria-label="命令">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3.5v9M3.5 8h9" stroke-linecap="round"/></svg>
+                  </button>
+                  <button type="button">思考</button>
+                </div>
+                <div class="GRgSLq_trailing">
+                  <div class="GRgSLq_standardControls">
+                    <button type="button" class="_9r0rkG_trigger" aria-haspopup="listbox" aria-expanded="false">
+                      <span class="_9r0rkG_triggerLabel">DeepSeek V3.2</span>
+                      <span class="_9r0rkG_triggerEffort">Medium</span>
+                      <svg class="_9r0rkG_chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m4 6 4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
+                  <button type="button" class="GRgSLq_primary" aria-label="发送">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 12.5V3.5M4 7.5l4-4 4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  const doc = document.documentElement;
+  const body = document.body;
+  const initial = {
+    decor: doc.getAttribute('data-animal-decor'),
+    grain: doc.getAttribute('data-animal-grain'),
+    diffSyntax: doc.getAttribute('data-animal-diff-syntax'),
+    font: doc.getAttribute('data-animal-font'),
+    veil: body.style.getPropertyValue('--animal-canvas-veil'),
+    fontFamily: body.style.getPropertyValue('--dsw-font-family'),
+  };
+  const restoreAttr = (name, value) => {
+    if (value === null) doc.removeAttribute(name);
+    else doc.setAttribute(name, value);
+  };
+  const restoreProp = (name, value) => {
+    if (value) body.style.setProperty(name, value);
+    else body.style.removeProperty(name);
+  };
+  window.addEventListener('message', (event) => {
+    const data = event.data;
+    if (!data || data.type !== 'animal-island:appearance') return;
+    if (data.reset) {
+      restoreAttr('data-animal-decor', initial.decor);
+      restoreAttr('data-animal-grain', initial.grain);
+      restoreAttr('data-animal-diff-syntax', initial.diffSyntax);
+      restoreAttr('data-animal-font', initial.font);
+      restoreProp('--animal-canvas-veil', initial.veil);
+      restoreProp('--dsw-font-family', initial.fontFamily);
+      return;
+    }
+    const patch = data.patch || {};
+    if (patch.decor !== undefined) doc.setAttribute('data-animal-decor', patch.decor);
+    if (patch.grain !== undefined) doc.setAttribute('data-animal-grain', patch.grain);
+    if (patch.diffSyntax !== undefined) doc.setAttribute('data-animal-diff-syntax', patch.diffSyntax);
+    if (patch.font !== undefined) {
+      doc.setAttribute('data-animal-font', patch.font);
+      if (patch.font === 'system') {
+        body.style.setProperty('--dsw-font-family', 'var(--animal-system-font-family, sans-serif)');
+      } else {
+        restoreProp('--dsw-font-family', initial.fontFamily);
+      }
+    }
+    if (patch.veil !== undefined) {
+      body.style.setProperty('--animal-canvas-veil', String(patch.veil));
+    }
+  });
+})();
+</script>
+</body>
+</html>

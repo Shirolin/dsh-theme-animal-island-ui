@@ -1,7 +1,19 @@
 {
   "title": "右侧栏 deliverables diff 的语法配色（浅色面板）",
+  "group": "代码与交付",
   "pluginCss": ["@deepseek-ai/dsh-client-ui-deliverables"],
-  "variants": [{ "id": "light", "mode": "light", "window": "760,520" }, { "id": "dark", "mode": "dark", "window": "760,520" }],
+  "variants": [
+    {
+      "id": "light",
+      "mode": "light",
+      "window": "760,520"
+    },
+    {
+      "id": "dark",
+      "mode": "dark",
+      "window": "760,520"
+    }
+  ],
   "assertions": [
     {
       "message": "关键字色：亮色用浅面暖语法色 #a13d7a，暗色保留代码岛亮语法色 #f0a1c0",

@@ -1,0 +1,188 @@
+<!doctype html>
+<!--
+  Plugin manager rows and switches in light mode.
+
+  The plugin creates the identity attributes on its list rows and uses the
+  standard switch role. This fixture keeps a small, real DOM shape so the visual
+  boundary and reading surface can be measured without copying the whole page.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>插件管理 · 亮色可读性</title>
+<link rel="stylesheet" href="css/dsh.css">
+<link rel="stylesheet" href="css/theme-base.css">
+<link rel="stylesheet" href="css/plugins/plugin-manager.css">
+<link rel="stylesheet" href="css/skin.css">
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #8fcaa5;
+    background-image:
+      radial-gradient(circle, rgba(74, 126, 83, .24) 1.25px, transparent 1.4px),
+      radial-gradient(circle, rgba(245, 250, 222, .22) .85px, transparent 1px);
+    background-position: 0 0, 8px 8px;
+    background-size: 30px 30px, 15px 15px;
+  }
+  .fixture {
+    position: relative;
+    width: 760px;
+    min-height: 460px;
+    margin: 22px auto;
+    padding: 22px 24px 70px;
+    overflow: hidden;
+    color: var(--animal-body);
+    background: rgba(248, 248, 240, .18);
+    border: 1px solid rgba(143, 118, 94, .2);
+    border-radius: 22px;
+  }
+  .fixture::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    bottom: -22px;
+    left: -40px;
+    height: 96px;
+    border-radius: 50% 50% 0 0;
+    background: rgba(88, 170, 160, .2);
+    pointer-events: none;
+  }
+  .fixture-title {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 18px;
+    color: var(--animal-ink);
+    font-size: 24px;
+    font-weight: 900;
+  }
+  .V7pFBG_page {
+    position: relative;
+    z-index: 1;
+    width: auto;
+    padding: 0;
+    overflow: visible;
+  }
+  .plugin-group + .plugin-group {
+    margin-top: 22px;
+  }
+  .fixture .V7pFBG_cardTitle,
+  .fixture .V7pFBG_cardDesc {
+    position: relative;
+    z-index: 1;
+  }
+  .fixture .V7pFBG_cardDesc {
+    color: var(--animal-muted);
+  }
+</style>
+</head>
+<body  style="--dsw-alias-bg-base:#f8f8f0;--dsw-alias-bg-layer-1:#ffffff;--dsw-alias-bg-layer-2:#f7f3df;--dsw-alias-bg-layer-3:#f0e8d8;--dsw-alias-bg-module-platform:#f3f1e8;--dsw-alias-bg-multi-select:#f6f4f2;--dsw-alias-bg-overlay:#fffbe7;--dsw-alias-bg-skeleton:rgba(111, 69, 31, 0.07);--dsw-alias-bg-mask-1:#3d342a3d;--dsw-alias-bg-mask-2:#3d342a1f;--dsw-alias-bg-mask-3:#160f0a7a;--dsw-alias-bg-mask-photo:#160f0ae0;--dsw-alias-bg-mask-drop:rgba(248, 248, 240, 0.7);--dsw-alias-border-l1:rgba(220, 216, 209, 0.35);--dsw-alias-border-l2:rgba(220, 216, 209, 0.55);--dsw-alias-border-l2-darkmode-thin:rgba(220, 216, 209, 0.35);--dsw-alias-border-l3:rgba(220, 216, 209, 0.7);--dsw-alias-border-l4:rgba(220, 216, 209, 0.9);--dsw-alias-border-inverted:rgba(111, 69, 31, 0.06);--dsw-alias-border-inverted2:rgba(111, 69, 31, 0.09);--dsw-alias-brand-primary:#19c8b9;--dsw-alias-brand-primary-invert:#6f451f;--dsw-alias-brand-primary-new-colorprimary-new-color:#19c8b9;--dsw-alias-brand-text:#6f451f;--dsw-alias-link:#0b6d64;--dsw-font-family:Nunito, &quot;Noto Sans SC&quot;, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, sans-serif;--ds-font-family-code:&quot;SFMono-Regular&quot;, &quot;Cascadia Code&quot;, &quot;Fira Code&quot;, Consolas, &quot;Liberation Mono&quot;, monospace;--dsw-alias-button-contrast-fill:#7f5a38;--dsw-alias-button-elevated-fill:#fffbe7;--dsw-alias-button-floating-fill:#ffffff;--dsw-alias-button-floating-hover:#f5f2ef;--dsw-alias-button-ghost-active-border:#dcd8d1;--dsw-alias-button-ghost-active-fill:#f3f0ed;--dsw-alias-button-ghost-active-hover:#ebe5e0;--dsw-alias-button-info-fill:#2e6f7d;--dsw-alias-button-info-hover:#3a676c;--dsw-alias-button-primary-dimmed:#f8f8f0;--dsw-alias-button-primary-fill:#f8f8f0;--dsw-alias-button-primary-hover:#fffbe7;--dsw-alias-button-tool-bar-fill:rgba(111, 69, 31, 0.5);--dsw-alias-button-tool-bar-fill-invisible:rgba(111, 69, 31, 0.36);--dsw-alias-button-tool-bar-hover:rgba(111, 69, 31, 0.62);--dsw-alias-interactive-bg-hover:rgba(229, 201, 155, 0.5);--dsw-alias-interactive-bg-hover-accent:rgba(25, 200, 185, 0.22);--dsw-alias-interactive-bg-hover-danger:rgba(182, 62, 62, 0.13);--dsw-alias-interactive-bg-hover-solid:rgba(240, 226, 200, 0.82);--dsw-alias-interactive-bg-active:rgba(229, 201, 155, 0.78);--dsw-alias-label-primary:#6f451f;--dsw-alias-label-secondary:#654a2f;--dsw-alias-label-tertiary:#725f48;--dsw-alias-label-caption:#7c684d;--dsw-alias-label-dimmed:#d6cfbe;--dsw-alias-label-primary-bluish:#6f451f;--dsw-alias-label-primary-dimmed:#7f5a38;--dsw-alias-label-primary-foreground:#2a2118;--dsw-alias-label-primary-inverted:#f8f8f0;--dsw-alias-markdown-code-block:#2b2118;--dsw-alias-markdown-code-block-banner:#342a20;--dsw-alias-markdown-code-segment-selected:#3e3328;--dsw-alias-markdown-code-segment-unselected:#2b2118;--dsw-alias-markdown-inline-code:#f7f3df;--dsw-alias-markdown-citation:#f5f2ef;--dsw-alias-markdown-placeholder:#f3f1e8;--dsw-alias-markdown-tag:#f8f6f4;--dsw-alias-scrollbar-bg-l1:rgba(111, 69, 31, 0.18);--dsw-alias-scrollbar-bg-l2:rgba(111, 69, 31, 0.22);--dsw-alias-scrollbar-hover-l1:rgba(111, 69, 31, 0.3);--dsw-alias-scrollbar-hover-l2:rgba(111, 69, 31, 0.34);--dsw-alias-state-error-primary:#b63e3e;--dsw-alias-state-error-secondary:#c36362;--dsw-alias-state-success-primary:#48741d;--dsw-alias-state-success-secondary:#6b8e47;--dsw-alias-state-success-tertiary:#d8e0ca;--dsw-alias-state-warn-primary:#846100;--dsw-alias-state-warn-secondary:#9b7f30;--dsw-alias-state-warn-tertiary:#e3ddc5;--dsw-alias-state-warn-label:#846100;--dsw-alias-state-business-primary:#0b6d64;--dsw-alias-state-business-tertiary:#c7ede4;--dsw-alias-toast-bg:#7f5a38;--dsw-alias-tooltip-bg:#7f5a38;--dsw-specific-bubble:#e6f9f6;--dsw-specific-bubble-highlight:#adebe5;--dsw-specific-input-major:#ffffff;--dsw-specific-login-input:#f4f3ea;--dsw-specific-menu:#ffffff;--dsw-specific-selector:#f8f6f4;--dsw-specific-sidebar-fill:#faf8f3;--dsw-specific-sidebar-nav-item-hover:#f0e2c8;--dsw-specific-sidebar-nav-item-active:#e5c99b;--dsw-specific-sidebar-nav-item-active-accent:#c6bc93;--dsw-specific-tip:#f8f6f4;--dsw-static-deepseek-500:#0b6d64;--dsw-static-deepseek-200:#b1cec6;--dsw-static-blue-500:#0b6d64;--dsw-static-blue-450:#3dd4c6;--dsw-static-neutral-bluish-400:#b4a68c;--dsw-shadow-lv1:0 2px 4px 0 #3d34280f;--dsw-shadow-lv1-blur:0 4px 12px 0 #3d342808;--dsw-shadow-lv2:0 4px 12px 0 #3d342808, 0 2px 8px 0 #3d34280d;--dsw-shadow-lv3:0 0 1px 0 #3d342833, 0 0 4px 0 #3d34280d, 0 12px 32px 0 #3d34281f;--dsw-elevation-stroke-color:#82715766;--dsw-elevation-stroke:0 0 0 .5px var(--dsw-elevation-stroke-color);--dsw-elevation-panel:var(--dsw-elevation-stroke), 0 4px 12px 0 #3d342814, 0 0 20px 0 #3d34280d;--dsw-elevation-prominent:var(--dsw-elevation-stroke), 0 8px 24px 0 #3d342824, 0 0 28px 0 #3d342814;--dsw-elevation-soft:var(--dsw-elevation-stroke), 0 4px 16px 0 #3d342814, 0 0 28px 0 #3d34280f;--dsw-linear-gradient-think:linear-gradient(180deg, #f8f8f0 20.19%, rgba(248, 248, 240, 0) 100%);--dsw-linear-think-select:linear-gradient(180deg, #ffffff 20.19%, rgba(255, 255, 255, 0) 100%);--shiki-foreground:#e8d5bc;--shiki-background:#2b2118;--shiki-token-comment:#a69580;--shiki-token-keyword:#d4a0e0;--shiki-token-string:#a8d4a0;--shiki-token-string-expression:#a8d4a0;--shiki-token-constant:#e8c87a;--shiki-token-function:#61afef;--shiki-token-parameter:#f0a870;--shiki-token-punctuation:#d4b896;--shiki-token-link:#74c0fc ">
+<main class="fixture">
+  <h1 class="fixture-title">插件</h1>
+  <section class="V7pFBG_page" data-plugin-panel="true" aria-busy="false">
+    <section class="V7pFBG_group plugin-group" data-plugin-scope="global" data-plugin-group="extensions">
+      <div class="V7pFBG_groupHead"><h3 class="V7pFBG_groupTitle">实验性插件</h3></div>
+      <ul class="V7pFBG_cards">
+        <li class="V7pFBG_card V7pFBG_cardLink" data-plugin-package="@deepseek-ai/dsh-experimental-agent-team-profile" data-plugin-status="disabled">
+          <div class="V7pFBG_cardHead">
+            <span class="V7pFBG_cardIcon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28"><rect x="4" y="5" width="8" height="8" rx="2" fill="#65b9ff"/><rect x="16" y="5" width="8" height="8" rx="2" fill="#ffc85e"/><rect x="4" y="16" width="8" height="8" rx="2" fill="#52cfa6"/></svg>
+            </span>
+            <div class="V7pFBG_cardMain">
+              <div class="V7pFBG_cardTitle">智能体团队</div>
+              <div class="V7pFBG_cardDesc">启用团队协作、团队工具与共享任务看板。</div>
+            </div>
+            <div class="V7pFBG_cardEnd">
+              <button type="button" role="switch" aria-checked="false" aria-label="启用 智能体团队" class="_switch_1ik0f_5"><span class="_thumb_1ik0f_33"></span></button>
+            </div>
+          </div>
+        </li>
+        <li class="V7pFBG_card V7pFBG_cardLink" data-plugin-package="@deepseek-ai/dsh-experimental-voice-input" data-plugin-status="enabled">
+          <div class="V7pFBG_cardHead">
+            <span class="V7pFBG_cardIcon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28"><path d="M5 14h3l2-6 3 12 3-9 2 3h5" fill="none" stroke="#76a8ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <div class="V7pFBG_cardMain">
+              <div class="V7pFBG_cardTitle">语音输入</div>
+              <div class="V7pFBG_cardDesc">在本机使用 SenseVoice 转写录音。</div>
+            </div>
+            <div class="V7pFBG_cardEnd">
+              <button type="button" role="switch" aria-checked="true" aria-label="启用 语音输入" class="_switch_1ik0f_5"><span class="_thumb_1ik0f_33"></span></button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <section class="V7pFBG_group plugin-group" data-plugin-scope="global" data-plugin-group="basic">
+      <div class="V7pFBG_groupHead"><h3 class="V7pFBG_groupTitle">内置插件配置</h3></div>
+      <ul class="V7pFBG_cards">
+        <li class="V7pFBG_card V7pFBG_cardLink" data-plugin-item="subagent">
+          <div class="V7pFBG_cardHead">
+            <span class="V7pFBG_cardIcon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28"><rect x="7" y="7" width="14" height="14" rx="3" fill="#60d2bc"/><rect x="3" y="3" width="9" height="9" rx="2" fill="#65b9ff"/></svg>
+            </span>
+            <div class="V7pFBG_cardMain">
+              <div class="V7pFBG_cardTitle">子智能体</div>
+              <div class="V7pFBG_cardDesc">设置子智能体的递归层级、数量和模型。</div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </section>
+</main>
+<script>
+  document.querySelector('button[role="switch"]')?.focus({ focusVisible: true })
+</script>
+<script>
+(() => {
+  const doc = document.documentElement;
+  const body = document.body;
+  const initial = {
+    decor: doc.getAttribute('data-animal-decor'),
+    grain: doc.getAttribute('data-animal-grain'),
+    diffSyntax: doc.getAttribute('data-animal-diff-syntax'),
+    font: doc.getAttribute('data-animal-font'),
+    veil: body.style.getPropertyValue('--animal-canvas-veil'),
+    fontFamily: body.style.getPropertyValue('--dsw-font-family'),
+  };
+  const restoreAttr = (name, value) => {
+    if (value === null) doc.removeAttribute(name);
+    else doc.setAttribute(name, value);
+  };
+  const restoreProp = (name, value) => {
+    if (value) body.style.setProperty(name, value);
+    else body.style.removeProperty(name);
+  };
+  window.addEventListener('message', (event) => {
+    const data = event.data;
+    if (!data || data.type !== 'animal-island:appearance') return;
+    if (data.reset) {
+      restoreAttr('data-animal-decor', initial.decor);
+      restoreAttr('data-animal-grain', initial.grain);
+      restoreAttr('data-animal-diff-syntax', initial.diffSyntax);
+      restoreAttr('data-animal-font', initial.font);
+      restoreProp('--animal-canvas-veil', initial.veil);
+      restoreProp('--dsw-font-family', initial.fontFamily);
+      return;
+    }
+    const patch = data.patch || {};
+    if (patch.decor !== undefined) doc.setAttribute('data-animal-decor', patch.decor);
+    if (patch.grain !== undefined) doc.setAttribute('data-animal-grain', patch.grain);
+    if (patch.diffSyntax !== undefined) doc.setAttribute('data-animal-diff-syntax', patch.diffSyntax);
+    if (patch.font !== undefined) {
+      doc.setAttribute('data-animal-font', patch.font);
+      if (patch.font === 'system') {
+        body.style.setProperty('--dsw-font-family', 'var(--animal-system-font-family, sans-serif)');
+      } else {
+        restoreProp('--dsw-font-family', initial.fontFamily);
+      }
+    }
+    if (patch.veil !== undefined) {
+      body.style.setProperty('--animal-canvas-veil', String(patch.veil));
+    }
+  });
+})();
+</script>
+</body>
+</html>

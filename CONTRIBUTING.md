@@ -45,7 +45,9 @@ pnpm run fixture sidebar-masthead                        # 自动探测本机 We
 pnpm run fixture document-preview-plain --dsh <app_dir>  # 显式指定 Web 端 DSH 目录
 pnpm run fixture boot-loading --desktop                  # 显式解包桌面端 app.asar 运行时
 pnpm run check:visual                                    # 侧栏船票真实 DOM 视觉门禁
-pnpm run check:fixtures                                  # 全套夹具（11 个，浅/深）
+pnpm run check:fixtures                                  # 全套夹具（浅/深双模式）
+pnpm run showcase                                        # 基于夹具重生成组件图鉴静态页（DSH 升级或夹具变更后运行并提交）
+pnpm run audit                                           # 扫描本机 DSH 运行时输出覆盖率审计报告至 artifacts/audit/
 ```
 
 - 夹具位于 `test/fixtures/<name>/`，由 `fixture.json`（依赖的插件 CSS、窗口尺寸与浏览器断言）和 `body.html`（最小可复现 DOM 片段）组成；

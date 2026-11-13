@@ -92,6 +92,8 @@
     "check:visual": "node scripts/fixture.mjs sidebar-masthead --desktop",
     "check:fixtures": "node scripts/fixture-suite.mjs",
     "fixture": "node scripts/fixture.mjs",
+    "showcase": "pnpm run build && node scripts/build-showcase.mjs",
+    "audit": "pnpm run build && node scripts/audit-coverage.mjs",
     "perf": "node scripts/perf.mjs",
     "capture:desktop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/capture-desktop.ps1",
     "desktop:debug": "scripts\\dsh-desktop-debug.cmd",

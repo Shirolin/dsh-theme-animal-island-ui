@@ -1,0 +1,156 @@
+<!doctype html>
+<!--
+  Plain <pre> blocks that DSH paints on paper-coloured cards. The skin's dark
+  code island foreground must not reach any of them; the trajectory payload at
+  the end is the dark-island control that must keep the cream foreground.
+
+  The class names come from the pinned runtime's CSS modules and are not
+  selected by the skin; only the reviewed data hooks and the dialog role are.
+-->
+<html lang="zh-CN" data-dsh-animal-island-skin="active">
+<head>
+<meta charset="utf-8">
+<title>代码岛作用域</title>
+<link rel="stylesheet" href="css/dsh.css">
+<link rel="stylesheet" href="css/theme-base.css">
+<link rel="stylesheet" href="css/plugins/action-cards.css">
+<link rel="stylesheet" href="css/plugins/deliverables.css">
+<link rel="stylesheet" href="css/plugins/plugin-manager.css">
+<link rel="stylesheet" href="css/plugins/agent-preset.css">
+<link rel="stylesheet" href="css/plugins/schedule.css">
+<link rel="stylesheet" href="css/plugins/trajectory.css">
+<link rel="stylesheet" href="css/skin.css">
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #f8f8f0;
+  }
+  .fixture {
+    width: 720px;
+    margin: 0 auto;
+    padding: 24px 26px 40px;
+  }
+  .fixture-title {
+    margin: 0 0 18px;
+    color: var(--dsw-alias-label-primary);
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .fixture-row {
+    margin: 0 0 18px;
+  }
+  .fixture-dialog {
+    padding: 12px;
+    background: var(--dsw-alias-bg-layer-1);
+    border: 1px solid var(--dsw-alias-border-l1);
+    border-radius: var(--dsw-radius-lg);
+  }
+  .fixture-dark {
+    background: var(--dsw-alias-bg-layer-1);
+    padding: 12px;
+    border-radius: var(--dsw-radius-lg);
+  }
+</style>
+</head>
+<body  style="--dsw-alias-bg-base:#f8f8f0;--dsw-alias-bg-layer-1:#ffffff;--dsw-alias-bg-layer-2:#f7f3df;--dsw-alias-bg-layer-3:#f0e8d8;--dsw-alias-bg-module-platform:#f3f1e8;--dsw-alias-bg-multi-select:#f6f4f2;--dsw-alias-bg-overlay:#fffbe7;--dsw-alias-bg-skeleton:rgba(111, 69, 31, 0.07);--dsw-alias-bg-mask-1:#3d342a3d;--dsw-alias-bg-mask-2:#3d342a1f;--dsw-alias-bg-mask-3:#160f0a7a;--dsw-alias-bg-mask-photo:#160f0ae0;--dsw-alias-bg-mask-drop:rgba(248, 248, 240, 0.7);--dsw-alias-border-l1:rgba(220, 216, 209, 0.35);--dsw-alias-border-l2:rgba(220, 216, 209, 0.55);--dsw-alias-border-l2-darkmode-thin:rgba(220, 216, 209, 0.35);--dsw-alias-border-l3:rgba(220, 216, 209, 0.7);--dsw-alias-border-l4:rgba(220, 216, 209, 0.9);--dsw-alias-border-inverted:rgba(111, 69, 31, 0.06);--dsw-alias-border-inverted2:rgba(111, 69, 31, 0.09);--dsw-alias-brand-primary:#19c8b9;--dsw-alias-brand-primary-invert:#6f451f;--dsw-alias-brand-primary-new-colorprimary-new-color:#19c8b9;--dsw-alias-brand-text:#6f451f;--dsw-alias-link:#0b6d64;--dsw-font-family:Nunito, &quot;Noto Sans SC&quot;, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, sans-serif;--ds-font-family-code:&quot;SFMono-Regular&quot;, &quot;Cascadia Code&quot;, &quot;Fira Code&quot;, Consolas, &quot;Liberation Mono&quot;, monospace;--dsw-alias-button-contrast-fill:#7f5a38;--dsw-alias-button-elevated-fill:#fffbe7;--dsw-alias-button-floating-fill:#ffffff;--dsw-alias-button-floating-hover:#f5f2ef;--dsw-alias-button-ghost-active-border:#dcd8d1;--dsw-alias-button-ghost-active-fill:#f3f0ed;--dsw-alias-button-ghost-active-hover:#ebe5e0;--dsw-alias-button-info-fill:#2e6f7d;--dsw-alias-button-info-hover:#3a676c;--dsw-alias-button-primary-dimmed:#f8f8f0;--dsw-alias-button-primary-fill:#f8f8f0;--dsw-alias-button-primary-hover:#fffbe7;--dsw-alias-button-tool-bar-fill:rgba(111, 69, 31, 0.5);--dsw-alias-button-tool-bar-fill-invisible:rgba(111, 69, 31, 0.36);--dsw-alias-button-tool-bar-hover:rgba(111, 69, 31, 0.62);--dsw-alias-interactive-bg-hover:rgba(229, 201, 155, 0.5);--dsw-alias-interactive-bg-hover-accent:rgba(25, 200, 185, 0.22);--dsw-alias-interactive-bg-hover-danger:rgba(182, 62, 62, 0.13);--dsw-alias-interactive-bg-hover-solid:rgba(240, 226, 200, 0.82);--dsw-alias-interactive-bg-active:rgba(229, 201, 155, 0.78);--dsw-alias-label-primary:#6f451f;--dsw-alias-label-secondary:#654a2f;--dsw-alias-label-tertiary:#725f48;--dsw-alias-label-caption:#7c684d;--dsw-alias-label-dimmed:#d6cfbe;--dsw-alias-label-primary-bluish:#6f451f;--dsw-alias-label-primary-dimmed:#7f5a38;--dsw-alias-label-primary-foreground:#2a2118;--dsw-alias-label-primary-inverted:#f8f8f0;--dsw-alias-markdown-code-block:#2b2118;--dsw-alias-markdown-code-block-banner:#342a20;--dsw-alias-markdown-code-segment-selected:#3e3328;--dsw-alias-markdown-code-segment-unselected:#2b2118;--dsw-alias-markdown-inline-code:#f7f3df;--dsw-alias-markdown-citation:#f5f2ef;--dsw-alias-markdown-placeholder:#f3f1e8;--dsw-alias-markdown-tag:#f8f6f4;--dsw-alias-scrollbar-bg-l1:rgba(111, 69, 31, 0.18);--dsw-alias-scrollbar-bg-l2:rgba(111, 69, 31, 0.22);--dsw-alias-scrollbar-hover-l1:rgba(111, 69, 31, 0.3);--dsw-alias-scrollbar-hover-l2:rgba(111, 69, 31, 0.34);--dsw-alias-state-error-primary:#b63e3e;--dsw-alias-state-error-secondary:#c36362;--dsw-alias-state-success-primary:#48741d;--dsw-alias-state-success-secondary:#6b8e47;--dsw-alias-state-success-tertiary:#d8e0ca;--dsw-alias-state-warn-primary:#846100;--dsw-alias-state-warn-secondary:#9b7f30;--dsw-alias-state-warn-tertiary:#e3ddc5;--dsw-alias-state-warn-label:#846100;--dsw-alias-state-business-primary:#0b6d64;--dsw-alias-state-business-tertiary:#c7ede4;--dsw-alias-toast-bg:#7f5a38;--dsw-alias-tooltip-bg:#7f5a38;--dsw-specific-bubble:#e6f9f6;--dsw-specific-bubble-highlight:#adebe5;--dsw-specific-input-major:#ffffff;--dsw-specific-login-input:#f4f3ea;--dsw-specific-menu:#ffffff;--dsw-specific-selector:#f8f6f4;--dsw-specific-sidebar-fill:#faf8f3;--dsw-specific-sidebar-nav-item-hover:#f0e2c8;--dsw-specific-sidebar-nav-item-active:#e5c99b;--dsw-specific-sidebar-nav-item-active-accent:#c6bc93;--dsw-specific-tip:#f8f6f4;--dsw-static-deepseek-500:#0b6d64;--dsw-static-deepseek-200:#b1cec6;--dsw-static-blue-500:#0b6d64;--dsw-static-blue-450:#3dd4c6;--dsw-static-neutral-bluish-400:#b4a68c;--dsw-shadow-lv1:0 2px 4px 0 #3d34280f;--dsw-shadow-lv1-blur:0 4px 12px 0 #3d342808;--dsw-shadow-lv2:0 4px 12px 0 #3d342808, 0 2px 8px 0 #3d34280d;--dsw-shadow-lv3:0 0 1px 0 #3d342833, 0 0 4px 0 #3d34280d, 0 12px 32px 0 #3d34281f;--dsw-elevation-stroke-color:#82715766;--dsw-elevation-stroke:0 0 0 .5px var(--dsw-elevation-stroke-color);--dsw-elevation-panel:var(--dsw-elevation-stroke), 0 4px 12px 0 #3d342814, 0 0 20px 0 #3d34280d;--dsw-elevation-prominent:var(--dsw-elevation-stroke), 0 8px 24px 0 #3d342824, 0 0 28px 0 #3d342814;--dsw-elevation-soft:var(--dsw-elevation-stroke), 0 4px 16px 0 #3d342814, 0 0 28px 0 #3d34280f;--dsw-linear-gradient-think:linear-gradient(180deg, #f8f8f0 20.19%, rgba(248, 248, 240, 0) 100%);--dsw-linear-think-select:linear-gradient(180deg, #ffffff 20.19%, rgba(255, 255, 255, 0) 100%);--shiki-foreground:#e8d5bc;--shiki-background:#2b2118;--shiki-token-comment:#a69580;--shiki-token-keyword:#d4a0e0;--shiki-token-string:#a8d4a0;--shiki-token-string-expression:#a8d4a0;--shiki-token-constant:#e8c87a;--shiki-token-function:#61afef;--shiki-token-parameter:#f0a870;--shiki-token-punctuation:#d4b896;--shiki-token-link:#74c0fc ">
+<main class="fixture">
+  <h1 class="fixture-title">代码岛作用域</h1>
+
+  <section class="fixture-row" data-action-card="call-1" data-action="propose">
+    <pre class="ZMgt9a_reason" data-audit="light">提议理由：把结果整理成一个文件。</pre>
+  </section>
+
+  <section class="fixture-row">
+    <div data-tool="present" data-state="ok">
+      <pre class="YcWBLa_output" data-audit="light">已交付 1 个文件：notes.md</pre>
+    </div>
+  </section>
+
+  <section class="fixture-row">
+    <div class="oT5lKa_card" data-tool="schedule_create">
+      <pre class="oT5lKa_fallback" data-audit="light">schedule fallback output</pre>
+    </div>
+  </section>
+
+  <section class="fixture-row">
+    <div class="fixture-dialog" role="dialog" aria-modal="true">
+      <pre class="V7pFBG_updateOutput" data-audit="light">plugin update output</pre>
+    </div>
+  </section>
+
+  <section class="fixture-row">
+    <div class="fixture-dialog" role="dialog" aria-modal="true">
+      <pre class="Wsg8iW_viewerCode" data-audit="light">preset source text</pre>
+    </div>
+  </section>
+
+  <section class="fixture-row">
+    <div class="_card_1mqf1_1">
+      <div class="_header_1mqf1_10" data-code-block-banner="true">
+        <div class="_heading_1mqf1_23">
+          <span class="_language_1mqf1_30" data-audit="banner-label">ts</span>
+        </div>
+        <div class="_actions_1mqf1_43">
+          <button class="_action_1mqf1_43" type="button" aria-label="复制" data-audit="banner-action">copy</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fixture-row fixture-dark">
+    <pre class="xeixwq_payload" data-audit="dark">{"payload":"dark island"}</pre>
+  </section>
+</main>
+<script>
+(() => {
+  const doc = document.documentElement;
+  const body = document.body;
+  const initial = {
+    decor: doc.getAttribute('data-animal-decor'),
+    grain: doc.getAttribute('data-animal-grain'),
+    diffSyntax: doc.getAttribute('data-animal-diff-syntax'),
+    font: doc.getAttribute('data-animal-font'),
+    veil: body.style.getPropertyValue('--animal-canvas-veil'),
+    fontFamily: body.style.getPropertyValue('--dsw-font-family'),
+  };
+  const restoreAttr = (name, value) => {
+    if (value === null) doc.removeAttribute(name);
+    else doc.setAttribute(name, value);
+  };
+  const restoreProp = (name, value) => {
+    if (value) body.style.setProperty(name, value);
+    else body.style.removeProperty(name);
+  };
+  window.addEventListener('message', (event) => {
+    const data = event.data;
+    if (!data || data.type !== 'animal-island:appearance') return;
+    if (data.reset) {
+      restoreAttr('data-animal-decor', initial.decor);
+      restoreAttr('data-animal-grain', initial.grain);
+      restoreAttr('data-animal-diff-syntax', initial.diffSyntax);
+      restoreAttr('data-animal-font', initial.font);
+      restoreProp('--animal-canvas-veil', initial.veil);
+      restoreProp('--dsw-font-family', initial.fontFamily);
+      return;
+    }
+    const patch = data.patch || {};
+    if (patch.decor !== undefined) doc.setAttribute('data-animal-decor', patch.decor);
+    if (patch.grain !== undefined) doc.setAttribute('data-animal-grain', patch.grain);
+    if (patch.diffSyntax !== undefined) doc.setAttribute('data-animal-diff-syntax', patch.diffSyntax);
+    if (patch.font !== undefined) {
+      doc.setAttribute('data-animal-font', patch.font);
+      if (patch.font === 'system') {
+        body.style.setProperty('--dsw-font-family', 'var(--animal-system-font-family, sans-serif)');
+      } else {
+        restoreProp('--dsw-font-family', initial.fontFamily);
+      }
+    }
+    if (patch.veil !== undefined) {
+      body.style.setProperty('--animal-canvas-veil', String(patch.veil));
+    }
+  });
+})();
+</script>
+</body>
+</html>

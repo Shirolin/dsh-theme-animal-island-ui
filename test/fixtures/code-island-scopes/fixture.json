@@ -1,5 +1,6 @@
 {
   "title": "代码岛作用域 · 浅色卡面不被奶油前景命中",
+  "group": "代码与交付",
   "pluginCss": [
     "@deepseek-ai/dsh-client-ui-action-cards",
     "@deepseek-ai/dsh-client-ui-deliverables",
@@ -22,5 +23,16 @@
       "expression": "(() => { const label = document.querySelector('[data-audit=\"banner-label\"]'); const action = document.querySelector('[data-audit=\"banner-action\"]'); const header = label && label.closest('[data-code-block-banner]'); if (!label || !action || !header) return false; const parse = (value) => { const n = value.match(/[\\d.]+/g); return [Number(n[0]), Number(n[1]), Number(n[2]), n.length > 3 ? Number(n[3]) : 1]; }; const lum = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }; const dark = document.body.hasAttribute('data-ds-dark-theme'); const cream = dark ? 'rgb(243, 223, 189)' : 'rgb(232, 213, 188)'; const bg = parse(getComputedStyle(header).backgroundColor); const readable = (element) => { const [light, darkLum] = [lum(parse(getComputedStyle(element).color)), lum(bg)].sort((a, b) => b - a); return (light + 0.05) / (darkLum + 0.05) >= 4.5; }; return getComputedStyle(label).color === cream && getComputedStyle(action).color === cream && readable(label) && readable(action); })()"
     }
   ],
-  "variants": [{ "id": "light", "mode": "light", "window": "900,1100" }, { "id": "dark", "mode": "dark", "window": "900,1100" }]
+  "variants": [
+    {
+      "id": "light",
+      "mode": "light",
+      "window": "900,1100"
+    },
+    {
+      "id": "dark",
+      "mode": "dark",
+      "window": "900,1100"
+    }
+  ]
 }
