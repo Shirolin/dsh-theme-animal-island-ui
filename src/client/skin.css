@@ -155,38 +155,33 @@ html[data-dsh-animal-island-skin][data-animal-font="system"] {
   --animal-font-family: var(--animal-system-font-family);
 }
 
-/* The native Windows caption and sidebar both read
-   --dsw-specific-sidebar-fill. In dark mode that collapses the caption into
-   the sidebar, so give the caption a third night-sky surface and restore the
-   sidebar through its direct semantic nav. Restore the sidebar-local token too:
-   DSH's session-list fade consumes it, so leaving the caption color there draws
-   a darker rectangle above the account row. Light caption and sidebar use the
-   same split below; neither branch changes sidebar geometry. */
+/* The native Windows caption and the app surfaces both read
+   --dsw-specific-sidebar-fill. The caption colour has to stay on <body> because
+   the desktop host reports it over the windowsAppearance IPC, so the sidebar
+   surface is restored inside #root. DSH 0.2.2 moved the panel nav under the
+   sidebar's scroll area, so keying the sidebar off `nav[aria-label]` now paints
+   only that inner scroller (a hard rectangle under the new-session row) and
+   leaves the new bottom scroll fade on the caption colour (a second rectangle
+   above the account row). #root keeps every sidebar consumer — column, root and
+   fade — on one token; neither branch changes sidebar geometry. */
 html[data-windows-titlebar] body[data-ds-dark-theme] {
   --dsw-specific-sidebar-fill: #1f3034 !important;
 }
 
-html[data-windows-titlebar] body[data-ds-dark-theme] div:has(> nav[aria-label]) {
+html[data-windows-titlebar] body[data-ds-dark-theme] #root {
   --dsw-specific-sidebar-fill: #303444 !important;
-  background-color: #303444 !important;
 }
 
 /* In light mode the Windows overlay also reads sidebar-fill. A translucent
    cream leaves the canvas visible on the left but composites the native
    controls area to cream, so make the caption token the canvas mint and restore
-   the app's cream token inside #root. The sidebar root is explicit for the
-   fixture/older shell shapes that do not include the #root wrapper. */
+   the app's cream token inside #root. */
 html[data-windows-titlebar] body:not([data-ds-dark-theme]) {
   --dsw-specific-sidebar-fill: #e7efe5 !important;
 }
 
 html[data-windows-titlebar] body:not([data-ds-dark-theme]) #root {
   --dsw-specific-sidebar-fill: rgba(250, 248, 243, 0.82) !important;
-}
-
-html[data-windows-titlebar] body:not([data-ds-dark-theme]) div:has(> nav[aria-label]) {
-  --dsw-specific-sidebar-fill: rgba(250, 248, 243, 0.82) !important;
-  background-color: rgba(250, 248, 243, 0.82) !important;
 }
 
 /* The split open-target control uses DSH's faint border-l4 for both its outer
@@ -671,6 +666,9 @@ html[data-dsh-animal-island-skin] body > [role="alert"] {
   --dsw-alias-state-success-primary: #a9db69;
   --dsw-alias-state-warn-label: #ffd15a;
   --dsw-static-deepseek-400: #cfe3ff;
+  /* 0.2.2 routes the inline action through this alias, declared on <body>, so
+     overriding the static fallback inside the toast no longer reaches it. */
+  --dsw-alias-toast-action: #cfe3ff;
 }
 
 /* The composer's "/" and "@" trigger panel is a scroll area whose max-height DSH

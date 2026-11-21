@@ -56,7 +56,7 @@ pnpm run audit                                           # 扫描本机 DSH 运�
 
 夹具镜像的是某个具体 DSH 版本的 DOM 与 CSS，因此：
 
-- 运行时版本会打印在每次输出的第一行，`pnpm run check:fixtures -- --expect-dsh 0.2.2-rc.1` 可以把结论钉到某个版本；
+- 运行时版本会打印在每次输出的第一行，`pnpm run check:fixtures -- --expect-dsh 0.2.2-rc.5` 可以把结论钉到某个版本；
 - 断言只比较设计意图（元素的实际位置、尺寸、计算样式），不要从 `padding`/`margin` 反推几何 —— 那会在 DSH 调整自身内边距时误报；
 - 桌面客户端升级后先跑一遍全套夹具，再判断是皮肤回归还是夹具 DOM 过期，判据见 [docs/compatibility.md](docs/compatibility.md#dsh-升级时怎么处理)。
 

@@ -11,6 +11,13 @@
 - 新增 `turn-trigger-notice`、`toast-notice` 与 `code-island-scopes` 三个离屏夹具锁定上述对比度；`docs/compatibility.md` 补上 `[data-turn-trigger]`、`body > [role="alert"]`、`[data-action-card]` 与 `[data-tool]` 接缝；
 - 修复 Windows 下 `verify-release` 测试失败：GNU tar 把绝对路径中的盘符当作远程主机，改为以相对文件名打包与解包。
 
+## 0.3.39（DSH 0.2.2-rc.5 侧栏与浮层接缝修复）
+
+- DSH `0.2.2-rc.5` 把侧栏面板 `nav` 移入新的滚动区并新增底部渐隐层：暗色侧栏原本靠 `div:has(> nav[aria-label])` 上色，导致「新会话」下方切出一块硬边矩形、账户行上方出现一条渐隐色带。Windows 暗色的侧栏底色改在 `#root` 上恢复，侧栏列、侧栏根与渐隐层共用同一 token，标题栏仍保持独立第三层；
+- 夹具的 DSH CSS 模块提取同时接受 `0.2.2` 起使用的模板字符串写法，`sidebar-masthead` 同步到 `scrollRegion/scrollArea/scrollFade` 结构并锁定「滚动区不画底色」「渐隐层与侧栏同色」；toast 与启动失败页夹具同步新模块哈希；
+- `0.2.2` 的 toast 行内链接改由声明在 `<body>` 的 `toast-action` 别名取色，皮肤在浮层内一并重映射该别名（「撤销」对比度维持 4.7:1）；
+- 桌面客户端验证基线更新为 `0.2.2-rc.5`，`docs/compatibility.md` 与 `docs/web-vs-desktop.md` 的 Windows 三层表面说明同步为 `#root` 单一 token。
+
 ## 0.3.37（DSH 0.2.2 基线确认与工具链更新）
 
 - 桌面客户端验证基线更新为 DSH `0.2.2-rc.1`，并声明支持区间 `>= 0.2.2 < 0.3`：设置面板改成 grid 布局、导航标题脱离 `nav` 后，皮肤无需改动（`0.2.1-rc.5 → 0.2.2-rc.1` 的夹具截图逐字节相同），只把设置导航夹具的 DOM 同步到新结构；

@@ -2,10 +2,12 @@
 <!--
   Sidebar masthead — the ferry-ticket brand area as the user sees it.
 
-  Reproduces the real 0.2.1-rc.5 sidebar DOM (wtg9ga_* module classes, taken from
+  Reproduces the real 0.2.2-rc.5 sidebar DOM (wtg9ga_* module classes, taken from
   the installed client bundle) around the plugin's brand slots. The mint strip
-  above the logo row is shell chrome (the desktop titlebar tabs); it is drawn
-  here only so the masthead is judged in context, and no skin rule may target it.
+  above the logo row stands in for the native Windows caption, which the desktop
+  host paints outside the app DOM from the <body> sidebar-fill it reads; it is
+  drawn here only so the masthead is judged in context, and no skin rule may
+  target it.
 -->
 <html lang="zh-CN" data-dsh-animal-island-skin="active" data-windows-titlebar>
 <head>
@@ -16,12 +18,14 @@
 <!--{{PLUGIN_CSS}}-->
 <!--{{SKIN_CSS}}-->
 <style>
-  body { margin: 0; padding: 20px; background: #8fcaa5; }
+  body { margin: 0; padding: 20px; background: #8fcaa5; --fixture-caption: var(--dsw-specific-sidebar-fill); }
   .stage { display: flex; gap: 20px; align-items: flex-start; }
   .frame { width: 280px; height: 660px; overflow: hidden; border-radius: 12px; box-shadow: 0 10px 24px rgba(40, 60, 40, .18); }
   .frame.narrow { width: 240px; }
   .frame.tight { width: 180px; }
-  .shellStrip { box-sizing: border-box; display: flex; align-items: center; gap: 18px; height: 36px; padding: 0 12px; background: var(--dsw-specific-sidebar-fill); color: var(--dsw-alias-label-primary); font-size: 14px; font-weight: 700; }
+  /* The caption colour is the one reported from <body>; the sidebar column under
+     #root reads its own token, so the stand-in must not inherit the latter. */
+  .shellStrip { box-sizing: border-box; display: flex; align-items: center; gap: 18px; height: 36px; padding: 0 12px; background: var(--fixture-caption); color: var(--dsw-alias-label-primary); font-size: 14px; font-weight: 700; }
   .shellStrip .tab { padding: 0 2px; }
   .shellStrip .tab.on { border-bottom: 2px solid #6f451f; }
   .stripIcon { width: 16px; height: 16px; border: 1.6px solid currentColor; border-radius: 2px; position: relative; }
@@ -34,6 +38,7 @@
 </style>
 </head>
 <body {{BODY_ATTRIBUTES}} style="{{TOKENS}} {{BODY_STYLE}}">
+<div id="root">
 <div class="stage">
   <div class="frame">
     <div class="shellStrip"><span class="stripIcon"></span><span class="tab on">应用</span><span class="tab">编辑</span></div>
@@ -47,6 +52,7 @@
     <div class="shellStrip"><span class="stripIcon"></span><span class="tab on">应用</span><span class="tab">编辑</span></div>
     <div class="wtg9ga_root" id="root-180"></div>
   </div>
+</div>
 </div>
 <script>
 const H = 'wtg9ga_';
@@ -73,11 +79,13 @@ function sidebar(width) {
     + '<button type="button" class="' + H + 'iconButton ' + H + 'toggle" aria-label="收起侧栏">'
     + '<svg class="' + H + 'panelIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="2.5" width="13" height="11" rx="2.5"/><path d="M6 2.5v11"/></svg>'
     + '</button></div>'
-    + '<button type="button" class="' + H + 'newSession">'
+    + '<div class="' + H + 'newSessionRow"><button type="button" class="' + H + 'newSession">'
     + '<span class="' + H + 'newSessionLabelMask"><span class="' + H + 'newSessionContent">'
     + '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M8 5.2v5.6M5.2 8h5.6"/></svg>'
     + '<span class="' + H + 'newSessionLabel ' + H + 'wide">新会话</span>'
-    + '</span></span></button>'
+    + '</span></span></button></div>'
+    + '<div class="' + H + 'scrollRegion">'
+    + '<div class="' + H + 'scrollArea" data-sidebar-scrollport="">'
     + '<nav class="' + H + 'panelList" aria-label="功能面板">'
     + panelRow('插件', PANEL_ICON) + panelRow('自动化任务', CLOCK_ICON) + panelRow('更多', GRID_ICON)
     + '</nav>'
@@ -88,7 +96,9 @@ function sidebar(width) {
     + '<div style="display:flex;align-items:center;gap:8px;margin:2px 0 0 12px;padding:7px 8px;border-radius:8px;color:var(--animal-body);font-size:13px">◌ 亮暗滚动与层级</div>'
     + '<div style="display:flex;align-items:center;gap:8px;padding:8px 6px;color:var(--animal-body);font-size:13px;font-weight:700">▤ README</div>'
     + '</div>'
-    + '<div style="position:relative;height:24px;margin-top:-24px"><span class="GAkraW_fade"></span></div>'
+    + '</div>'
+    + '<span class="' + H + 'scrollFade" aria-hidden="true"></span>'
+    + '</div>'
     + '<div class="' + H + 'footArea"><div class="' + H + 'settingsArea" style="display:flex;align-items:center;gap:8px;padding:8px 6px;color:var(--animal-body);font-size:13px">◍ demo@example.com</div></div>';
 }
 

@@ -3,7 +3,7 @@
 ## 支持基线
 
 - **仓库测试基线**：DSH `0.1.5-rc.3`（`@deepseek-ai/dsh-client-ui-theme@0.1.5-rc.3` 及同版本 Sidebar / Conversation / Layout，React 18）。
-- **桌面客户端验证基线**：`0.2.2-rc.1`（内置于桌面端 `app.asar`）。它与 Web 端运行同一套前端应用与客户端插件契约；关于桌面端 profile 隔离、安装与夹具验证的细节见 [desktop.md](desktop.md)。
+- **桌面客户端验证基线**：`0.2.2-rc.5`（内置于桌面端 `app.asar`）。它与 Web 端运行同一套前端应用与客户端插件契约；关于桌面端 profile 隔离、安装与夹具验证的细节见 [desktop.md](desktop.md)。
 - **支持区间**：桌面客户端 `>= 0.2.2 < 0.3`。跨 minor 升级通常不需要改皮肤（Token、Slot 与 `data-*` 接缝都稳定），需要核对的是夹具还原的 DOM 是否仍与真实运行时一致。
 
 DSH 仍处于 `0.x` 迭代阶段。本插件仅依赖已验证的公开接缝（Seam），在接缝变更时按下方降级矩阵回退。
@@ -15,7 +15,7 @@ DSH 仍处于 `0.x` 迭代阶段。本插件仅依赖已验证的公开接缝（
 - 每次运行都会先打印 `[fixture] DSH runtime <版本> <- <路径>`；截图与断言结论只对该版本成立。
 - 需要可复现的结论时用 `--expect-dsh <版本>` 固定，版本不符立即失败：
   ```sh
-  pnpm run check:fixtures -- --expect-dsh 0.2.2-rc.1
+  pnpm run check:fixtures -- --expect-dsh 0.2.2-rc.5
   ```
 - `--desktop` 自动解包本机安装的桌面端，版本随桌面客户端自动更新而变化；不要把它当成「基线」本身。
 
@@ -29,7 +29,7 @@ DSH 仍处于 `0.x` 迭代阶段。本插件仅依赖已验证的公开接缝（
 | 断言通过但截图出现样式错位，或 `skin.css` 的规则未命中 | 皮肤回归 | 改 `skin.css`，按 [design.md](design.md) 的样式边界处理 |
 | 断言里的数字来自 DSH 而非皮肤（如标题内边距推算） | 断言耦合了实现细节 | 改成比较设计意图（元素实际位置/尺寸），不要回推 padding |
 
-跨 minor 的实际经验：`0.2.1-rc.5 → 0.2.2-rc.1` 皮肤零改动（22 张夹具截图逐字节相同），只把设置面板的夹具 DOM 同步到 0.2.2 新的 grid 结构（标题从 `nav` 子元素变为面板级格子）。
+跨版本的实际经验：`0.2.1-rc.5 → 0.2.2-rc.1` 皮肤零改动（22 张夹具截图逐字节相同），只把设置面板的夹具 DOM 同步到 0.2.2 新的 grid 结构（标题从 `nav` 子元素变为面板级格子）。`0.2.2-rc.1 → 0.2.2-rc.5` 则改到了皮肤：侧栏把面板 `nav` 移进新的滚动区、并新增底部渐隐层，Windows 暗色的侧栏底色因此改挂在 `#root`；toast 的行内链接改走 `toast-action` 别名；夹具的 CSS 模块提取要同时接受模板字符串写法，并同步 toast / 启动失败页的模块哈希。
 
 ## 公开扩展面
 
@@ -55,7 +55,7 @@ Slot 仅用于公开组件注入；`data-slot` 仅在测试断言中用于定位
 | `[data-code-block-banner]` | 代码块顶部栏（语言标签 + 复制按钮）文字颜色：亮色下将默认深棕字改为浅色代码前景，连同直接子元素一并覆盖 | 代码块头部标记；仅改颜色，不改几何 |
 | `[data-code-preview]`、`[data-textpreview-plain]` | 右侧栏「文档」预览的两条平面视图（高亮代码 / 纯文本）：排除深色代码岛排版，保留 DSH 原生内边距与文字色 | `CodeBody` 与 `TextBody` 渲染的公开属性 |
 | `[data-turn-trigger]` | 会话里的触发提示条：DSH 用深色代码面作底，却配浅色界面的三级文字色。亮色下仅在卡片保持深色底时把该作用域内的 `label-primary/secondary/tertiary` 换成深面可读的暖色；悬停时 DSH 会把底色换成浅色交互面，该状态交还它原本的深色文字。卡片底色、边框与 hover 配色保持原样 | `TurnTriggerNodeView` 渲染在 section 根上的标记；由 `turn-trigger-notice` 夹具锁定默认态对比度，CSS 规则测试锁定 `:not(:hover)` 作用域 |
-| `body > [role="alert"]` | 应用内浮层提示（toast）：DSH 把它 portal 到 `body`，底色是本主题的深色工具栏棕。亮色下把图标（`state-success-primary` / `state-warn-label`）换成深面可读的浅色；行内操作链接（`static-deepseek-400`）在两种模式下都换成浅蓝——DSH 静态蓝在该底色上也只有 3.4:1。浮层底色、圆角与阴影保持原样 | DSH `createPortal(..., document.body)` 的 toast 根节点；由 `toast-notice` 夹具锁定对比度 |
+| `body > [role="alert"]` | 应用内浮层提示（toast）：DSH 把它 portal 到 `body`，底色是本主题的深色工具栏棕。亮色下把图标（`state-success-primary` / `state-warn-label`）换成深面可读的浅色；行内操作链接在两种模式下都换成浅蓝——DSH 静态蓝在该底色上也只有 3.4:1。0.2.2 起链接颜色经由声明在 `<body>` 的 `toast-action` 别名继承，因此在浮层内同时重映射该别名。浮层底色、圆角与阴影保持原样 | DSH `createPortal(..., document.body)` 的 toast 根节点；由 `toast-notice` 夹具锁定对比度 |
 | `[data-review-view]` | 右侧栏 Deliverables 代码 diff：画在浅色纸面上的平面视图。亮色下将 `--shiki-*` 切换为浅面可读的暖色语法色，几何由组件自身控制 | `FileDiff` 组件的根标记；由 `deliverables-diff` 夹具锁定计算色 |
 | `[data-open-target]` | 分裂式「打开方式」按钮在亮色下的外框与中缝（内部 `button[aria-haspopup="menu"]`）：增强在浅色画布上过淡的原生边框 | `OpenTargetButton` 的语义标记，不依赖 CSS Module 哈希 |
 | `[data-plugin-item]`、`[data-plugin-package]` | 插件管理列表行在亮色下的浅奶油阅读面，防止画布底部波浪穿过透明行文字；不改边距与排列 | Plugin Manager 为配置行与插件行写出的标记 |
@@ -66,7 +66,7 @@ Slot 仅用于公开组件注入；`data-slot` 仅在测试断言中用于定位
 | `--dsl-code-block-*` | 代码块圆角、底色与 Banner 变量 —— 皮肤**只读不写**，避免顶掉文档预览的 `0px` / `transparent` 平面设置 | DSH 为代码块预留的样式变量 |
 | `body[data-ds-dark-theme]` | 深色模式分支选择器 | `ThemePresenter` 写出的主题状态属性 |
 | `[data-windows-titlebar]` | Windows 桌面端外壳标记：将 `AppFrame` 上的不透明 `sidebar-fill` 清为透明，露出底层画布 | Electron 外壳写入的平台属性（见 [#9490](https://github.com/deepseek-ai/deepseek-harness/discussions/9490)） |
-| `#root` + `div:has(> nav[aria-label])` | Windows 标题栏三层表面：让 `body` 的 `sidebar-fill` 供原生标题栏读取，再在 `#root` 与侧栏根节点恢复各自底色 | `#root` 为根容器，侧栏根节点包含直接子元素 `nav[aria-label]`；仅改底色 |
+| `#root` | Windows 标题栏三层表面：`body` 的 `sidebar-fill` 只供原生标题栏与窗口按钮区读取，`#root` 再把侧栏列、侧栏根与会话列表渐隐层统一到侧栏底色 | `#root` 为根容器；0.2.2 把面板 `nav` 移到侧栏滚动区内部，不再能用 `nav[aria-label]` 定位侧栏根，因此只在 `#root` 上恢复 token，不直接给滚动区画底色 |
 | `--dsh-windows-content-radius` | Windows 内容列左上角圆角：在 **frame 元素**上设为 `0px`，与 Web 端直角对齐 | Layout 插件公开变量；必须写在 `.frame` 元素上才能覆盖其自身声明 |
 | `--dsw-menu-surface-fill` | 桌面端新版菜单材质底色别名：映射到不透明的 `--dsw-specific-menu`，防止透出下方焦点环 | 仅在支持该变量的运行时生效，旧版自然忽略 |
 | `role="alert" / button / checkbox / dialog / group / listbox / menu / menuitem / menuitemradio / option / radio / search / switch / treeitem` | 控件、弹层、搜索框与树行的语义锚点；对话框内的 `<pre>`（插件更新日志、预设源码查看）保持对话框自身的文字色，不套深色代码岛排版 | 标准 ARIA 角色 |

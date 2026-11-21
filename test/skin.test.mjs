@@ -152,15 +152,19 @@ test('windows dark caption keeps a third surface above the sidebar', () => {
     (rule) =>
       rule.selector.includes('html[data-windows-titlebar]') &&
       rule.selector.includes('body[data-ds-dark-theme]') &&
-      rule.selector.includes('div:has(> nav[aria-label])') &&
+      rule.selector.includes('#root') &&
       rule.declaration('--dsw-specific-sidebar-fill')?.value === '#303444' &&
-      rule.declaration('--dsw-specific-sidebar-fill')?.important &&
-      rule.declaration('background-color')?.value === '#303444' &&
-      rule.declaration('background-color')?.important,
+      rule.declaration('--dsw-specific-sidebar-fill')?.important,
+  )
+  // 0.2.2 moved the panel nav under the sidebar scroller; painting a surface on
+  // its parent cuts a hard rectangle under the new-session row.
+  const scrollerSurface = ruleQuery.find(
+    (rule) => rule.selector.includes('div:has(> nav[aria-label])') && rule.declaration('background-color')?.value !== 'transparent',
   )
 
   assert.ok(caption, 'the dark Windows caption token is missing')
   assert.ok(sidebar, 'the dark Windows sidebar surface is missing')
+  assert.equal(scrollerSurface, undefined, 'the skin must not paint the sidebar scroller')
 })
 
 test('windows light caption uses the canvas mint while the app keeps its cream surfaces', () => {
@@ -179,20 +183,13 @@ test('windows light caption uses the canvas mint while the app keeps its cream s
       rule.declaration('--dsw-specific-sidebar-fill')?.value === 'rgba(250, 248, 243, 0.82)' &&
       rule.declaration('--dsw-specific-sidebar-fill')?.important,
   )
-  const sidebar = ruleQuery.find(
-    (rule) =>
-      rule.selector.includes('html[data-windows-titlebar]') &&
-      rule.selector.includes('body:not([data-ds-dark-theme])') &&
-      rule.selector.includes('div:has(> nav[aria-label])') &&
-      rule.declaration('--dsw-specific-sidebar-fill')?.value === 'rgba(250, 248, 243, 0.82)' &&
-      rule.declaration('--dsw-specific-sidebar-fill')?.important &&
-      rule.declaration('background-color')?.value === 'rgba(250, 248, 243, 0.82)' &&
-      rule.declaration('background-color')?.important,
+  const scrollerSurface = ruleQuery.find(
+    (rule) => rule.selector.includes('div:has(> nav[aria-label])') && rule.declaration('background-color')?.value !== 'transparent',
   )
 
   assert.ok(caption, 'the light Windows caption token is missing')
   assert.ok(appRoot, 'the app root does not restore the cream sidebar token')
-  assert.ok(sidebar, 'the light Windows sidebar surface is missing')
+  assert.equal(scrollerSurface, undefined, 'the skin must not paint the sidebar scroller')
 })
 
 test('header ribbon colors the current crumb span directly', () => {

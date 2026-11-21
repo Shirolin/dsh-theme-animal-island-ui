@@ -1,5 +1,5 @@
 {
-  "title": "侧栏品牌区 · 渡岛船票（0.2.1-rc.5 真实侧栏 DOM）",
+  "title": "侧栏品牌区 · 渡岛船票（0.2.2-rc.5 真实侧栏 DOM）",
   "group": "工作区与会话",
   "pluginCss": ["@deepseek-ai/dsh-client-ui-sidebar", "@deepseek-ai/dsh-client-ui-workspace"],
   "assertions": [
@@ -9,7 +9,11 @@
     },
     {
       "message": "会话列表渐隐层读取与侧栏相同的底色",
-      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const fade = root.querySelector('.GAkraW_fade'); if (fade === null) return false; const sidebarColor = getComputedStyle(root).backgroundColor; return getComputedStyle(fade).backgroundImage.includes(sidebarColor); }))()"
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const fade = root.querySelector('.wtg9ga_scrollFade'); if (fade === null) return false; const sidebarColor = getComputedStyle(root).backgroundColor; return getComputedStyle(fade).backgroundImage.includes(sidebarColor); }))()"
+    },
+    {
+      "message": "滚动区自身不画底色，避免在新会话按钮下切出硬边矩形",
+      "expression": "(() => [...document.querySelectorAll('[id^=\"root-\"]')].every((root) => { const area = root.querySelector('.wtg9ga_scrollArea'); if (area === null) return false; const style = getComputedStyle(area); return style.backgroundColor === 'rgba(0, 0, 0, 0)' && style.backgroundImage === 'none'; }))()"
     },
     {
       "message": "三档侧栏都渲染出对应宽度的 60px 船票",

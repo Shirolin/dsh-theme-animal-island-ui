@@ -5,11 +5,16 @@ import { dirname, isAbsolute, join, resolve } from 'node:path'
 
 const require = createRequire(import.meta.url)
 const themePackage = '@deepseek-ai/dsh-client-ui-theme'
-const cssModulePattern = /var \w+_css_default = "((?:[^"\\]|\\.)*)";/g
-const allCssModulePattern = /(?:var \w+_css_default|const css(?:\$\d+)?) = "((?:[^"\\]|\\.)*)";/g
+// DSH inlines CSS modules as string literals. 0.1.x emitted double-quoted
+// strings; 0.2.2 emits template literals, so both quote styles must match.
+const quotedCss = String.raw`(["'\x60])((?:\\.|(?!\1)[\s\S])*?)\1`
+const cssModulePattern = new RegExp(String.raw`var \w+_css_default\s*=\s*${quotedCss};`, 'g')
+const allCssModulePattern = new RegExp(String.raw`(?:var \w+_css_default|const css(?:\$\d+)?)\s*=\s*${quotedCss};`, 'g')
 
 function extractCssModules(source, pattern) {
-  return [...source.matchAll(pattern)].map((match) => match[1].replaceAll('\\"', '"').replaceAll('\\\\', '\\')).join('\n')
+  return [...source.matchAll(pattern)]
+    .map((match) => match[2].replaceAll('\\"', '"').replaceAll("\\'", "'").replaceAll('\\`', '`').replaceAll('\\\\', '\\'))
+    .join('\n')
 }
 
 export const REQUIRED_RUNTIME_PATHS = [
